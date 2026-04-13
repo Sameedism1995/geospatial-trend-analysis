@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* shadcn-style design tokens for Tailwind-powered UI (e.g. Aurora hero) */
+@layer base {
+  :root {
+    --background: 222 47% 11%;
+    --foreground: 45 33% 97%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 72%;
+    --primary: 162 36% 38%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 33% 22%;
+    --secondary-foreground: 210 40% 98%;
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
+    --ring: 162 36% 45%;
+    --radius: 0.75rem;
+  }
+}

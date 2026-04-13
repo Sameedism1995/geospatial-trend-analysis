@@ -1,0 +1,43 @@
+Thank you so much sir again for your encouraging message and for the helpful suggestions. I followed up with an additional exploratory analysis focused on your main point: whether we can observe systematic differences between main sea-lanes and low-traffic areas (and whether any signal decays with distance from the sea-lanes). I will keep the interpretation strictly descriptive and avoid causal conclusions.
+1) Sea-lanes vs (almost) no-traffic areas, and distance-to-lane gradients
+How “sea-lanes” were defined (practical, non-causal exposure proxy)
+To approximate the main shipping corridors, I used the EMODnet vessel density grid (2017–2023 averaged). I classified a point as “sea-lane” if its nearest density grid cell belongs to the top 10% of vessel density (density_total_log ≥ 0.4496; q90). This yields:
+	•	Sea-lane points: 129 
+	•	Background points: 1,511 
+	•	Total Sentinel-2 water samples (2023): 1,640 
+I also computed the distance from each Sentinel-2 sample to the nearest “sea-lane” grid cell and produced distance-decay plots (median and IQR by 5 km bins).
+Indicators examined
+To stay close to shipping-plausible pathways, I focused on optical indicators related to suspended matter / turbidity and surface anomalies:
+	•	NDTI (turbidity proxy) 
+	•	red/green ratio (B4/B3; alternative suspended matter proxy) 
+	•	FAI (surface reflectance anomaly proxy) 
+NDCI was kept only as background context and is not interpreted as shipping-driven.
+Sea-lane vs background comparisons (non-parametric)
+Because distributions are non-normal, I used Mann–Whitney U tests.
+All points (q90 lane definition):
+	•	NDTI: median(lane) = −0.3314 vs median(background) = −0.2945, p = 0.016 
+	•	red/green ratio: median(lane) = 0.5022 vs median(background) = 0.5459, p = 0.0166 
+	•	FAI: no significant difference (p = 0.485) 
+Restricted comparisons to reduce obvious confounding
+To reduce the risk that “lane vs background” is simply separating open sea from near-coastal/archipelago waters, I repeated the same tests with restrictions:
+Only points 10–50 km from nearest port (N = 959):
+	•	NDTI: median(lane) = −0.3391 vs median(background) = −0.2764, p = 0.00181 
+	•	red/green ratio: median(lane) = 0.4936 vs median(background) = 0.5676, p = 0.00193 
+	•	FAI: no significant difference (p = 0.875) 
+Only points 20–50 km from nearest port (N = 830):
+	•	NDTI: median(lane) = −0.3314 vs median(background) = −0.2772, p = 0.0182 
+	•	red/green ratio: median(lane) = 0.5022 vs median(background) = 0.5673, p = 0.0169 
+	•	FAI: no significant difference (p = 0.627) 
+Only points with low SWIR reflectance (B11 ≤ 0.05) to reduce mixed pixels (N = 1,577):
+	•	NDTI: median(lane) = −0.3363 vs median(background) = −0.2998, p = 0.0116 
+	•	red/green ratio: median(lane) = 0.4985 vs median(background) = 0.5417, p = 0.0121 
+	•	FAI: no significant difference (p = 0.623) 
+Taken together, this suggests that (at least for 2023 and within this study area) turbidity-related optical indicators show consistent lane/background differences under several reasonable restrictions, whereas FAI does not separate the two groups in the current setup.
+Direction of the difference (important)
+In these comparisons, the lane medians are lower than the background medians for NDTI and the red/green ratio. I do not interpret this as “shipping improves water quality” or “shipping worsens water quality”; rather it indicates that lane and background areas have systematically different optical characteristics. This may reflect a combination of factors such as open-sea vs archipelago water types, bathymetry, coastal influence, and local hydrodynamics. Therefore, the lane/background results are best treated as an empirical spatial contrast rather than causal evidence.
+2) Notes on wind, AIS, and COVID-period ideas (kept as future options)
+Your suggestions on wind-driven transport, AIS-based exposure, and the COVID-period comparison are very interesting and would strengthen causal reasoning. At this stage I have not implemented these, but the sea-lane vs background framework above provides a concrete base that can later be combined with:
+	•	wind direction to compare upwind vs downwind patterns, and/or 
+	•	AIS track-based exposure metrics, and/or 
+	•	multi-year comparisons including the COVID period 
+

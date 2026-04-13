@@ -1,0 +1,3631 @@
+<html ng-app="gn_search_default" lang="" id="ng-app">
+  <head>
+    <title>EMODnet Human Activities, Vessel Density Map</title>
+    <base href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/eng/catalog.search" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="description" content="The Vessel Density maps in the EU are created since the 2019 by Cogea for the European Marine Observation and Data Network (EMODnet). The dataset is updated every year and is available for viewing and download on EMODnet web portal (Human Activities, https://emodnet.ec.europa.eu/en/human-activities). The maps are based on AIS data yearly purchased from Collecte Localisation Satellites (CLS), ORBCOMM and vesseltracker.com. The maps, GeoTIFF format, show shipping density in 1x1km cells of a grid covering all EU waters and some neighbouring areas. Density is expressed as hours per square kilometre per month. The following ship types are available:0 Other, 1 Fishing, 2 Service, 3 Dredging or underwater ops, 4 Sailing, 5 Pleasure Craft, 6 High speed craft, 7 Tug and towing, 8 Passenger, 9 Cargo, 10 Tanker, 11 Military and Law Enforcement, 12 Unknown and All ship types. Data are available by month of year and yearly averages are also available; to date, the data cover the period 2017–2024. For the 2024 the AIS data provider experienced a loss of satellite data starting from the month of June and despite the fact that the provider tried to mitigate this important decrease of data, the average amount of data for 2024 is not dense as the previous years." />
+    <meta name="keywords" content="" />
+    <meta property="og:title" content="EMODnet Human Activities, Vessel Density Map" />
+    <meta property="og:description" content="The Vessel Density maps in the EU are created since the 2019 by Cogea for the European Marine Observation and Data Network (EMODnet). The dataset is updated every year and is available for viewing and download on EMODnet web portal (Human Activities, https://emodnet.ec.europa.eu/en/human-activities). The maps are based on AIS data yearly purchased from Collecte Localisation Satellites (CLS), ORBCOMM and vesseltracker.com. The maps, GeoTIFF format, show shipping density in 1x1km cells of a grid covering all EU waters and some neighbouring areas. Density is expressed as hours per square kilometre per month. The following ship types are available:0 Other, 1 Fishing, 2 Service, 3 Dredging or underwater ops, 4 Sailing, 5 Pleasure Craft, 6 High speed craft, 7 Tug and towing, 8 Passenger, 9 Cargo, 10 Tanker, 11 Military and Law Enforcement, 12 Unknown and All ship types. Data are available by month of year and yearly averages are also available; to date, the data cover the period 2017–2024. For the 2024 the AIS data provider experienced a loss of satellite data starting from the month of June and despite the fact that the provider tried to mitigate this important decrease of data, the average amount of data for 2024 is not dense as the previous years." />
+    <meta property="og:site_name" content="EMODnet Human Activities" />
+    <meta property="og:image" content="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/vd.jpg" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:image" content="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/vd.jpg" />
+    <meta name="twitter:title" content="EMODnet Human Activities, Vessel Density Map" />
+    <meta name="twitter:description" content="The Vessel Density maps in the EU are created since the 2019 by Cogea for the European Marine Observation and Data Network (EMODnet). The dataset is updated every year and is available for viewing and download on EMODnet web portal (Human Activities, https://emodnet.ec.europa.eu/en/human-activities). The maps are based on AIS data yearly purchased from Collecte Localisation Satellites (CLS), ORBCOMM and vesseltracker.com. The maps, GeoTIFF format, show shipping density in 1x1km cells of a grid covering all EU waters and some neighbouring areas. Density is expressed as hours per square kilometre per month. The following ship types are available:0 Other, 1 Fishing, 2 Service, 3 Dredging or underwater ops, 4 Sailing, 5 Pleasure Craft, 6 High speed craft, 7 Tug and towing, 8 Passenger, 9 Cargo, 10 Tanker, 11 Military and Law Enforcement, 12 Unknown and All ship types. Data are available by month of year and yearly averages are also available; to date, the data cover the period 2017–2024. For the 2024 the AIS data provider experienced a loss of satellite data starting from the month of June and despite the fact that the provider tried to mitigate this important decrease of data, the average amount of data for 2024 is not dense as the previous years." />
+    <meta name="twitter:site" content="EMODnet Human Activities" />
+    <link rel="canonical" href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c" />
+    <link rel="icon" sizes="16x16 32x32 48x48" type="image/png" href="/geonetwork/images/logos/favicon.png" />
+    <link href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/eng/rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml" title="EMODnet Human Activities, Vessel Density Map" />
+    <link href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/eng/portal.opensearch" rel="search" type="application/opensearchdescription+xml" title="EMODnet Human Activities, Vessel Density Map" />
+    <link href="/geonetwork/static/gn_search_default.css?v=19b9edba4f9a5718047d3b17eb874c3ca769c26e&amp;" rel="stylesheet" media="screen" />
+    <link href="/geonetwork/static/gn_metadata_pdf.css?v=19b9edba4f9a5718047d3b17eb874c3ca769c26e&amp;" rel="stylesheet" media="print" />
+  </head>
+  <body class="gn-nojs ">
+    <div class="gn-full">
+      <div class="navbar navbar-default gn-top-bar" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" title="" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only" />
+              <span class="icon-bar" />
+              <span class="icon-bar" />
+              <span class="icon-bar" />
+            </button>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav" id="topbar-left">
+              <li>
+                <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/">
+                  <img class="gn-logo" alt="" src="https://ows.emodnet-humanactivities.eu/geonetwork/srv/../images/logos/45b373cc-8183-4ef8-864f-5bf1479df10f.png" />
+                  EMODnet Human Activities
+                </a>
+              </li>
+              <li>
+                <a title="Search" href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/eng/catalog.search#/search" onclick="location.href=('https://ows.emodnet-humanactivities.eu/geonetwork/srv/eng/catalog.search#/search');return false;">
+                  <i class="fa fa-fw fa-search hidden-sm"> </i>
+                  <span>Search</span>
+                </a>
+              </li>
+              <li id="map-menu" class="hidden-nojs">
+                <a title="Map" href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/eng/catalog.search#/map">
+                  <i class="fa fa-fw fa-globe hidden-sm"> </i>
+                  <span>Map</span>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/eng/catalog.signin" title="Sign in">
+                  <i class="fa fa-sign-in fa-fw"> </i>
+                  Sign in
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="container" role="main">
+        <div class="container-fluid gn-metadata-view gn-schema-iso19139">
+          <article id="0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c" class="gn-md-view gn-metadata-display">
+            <div class="row">
+              <div class="col-md-8">
+                <header>
+                  <h1>
+                    <i class="fa gn-icon-dataset">
+                      <!--icon-->
+                    </i>
+                    EMODnet Human Activities, Vessel Density Map
+                  </h1>
+                  <div class="gn-abstract">
+                    <p>
+                      The Vessel Density maps in the EU are created since the 2019 by Cogea for the European Marine Observation and Data Network (EMODnet). The dataset is updated every year and is available for viewing and download on EMODnet web portal (Human Activities,
+                      <a href="https://emodnet.ec.europa.eu/en/human-activities).">https://emodnet.ec.europa.eu/en/human-activities).</a>
+                      The maps are based on AIS data yearly purchased from Collecte Localisation Satellites (CLS), ORBCOMM and vesseltracker.com. The maps, GeoTIFF format, show shipping density in 1x1km cells of a grid covering all EU waters and some neighbouring areas. Density is expressed as hours per square kilometre per month. The following ship types are available:0 Other, 1 Fishing, 2 Service, 3 Dredging or underwater ops, 4 Sailing, 5 Pleasure Craft, 6 High speed craft, 7 Tug and towing, 8 Passenger, 9 Cargo, 10 Tanker, 11 Military and Law Enforcement, 12 Unknown and All ship types. Data are available by month of year and yearly averages are also available; to date, the data cover the period 2017–2024. For the 2024 the AIS data provider experienced a loss of satellite data starting from the month of June and despite the fact that the provider tried to mitigate this important decrease of data, the average amount of data for 2024 is not dense as the previous years.
+                    </p>
+                  </div>
+                  <script type="application/ld+json">{
+		"@context": "http://schema.org/",
+    
+      "@type": "schema:Dataset",
+    
+    
+		"@id": "https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c",
+		"includedInDataCatalog":[{"url":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/search#","name":""}],
+    
+    "inLanguage":"eng",
+    
+    "name": "EMODnet Human Activities, Vessel Density Map",
+
+    
+    
+
+    "dateCreated": [
+    
+       "2019-03-11"],
+    "dateModified": [
+    
+    "2025-12-06"],
+    "datePublished": [
+    
+      "2019-03-21"],
+		"thumbnailUrl": [
+    
+    "https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/vd.jpg"
+    ],
+		"description": "The Vessel Density maps in the EU are created since the 2019 by Cogea for the European Marine Observation and Data Network (EMODnet). The dataset is updated every year and is available for viewing and download on EMODnet web portal (Human Activities, https://emodnet.ec.europa.eu/en/human-activities). The maps are based on AIS data yearly purchased from Collecte Localisation Satellites (CLS), ORBCOMM and vesseltracker.com. The maps, GeoTIFF format, show shipping density in 1x1km cells of a grid covering all EU waters and some neighbouring areas. Density is expressed as hours per square kilometre per month. The following ship types are available:0 Other, 1 Fishing, 2 Service, 3 Dredging or underwater ops, 4 Sailing, 5 Pleasure Craft, 6 High speed craft, 7 Tug and towing, 8 Passenger, 9 Cargo, 10 Tanker, 11 Military and Law Enforcement, 12 Unknown and All ship types. Data are available by month of year and yearly averages are also available; to date, the data cover the period 2017–2024. For the 2024 the AIS data provider experienced a loss of satellite data starting from the month of June and despite the fact that the provider tried to mitigate this important decrease of data, the average amount of data for 2024 is not dense as the previous years.",
+
+    
+    
+
+    
+
+    
+    "keywords":[
+      "Marine Layer","Marine Waterway","Transport Area","merchant shipping","maritime navigation","maritime transport","Transport networks","Geographical grid systems"
+		],
+
+
+    
+
+    "author": [
+   {
+        
+        
+        "@id":"luigi.falco@bip-group.com",
+        "@type":"Organization"
+        
+          ,"name": "Cogea Srl"
+          ,"email": "luigi.falco@bip-group.com"
+        
+        ,"contactPoint": {
+          "@type" : "PostalAddress"
+          
+          }
+        }
+  ,
+   {
+        
+        
+        "@id":"william.adnams@lovelljohns.com",
+        "@type":"Organization"
+        
+          ,"name": "Lovell Johns"
+          ,"email": "william.adnams@lovelljohns.com"
+        
+        ,"contactPoint": {
+          "@type" : "PostalAddress"
+          
+          }
+        }
+  ],
+    "contributor": [],
+    "creator": [
+   {
+        
+        
+        "@id":"luigi.falco@bip-group.comalessandro.pititto@bip-group.com",
+        "@type":"Organization"
+        
+          ,"name": "Cogea Srl"
+          ,"email": "luigi.falco@bip-group.com"
+          ,"email": "alessandro.pititto@bip-group.com"
+        
+        ,"contactPoint": {
+          "@type" : "PostalAddress"
+          
+          }
+        }
+  ],
+    "provider" : [
+   {
+        
+        
+        "@id":"qdartiailh@groupcls.com",
+        "@type":"Organization"
+        
+          ,"name": "CLS"
+          ,"email": "qdartiailh@groupcls.com"
+        
+        ,"contactPoint": {
+          "@type" : "PostalAddress"
+          
+          }
+        }
+  ,
+    
+   {
+        
+        
+        "@id":"luigi.falco@bip-group.comalessandro.pititto@bip-group.com",
+        "@type":"Organization"
+        
+          ,"name": "Cogea Srl"
+          ,"email": "luigi.falco@bip-group.com"
+          ,"email": "alessandro.pititto@bip-group.com"
+        
+        ,"contactPoint": {
+          "@type" : "PostalAddress"
+          
+          }
+        }
+  ],
+    "copyrightHolder": [],
+    "user": [],
+    "sourceOrganization": [],
+    "publisher": []
+
+
+    
+
+    
+    
+    ,"distribution": [
+      
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://emodnet.ec.europa.eu/en/human-activities"
+        ,
+        "encodingFormat":"WWW:LINK"
+        ,
+        "name": "EMODnet Human Activities",
+        "description": "EMODnet Human Activities aims to facilitate access to existing marine data on activities carried out in EU waters, by building a single entry point for geographic information on human uses of the ocean. The portal makes available information such as geographical position, spatial extent of a series of activities related to the sea, their temporal variation, time when data was provided, and attributes to indicate the intensity of each activity. The data are aggregated and presented so as to preserve personal privacy and commercially-sensitive information. The data also include a time interval so that historic as well as current activities can be included."
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_all.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_all.zip",
+        "description": "Monthly Totals - All vessel types - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_00.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_00.zip",
+        "description": "Monthly Totals - Other vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_01.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_01.zip",
+        "description": "Monthly Totals - Fishing vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_02.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_02.zip",
+        "description": "Monthly Totals - Service vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_03.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_03.zip",
+        "description": "Monthly Totals - Dredging or underwater ops - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_04.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_04.zip",
+        "description": "Monthly Totals - Sailing - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_05.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_05.zip",
+        "description": "Monthly Totals - Pleasure Craft - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_06.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_06.zip",
+        "description": "Monthly Totals - High speed craft - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_07.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_07.zip",
+        "description": "Monthly Totals - Tug and towing - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_08.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_08.zip",
+        "description": "Monthly Totals - Passenger vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_09.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_09.zip",
+        "description": "Monthly Totals - Cargo vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_10.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_10.zip",
+        "description": "Monthly Totals - Tanker - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_11.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_11.zip",
+        "description": "Monthly Totals - Military and Law Enforcement vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_12.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_12.zip",
+        "description": "Monthly Totals - Unknown - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_allAvg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_allAvg.zip",
+        "description": "Annual Averages - All vessel types - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_00Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_00Avg.zip",
+        "description": "Annual Averages - Other vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_01Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_01Avg.zip",
+        "description": "Annual Averages - Fishing vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_02Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_02Avg.zip",
+        "description": "Annual Averages - Service vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_03Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_03Avg.zip",
+        "description": "Annual Averages - Dredging or underwater ops - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_04Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_04Avg.zip",
+        "description": "Annual Averages - Sailing - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_05Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_05Avg.zip",
+        "description": "Annual Averages - Pleasure Craft - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_06Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_06Avg.zip",
+        "description": "Annual Averages - High speed craft - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_07Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_07Avg.zip",
+        "description": "Annual Averages - Tug and towing - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_08Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_08Avg.zip",
+        "description": "Annual Averages - Passenger vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_09Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_09Avg.zip",
+        "description": "Annual Averages - Cargo vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_10Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_10Avg.zip",
+        "description": "Annual Averages - Tanker - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_11Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_11Avg.zip",
+        "description": "Annual Averages - Military and Law Enforcement vessels - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_12Avg.zip"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_12Avg.zip",
+        "description": "Annual Averages - Unknown - ZIP (GeoTIFF)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_Grid_20190311.7z"
+        ,
+        "encodingFormat":"WWW:DOWNLOAD"
+        ,
+        "name": "EMODnet_HA_Vessel_Density_Grid_20190311.7z",
+        "description": "7-Zip (File Geodatabase)"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_all",
+        "description": "Vessel Density Monthly totals - All types"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_00avg",
+        "description": "Vessel Density Annual Averages - Other"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_00",
+        "description": "Vessel Density Monthly totals - Other"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_01",
+        "description": "Vessel Density Monthly totals - Fishing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_02",
+        "description": "Vessel Density Monthly totals - Service"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_03",
+        "description": "Vessel Density Monthly totals - Dredging or underwater ops"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_04",
+        "description": "Vessel Density Monthly totals - Sailing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_05",
+        "description": "Vessel Density Monthly totals - Pleasure Craft"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_06",
+        "description": "Vessel Density Monthly totals - High speed craft"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_07",
+        "description": "Vessel Density Monthly totals - Tug and towing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_08",
+        "description": "Vessel Density Monthly totals - Passenger"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_09",
+        "description": "Vessel Density Monthly totals - Cargo"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_10",
+        "description": "Vessel Density Monthly totals - Tanker"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_11",
+        "description": "Vessel Density Monthly totals - Military and Law Enforcement"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_12",
+        "description": "Vessel Density Monthly totals - Unknown"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_allavg",
+        "description": "Vessel Density Annual Averages - All types"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_01avg",
+        "description": "Vessel Density Annual Averages - Fishing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_02avg",
+        "description": "Vessel Density Annual Averages - Service"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_03avg",
+        "description": "Vessel Density Annual Averages - Dredging or underwater ops"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_04avg",
+        "description": "Vessel Density Annual Averages - Sailing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_05avg",
+        "description": "Vessel Density Annual Averages - Pleasure Craft"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_06avg",
+        "description": "Vessel Density Annual Averages - High speed craft"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_07avg",
+        "description": "Vessel Density Annual Averages - Tug and towing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_08avg",
+        "description": "Vessel Density Annual Averages - Passenger"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_09avg",
+        "description": "Vessel Density Annual Averages - Cargo"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_10avg",
+        "description": "Vessel Density Annual Averages - Tanker"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_11avg",
+        "description": "Vessel Density Annual Averages - Military and Law Enforcement"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wms?"
+        ,
+        "encodingFormat":"OGC:WMS"
+        ,
+        "name": "vesseldensity_12avg",
+        "description": "Vessel Density Annual Averages - Unknown"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_all",
+        "description": "Vessel Density Monthly totals - All types"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_00",
+        "description": "Vessel Density Monthly totals - Other"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_01",
+        "description": "Vessel Density Monthly totals - Fishing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_02",
+        "description": "Vessel Density Monthly totals - Service"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_03",
+        "description": "Vessel Density Monthly totals - Dredging or underwater ops"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_04",
+        "description": "Vessel Density Monthly totals - Sailing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_05",
+        "description": "Vessel Density Monthly totals - Pleasure Craft"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_06",
+        "description": "Vessel Density Monthly totals - High speed craft"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_07",
+        "description": "Vessel Density Monthly totals - Tug and towing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_08",
+        "description": "Vessel Density Monthly totals - Passenger"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_09",
+        "description": "Vessel Density Monthly totals - Cargo"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_10",
+        "description": "Vessel Density Monthly totals - Tanker"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_11",
+        "description": "Vessel Density Monthly totals - Military and Law Enforcement"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_12",
+        "description": "Vessel Density Monthly totals - Unknown"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_allavg",
+        "description": "Vessel Density Annual Averages - All types"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_00avg",
+        "description": "Vessel Density Annual Averages - Other"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_01avg",
+        "description": "Vessel Density Annual Averages - Fishing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_02avg",
+        "description": "Vessel Density Annual Averages - Service"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_03avg",
+        "description": "Vessel Density Annual Averages - Dredging or underwater ops"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_04avg",
+        "description": "Vessel Density Annual Averages - Sailing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_05avg",
+        "description": "Vessel Density Annual Averages - Pleasure Craft"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_06avg",
+        "description": "Vessel Density Annual Averages - High speed craft"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_07avg",
+        "description": "Vessel Density Annual Averages - Tug and towing"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_08avg",
+        "description": "Vessel Density Annual Averages - Passenger"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_09avg",
+        "description": "Vessel Density Annual Averages - Cargo"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_10avg",
+        "description": "Vessel Density Annual Averages - Tanker"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_11avg",
+        "description": "Vessel Density Annual Averages - Military and Law Enforcement"
+        }
+        ,
+        {
+        "@type":"DataDownload",
+        "contentUrl":"https://ows.emodnet-humanactivities.eu/wcs?"
+        ,
+        "encodingFormat":"OGC:WCS"
+        ,
+        "name": "emodnet:vesseldensity_12avg",
+        "description": "Vessel Density Annual Averages - Unknown"
+        }
+        
+    ]
+    
+      ,"encodingFormat": [
+      "GEOTIFF"
+      ]
+    
+
+
+    ,"spatialCoverage": [
+    
+      {"@type":"Place",
+        "description": [
+        
+          ],
+        "geo": [
+          
+              {"@type":"GeoShape",
+              "box": "14.961111 -87.706484 86.842727 97.633027"
+              }
+        ]}]
+
+
+    
+      ,"temporalCoverage": ["2017-01-01/2024-12-31" ]
+    
+      ,"license":  [
+            "https://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"
+          ,
+            {
+              "@type": "CreativeWork",
+              "name": "Creative Commons CC-BY 4.0 https://creativecommons.org/licenses/by/4.0/"
+            }
+          ,
+            {
+              "@type": "CreativeWork",
+              "name": "This data was downloaded from the EMODnet Portal (https://emodnet.ec.europa.eu/en/). The data originator is Cogea Srl."
+            }
+           ]
+    
+    
+    
+	}</script>
+                  <div gn-related="md" data-user="user" data-layout="card" data-types="onlines">
+                    <!--icon-->
+                  </div>
+                </header>
+                <div>
+                  <div class="tab-content">
+                    <div id="gn-tab-default">
+                      <h1 class="hidden">Simple</h1>
+                      <div id="gn-view-d3590e3927" class="gn-tab-content">
+                        <dl class="gn-date">
+                          <dt>Date (Publication)</dt>
+                          <dd>
+                            <span data-gn-humanize-time="2019-03-21">
+                              <!--gco:Date-->
+                              2019-03-21
+                            </span>
+                          </dd>
+                        </dl>
+                        <dl class="gn-date">
+                          <dt>Date (Revision)</dt>
+                          <dd>
+                            <span data-gn-humanize-time="2025-12-06">
+                              <!--gco:Date-->
+                              2025-12-06
+                            </span>
+                          </dd>
+                        </dl>
+                        <dl class="gn-date">
+                          <dt>Date (Creation)</dt>
+                          <dd>
+                            <span data-gn-humanize-time="2019-03-11">
+                              <!--gco:Date-->
+                              2019-03-11
+                            </span>
+                          </dd>
+                        </dl>
+                        <dl class="gn-code">
+                          <dt>Citation identifier</dt>
+                          <dd>
+                            <span>
+                              <!--gmd:code-->
+                              EMODnet_HA_Vessel_DensityMap_20251206
+                            </span>
+                          </dd>
+                        </dl>
+                        <dl class="gn-table">
+                          <dt>Point of contact</dt>
+                          <dd>
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Organisation name</th>
+                                  <th>Individual name</th>
+                                  <th>Electronic mail address</th>
+                                  <th>Role</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:organisationName-->
+                                      <p>Cogea Srl</p>
+                                    </span>
+                                  </td>
+                                  <td />
+                                  <td>
+                                    <span>
+                                      <!--gmd:electronicMailAddress-->
+                                      <p>
+                                        <a href="/cdn-cgi/l/email-protection#a7cbd2cec0ce89c1c6cbc4c8e7c5ced78ac0d5c8d2d789c4c8ca"><span class="__cf_email__" data-cfemail="670b120e000e4901060b040827050e174a00150812174904080a">[email&#160;protected]</span></a>
+                                      </p>
+                                    </span>
+                                    <span>
+                                      <!--gmd:electronicMailAddress-->
+                                      <p>
+                                        <a href="/cdn-cgi/l/email-protection#6809040d1b1b09060c1a074618011c011c1c07280a0118450f1a071d18460b0705"><span class="__cf_email__" data-cfemail="7819141d0b0b19161c0a175608110c110c0c17381a1108551f0a170d08561b1715">[email&#160;protected]</span></a>
+                                      </p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <span title="Party who created the resource">Originator</span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:organisationName-->
+                                      <p>Cogea Srl</p>
+                                    </span>
+                                  </td>
+                                  <td />
+                                  <td>
+                                    <span>
+                                      <!--gmd:electronicMailAddress-->
+                                      <p>
+                                        <a href="/cdn-cgi/l/email-protection#2d4158444a44034b4c414e426d4f445d004a5f42585d034e4240"><span class="__cf_email__" data-cfemail="7f130a16181651191e131c103f1d160f52180d100a0f511c1012">[email&#160;protected]</span></a>
+                                      </p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <span title="Party who authored the resource">Author</span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:organisationName-->
+                                      <p>Lovell Johns</p>
+                                    </span>
+                                  </td>
+                                  <td />
+                                  <td>
+                                    <span>
+                                      <!--gmd:electronicMailAddress-->
+                                      <p>
+                                        <a href="/cdn-cgi/l/email-protection#285f41444441494506494c4649455b6844475e4d4444424740465b064b4745"><span class="__cf_email__" data-cfemail="37405e5b5b5e565a19565359565a44775b5841525b5b5d585f59441954585a">[email&#160;protected]</span></a>
+                                      </p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <span title="Party who authored the resource">Author</span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:organisationName-->
+                                      <p>CLS</p>
+                                    </span>
+                                  </td>
+                                  <td />
+                                  <td>
+                                    <span>
+                                      <!--gmd:electronicMailAddress-->
+                                      <p>
+                                        <a href="/cdn-cgi/l/email-protection#d3a2b7b2a1a7bab2babfbb93b4a1bca6a3b0bfa0fdb0bcbe"><span class="__cf_email__" data-cfemail="84f5e0e5f6f0ede5ede8ecc4e3f6ebf1f4e7e8f7aae7ebe9">[email&#160;protected]</span></a>
+                                      </p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <span title="Party that supplies the resource">Resource provider</span>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </dd>
+                        </dl>
+                        <dl class="gn-keyword">
+                          <dt>
+                            <span>
+                              <!--gmd:title-->
+                              <p>INSPIRE feature concept dictionary (Version: Linked Data 1.0)</p>
+                            </span>
+                          </dt>
+                          <dd>
+                            <div>
+                              <ul>
+                                <li>
+                                  <span>
+                                    <!--gmd:keyword-->
+                                    <p>Marine Layer</p>
+                                  </span>
+                                </li>
+                                <li>
+                                  <span>
+                                    <!--gmd:keyword-->
+                                    <p>Marine Waterway</p>
+                                  </span>
+                                </li>
+                                <li>
+                                  <span>
+                                    <!--gmd:keyword-->
+                                    <p>Transport Area</p>
+                                  </span>
+                                </li>
+                              </ul>
+                            </div>
+                          </dd>
+                        </dl>
+                        <dl class="gn-keyword">
+                          <dt>
+                            <span>
+                              <!--gmd:title-->
+                              <p>GEMET (version 3.1, 2012-07-20)</p>
+                            </span>
+                          </dt>
+                          <dd>
+                            <div>
+                              <ul>
+                                <li>
+                                  <span>
+                                    <!--gmd:keyword-->
+                                    <p>merchant shipping</p>
+                                  </span>
+                                </li>
+                                <li>
+                                  <span>
+                                    <!--gmd:keyword-->
+                                    <p>maritime navigation</p>
+                                  </span>
+                                </li>
+                                <li>
+                                  <span>
+                                    <!--gmd:keyword-->
+                                    <p>maritime transport</p>
+                                  </span>
+                                </li>
+                              </ul>
+                            </div>
+                          </dd>
+                        </dl>
+                        <dl class="gn-keyword">
+                          <dt>
+                            <span>
+                              <!--gmd:title-->
+                              <p>GEMET - INSPIRE themes, version 1.0</p>
+                            </span>
+                          </dt>
+                          <dd>
+                            <div>
+                              <ul>
+                                <li>
+                                  <span>
+                                    <!--gmd:keyword-->
+                                    <p>Transport networks</p>
+                                  </span>
+                                </li>
+                                <li>
+                                  <span>
+                                    <!--gmd:keyword-->
+                                    <p>Geographical grid systems</p>
+                                  </span>
+                                </li>
+                              </ul>
+                            </div>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Spatial representation type</dt>
+                          <dd>
+                            <!--gmd:spatialRepresentationType-->
+                            <span title="Grid data is used to represent geographic data">Grid</span>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Distance</dt>
+                          <dd>
+                            <!--gmd:distance-->
+                            1000
+           metre
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Language</dt>
+                          <dd>
+                            <!--gmd:language-->
+                            English
+                          </dd>
+                        </dl>
+                        <dl class="gn-date">
+                          <dt>Topic category</dt>
+                          <dd>
+                            <ul>
+                              <li>
+                                <span title="Features and characteristics of salt water bodies (excluding inland waters).&#xA;        Examples: tides, tidal waves, coastal information, reefs&#xA;      ">Oceans</span>
+                              </li>
+                            </ul>
+                          </dd>
+                        </dl>
+                        <div class="thumbnail extent">
+                          <div class="input-group coord coord-north">
+                            <input type="text" class="form-control" aria-label="north" value="86.84" readonly="" />
+                            <span class="input-group-addon">N</span>
+                          </div>
+                          <div class="input-group coord coord-south">
+                            <input type="text" class="form-control" aria-label="south" value="14.96" readonly="" />
+                            <span class="input-group-addon">S</span>
+                          </div>
+                          <div class="input-group coord coord-east">
+                            <input type="text" class="form-control" aria-label="east" value="97.63" readonly="" />
+                            <span class="input-group-addon">E</span>
+                          </div>
+                          <div class="input-group coord coord-west">
+                            <input type="text" class="form-control" aria-label="west" value="-87.71" readonly="" />
+                            <span class="input-group-addon">W</span>
+                          </div>
+                          <img class="gn-img-extent" alt="thumbnail" src="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/regions/geom.png?geomsrs=EPSG:4326&amp;geom=POLYGON((97.633027%2014.961111,97.633027%2086.842727,-87.706484%2086.842727,-87.706484%2014.961111,97.633027%2014.961111))" />
+                        </div>
+                        <br />
+                        <br />
+                        <dl>
+                          <dt>Begin date</dt>
+                          <dd>
+                            <!--gml:beginPosition-->
+                            2017-01-01
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>End date</dt>
+                          <dd>
+                            <!--gml:endPosition-->
+                            2024-12-31
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Access constraints</dt>
+                          <dd>
+                            <!--gmd:accessConstraints-->
+                            <span title="Limitation not listed">Other restrictions</span>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Other constraints</dt>
+                          <dd>
+                            <!--gmd:otherConstraints-->
+                            <a href="https://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">No limitations on public access</a>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>gmd:useconstraints</dt>
+                          <dd>
+                            <!--gmd:useconstraints-->
+                            <span title="otherRestrictions">otherRestrictions</span>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Other constraints</dt>
+                          <dd>
+                            <!--gmd:otherConstraints-->
+                            <span>
+                              <!--gmd:otherConstraints-->
+                              <p>
+                                Creative Commons CC-BY 4.0
+                                <a href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</a>
+                              </p>
+                            </span>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>gmd:useconstraints</dt>
+                          <dd>
+                            <!--gmd:useconstraints-->
+                            <span title="otherRestrictions">otherRestrictions</span>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Other constraints</dt>
+                          <dd>
+                            <!--gmd:otherConstraints-->
+                            <span>
+                              <!--gmd:otherConstraints-->
+                              <p>
+                                This data was downloaded from the EMODnet Portal (
+                                <a href="https://emodnet.ec.europa.eu/en/).">https://emodnet.ec.europa.eu/en/).</a>
+                                The data originator is Cogea Srl.
+                              </p>
+                            </span>
+                          </dd>
+                        </dl>
+                        <!--icon-->
+                      </div>
+                      <div id="gn-view-d3590e3929" class="gn-tab-content">
+                        <dl class="gn-code">
+                          <dt>Reference system identifier</dt>
+                          <dd>
+                            <span>
+                              <!--gmd:code-->
+                              EPSG:3035
+                            </span>
+                          </dd>
+                        </dl>
+                        <dl class="gn-code">
+                          <dt>Reference system identifier</dt>
+                          <dd>
+                            <span>
+                              <!--gmd:code-->
+                              ISO 19108 calendar
+                            </span>
+                          </dd>
+                        </dl>
+                        <!--icon-->
+                      </div>
+                      <div id="gn-view-d3590e3931" class="gn-tab-content">
+                        <!--icon-->
+                      </div>
+                      <div id="gn-view-d3590e3933" class="gn-tab-content">
+                        <dl>
+                          <dt>Transfer size</dt>
+                          <dd>
+                            <!--gmd:transferSize-->
+                            0
+                          </dd>
+                        </dl>
+                        <dl class="gn-table">
+                          <dt>OnLine resource</dt>
+                          <dd>
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Protocol</th>
+                                  <th>Linkage</th>
+                                  <th>Name</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:LINK</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://emodnet.ec.europa.eu/en/human-activities">
+                                      <!--gmd:URL-->
+                                      https://emodnet.ec.europa.eu/en/human-activities
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet Human Activities</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_all.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_all.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_all.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_00.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_00.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_00.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_01.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_01.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_01.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_02.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_02.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_02.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_03.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_03.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_03.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_04.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_04.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_04.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_05.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_05.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_05.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_06.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_06.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_06.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_07.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_07.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_07.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_08.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_08.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_08.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_09.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_09.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_09.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_10.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_10.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_10.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_11.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_11.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_11.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_12.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_12.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_12.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_allAvg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_allAvg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_allAvg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_00Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_00Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_00Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_01Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_01Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_01Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_02Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_02Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_02Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_03Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_03Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_03Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_04Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_04Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_04Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_05Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_05Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_05Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_06Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_06Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_06Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_07Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_07Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_07Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_08Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_08Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_08Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_09Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_09Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_09Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_10Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_10Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_10Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_11Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_11Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_11Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_12Avg.zip">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_12Avg.zip
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_12Avg.zip</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>WWW:DOWNLOAD</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_Grid_20190311.7z">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/EMODnet_HA_Vessel_Density_Grid_20190311.7z
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>EMODnet_HA_Vessel_Density_Grid_20190311.7z</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_all</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_00avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_00</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_01</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_02</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_03</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_04</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_05</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_06</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_07</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_08</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_09</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_10</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_11</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_12</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_allavg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_01avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_02avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_03avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_04avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_05avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_06avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_07avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_08avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_09avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_10avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_11avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WMS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wms?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wms?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>vesseldensity_12avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_all</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_00</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_01</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_02</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_03</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_04</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_05</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_06</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_07</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_08</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_09</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_10</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_11</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_12</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_allavg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_00avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_01avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_02avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_03avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_04avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_05avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_06avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_07avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_08avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_09avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_10avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_11avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:protocol-->
+                                      <p>OGC:WCS</p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <a href="https://ows.emodnet-humanactivities.eu/wcs?">
+                                      <!--gmd:URL-->
+                                      https://ows.emodnet-humanactivities.eu/wcs?
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <span>
+                                      <!--gmd:name-->
+                                      <p>emodnet:vesseldensity_12avg</p>
+                                    </span>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </dd>
+                        </dl>
+                        <dl class="gn-table">
+                          <dt>Distribution format</dt>
+                          <dd>
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Name</th>
+                                  <th>Version</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <a href="https://support.esri.com/en-us/gis-dictionary/geotiff">GEOTIFF</a>
+                                  </td>
+                                  <td>gco:nilReason="unknown"&gt;</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </dd>
+                        </dl>
+                        <!--icon-->
+                      </div>
+                      <div id="gn-view-d3590e3936" class="gn-tab-content">
+                        <dl>
+                          <dt>Hierarchy level</dt>
+                          <dd>
+                            <!--gmd:level-->
+                            <span title="Information applies to the dataset">Dataset</span>
+                          </dd>
+                        </dl>
+                        <div class="entry name">
+                          <h2>Conformance result</h2>
+                          <div class="target">
+                            <!--gmd:DQ_ConformanceResult-->
+                            <dl class="gn-date">
+                              <dt>Date (Publication)</dt>
+                              <dd>
+                                <span data-gn-humanize-time="2008-12-04">
+                                  <!--gco:Date-->
+                                  2008-12-04
+                                </span>
+                              </dd>
+                            </dl>
+                            <dl>
+                              <dt>Explanation</dt>
+                              <dd>
+                                <!--gmd:explanation-->
+                                <span>
+                                  <!--gmd:explanation-->
+                                  <p>See the referenced specification</p>
+                                </span>
+                              </dd>
+                            </dl>
+                            <dl>
+                              <dt>Pass</dt>
+                              <dd>
+                                <!--gmd:pass-->
+                                Yes
+                              </dd>
+                            </dl>
+                          </div>
+                        </div>
+                        <div class="entry name">
+                          <h2>Conformance result</h2>
+                          <div class="target">
+                            <!--gmd:DQ_ConformanceResult-->
+                            <dl class="gn-date">
+                              <dt>Date (Publication)</dt>
+                              <dd>
+                                <span data-gn-humanize-time="2009-12-15">
+                                  <!--gco:Date-->
+                                  2009-12-15
+                                </span>
+                              </dd>
+                            </dl>
+                            <dl>
+                              <dt>Explanation</dt>
+                              <dd>
+                                <!--gmd:explanation-->
+                                <span>
+                                  <!--gmd:explanation-->
+                                  <p>See the referenced specification</p>
+                                </span>
+                              </dd>
+                            </dl>
+                          </div>
+                        </div>
+                        <div class="entry name">
+                          <h2>Conformance result</h2>
+                          <div class="target">
+                            <!--gmd:DQ_ConformanceResult-->
+                            <dl class="gn-date">
+                              <dt>Date (Publication)</dt>
+                              <dd>
+                                <span data-gn-humanize-time="2010-12-08">
+                                  <!--gco:Date-->
+                                  2010-12-08
+                                </span>
+                              </dd>
+                            </dl>
+                            <dl>
+                              <dt>Explanation</dt>
+                              <dd>
+                                <!--gmd:explanation-->
+                                <span>
+                                  <!--gmd:explanation-->
+                                  <p>See the referenced specification</p>
+                                </span>
+                              </dd>
+                            </dl>
+                            <dl>
+                              <dt>Pass</dt>
+                              <dd>
+                                <!--gmd:pass-->
+                                Yes
+                              </dd>
+                            </dl>
+                          </div>
+                        </div>
+                        <dl>
+                          <dt>Statement</dt>
+                          <dd>
+                            <!--gmd:statement-->
+                            <span>
+                              <!--gmd:statement-->
+                              <p>
+                                AIS data are usually purchased annually from two commercial providers, such as CLS and ORBCOMM; however, for 2024, data from Vesseltracker.com were also included. The data consists of messages sent by automatic tracking systems installed on board ships and received by terrestrial and satellite receivers alike. The acquired datasets currently cover a period from 2017 to 2024 for an area covering all EU waters. A partial pre-processing of the data is carried out by CLS: (i) The only AIS messages delivered are the ones relevant for assessing shipping activities (AIS messages 1, 2, 3, 18 and 19). (ii) The AIS data are down-sampled to 3 minutes (iii). Duplicate signals are removed. (iv) Wrong MMSI signals are removed. (v) Special characters and diacritics are removed. (vi) Signals with erroneous speed over ground (SOG) are removed (negative values or more than 80 knots). (vii) Signals with erroneous course over ground (COG) are removed (negative values or more than 360 degrees). (viii) A Kalman filter is applied to remove satellite noise. The Kalman filter is based on a correlated random walk fine-tuned for ship behaviour. The consistency of a new observation with the modelised position is checked compared to key performance indicators such as innovation, likelihood and speed. (ix) A footprint filter is applied to check for satellite AIS data consistency. All positions which are not compliant with the ship-satellite co-visibility are flagged as invalid. The AIS data are converted from their original format (NMEA) to CSV, and deliverd to Cogea split into 12 files, each corresponding to a month of the year. By running a series of commands from Linux shell, all remaining invalid characters are removed as well as unnecessary fields. The data are then imported into a PostgreSQL relational database (with the PostGIS extension), each month in a different table containing the following specialised data types: mmsi (numeric), locdate (date), loctime (time without time zone), lon (double precision), lat (double precision), aisshiptype (character varying). MMSI numbers are often associated to more than a ship type during a year. To cope with this issue, a unique MMSI/ship type register is created every year. In the register, MMSI with multiple ship types are associated the most recurring and known ship type by counting the number of record for each combination mmsi/ship type. The admissible ship types reported in the AIS messages are grouped into macrocategories: 0 Other, 1 Fishing, 2 Service, 3 Dredging or underwater ops, 4 Sailing, 5 Pleasure Craft, 6 High speed craft, 7 Tug and towing, 8 Passenger, 9 Cargo, 10 Tanker, 11 Military and Law Enforcement, 12 Unknown and All ship types. The subsequent steps consist of creating points representing ship positions from the AIS messages, then reconstructing ship routes (lines) from the points for every two consecutive positions of a ship, by using the MMSI number as a unique identifier of a ship. In addition, for each line the query calculates its length (in km) and its duration (in hours) and append them both as attributes to the line. If the distance between two consecutive positions of a ship is longer than 30 km or if the time interval is longer than 6 hours, no line is created. Both datasets (points and lines) are projected into the ETRS89/ETRS-LAEA coordinate reference system, used for statistical mapping at all scales, where true area representation is required (EPSG: 3035). Points and lines calculations are based on custom-made sql scripts developed by Cogea. The lines obtained are then intersected with a custom-made 1x1km grid polygon (21 million cells) created by Cogea, based on the EEA's national grids, extended to cover the whole area of interest (all EU sea basins) and imported in PostGIS. Because each line has length and duration as attributes, it is possible to calculate how much time each ship spent in a given cell over a month by intersecting line records with grid cell records. This is done through a custom-made sql script developed by Lovell Johns. Using the PostGIS Intersect tool, for each cell of the grid, the time value of each 'segment' in it is summed, thus obtaining the density value associated to that cell, stored in calculated PostGIS tables. Density is thus expressed in hours per square kilometre per month. The final step consists of creating and compressing, in QGIS and GDAL and from the PostGIS vessel density tables, the final raster datasets (GeoTIFF format). Annual average rasters by ship type are also finally calculated. For more details on vessel density calculations method and concepts see the technical report 'EU Vessel Density Map - Detailed Method' published at:
+                                <a href="https://emodnet.ec.europa.eu/en/reports?field_emodnet_lot_value[]=human_activities.">https://emodnet.ec.europa.eu/en/reports?field_emodnet_lot_value[]=human_activities.</a>
+                                Comparared with the original method, starting from the 2021 (2020 data) the calculations of ship positions (points) and ship routes (lines) were sped up by moving them from ArcGIS to PostGIS through custom-made sql scripts developed by Cogea.
+                              </p>
+                            </span>
+                          </dd>
+                        </dl>
+                        <!--icon-->
+                      </div>
+                      <div id="gn-view-d3590e3938" class="gn-tab-content">
+                        <!--icon-->
+                      </div>
+                      <div id="gn-section-d3590e3940" class="gn-tab-content">
+                        <h2>Metadata</h2>
+                        <dl>
+                          <dt>File identifier</dt>
+                          <dd>
+                            0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c
+                            <a class="btn btn-default" href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/formatters/xml">
+                              <i class="fa fa-file-code-o">
+                                <!--file-->
+                              </i>
+                              <span>XML</span>
+                            </a>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Metadata language</dt>
+                          <dd>
+                            <!--gmd:language-->
+                            English
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Character set</dt>
+                          <dd>
+                            <!--gmd:characterSet-->
+                            <span title="8-bit variable size UCS Transfer Format, based on ISO/IEC 10646">UTF8</span>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Hierarchy level</dt>
+                          <dd>
+                            <!--gmd:hierarchyLevel-->
+                            <span title="Information applies to the dataset">Dataset</span>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Date stamp</dt>
+                          <dd>
+                            <!--gmd:dateStamp-->
+                            <span data-gn-humanize-time="2026-03-06T14:32:46.911208Z">
+                              <!--gco:DateTime-->
+                              2026-03-06T14:32:46.911208Z
+                            </span>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Metadata standard name</dt>
+                          <dd>
+                            <!--gmd:metadataStandardName-->
+                            <span>
+                              <!--gmd:metadataStandardName-->
+                              <p>ISO19115</p>
+                            </span>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt>Metadata standard version</dt>
+                          <dd>
+                            <!--gmd:metadataStandardVersion-->
+                            <span>
+                              <!--gmd:metadataStandardVersion-->
+                              <p>2003/Cor.1:2006</p>
+                            </span>
+                          </dd>
+                        </dl>
+                        <dl class="gn-table">
+                          <dt>Metadata author</dt>
+                          <dd>
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Organisation name</th>
+                                  <th>Individual name</th>
+                                  <th>Electronic mail address</th>
+                                  <th>Role</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <span>
+                                      <!--gmd:organisationName-->
+                                      <p>Cogea Srl</p>
+                                    </span>
+                                  </td>
+                                  <td />
+                                  <td>
+                                    <span>
+                                      <!--gmd:electronicMailAddress-->
+                                      <p>
+                                        <a href="/cdn-cgi/l/email-protection#c5a9b0aca2aceba3a4a9a6aa85a7acb5e8a2b7aab0b5eba6aaa8"><span class="__cf_email__" data-cfemail="fc9089959b95d29a9d909f93bc9e958cd19b8e93898cd29f9391">[email&#160;protected]</span></a>
+                                      </p>
+                                    </span>
+                                    <span>
+                                      <!--gmd:electronicMailAddress-->
+                                      <p>
+                                        <a href="/cdn-cgi/l/email-protection#0b6a676e78786a656f7964257b627f627f7f644b69627b266c79647e7b25686466"><span class="__cf_email__" data-cfemail="1a7b767f69697b747e6875346a736e736e6e755a78736a377d68756f6a34797577">[email&#160;protected]</span></a>
+                                      </p>
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <span title="Party who can be contacted for acquiring knowledge about or acquisition of the&#xA;        resource&#xA;      ">Point of contact</span>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </dd>
+                        </dl>
+                         
+                      </div>
+                       
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="gn-md-side gn-md-side-advanced col-md-4">
+                <section class="gn-md-side-overview">
+                  <h2>
+                    <i class="fa fa-fw fa-image">
+                      <!--image-->
+                    </i>
+                    <span>
+                      <!--gmd:MD_Metadata-->
+                      Overviews
+                    </span>
+                  </h2>
+                  <div>
+                    <img data-gn-img-modal="md" class="gn-img-thumbnail" alt="overview" src="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/records/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c/attachments/vd.jpg" onerror="this.onerror=null; $('.gn-md-side-overview').hide();" />
+                  </div>
+                </section>
+                <section class="gn-md-side-extent">
+                  <h2>
+                    <i class="fa fa-fw fa-map-marker">
+                      <!--image-->
+                    </i>
+                    <span>
+                      <!--gmd:MD_Metadata-->
+                      Spatial extent
+                    </span>
+                  </h2>
+                  <div class="thumbnail extent">
+                    <div class="input-group coord coord-north">
+                      <input type="text" class="form-control" aria-label="north" value="86.84" readonly="" />
+                      <span class="input-group-addon">N</span>
+                    </div>
+                    <div class="input-group coord coord-south">
+                      <input type="text" class="form-control" aria-label="south" value="14.96" readonly="" />
+                      <span class="input-group-addon">S</span>
+                    </div>
+                    <div class="input-group coord coord-east">
+                      <input type="text" class="form-control" aria-label="east" value="97.63" readonly="" />
+                      <span class="input-group-addon">E</span>
+                    </div>
+                    <div class="input-group coord coord-west">
+                      <input type="text" class="form-control" aria-label="west" value="-87.71" readonly="" />
+                      <span class="input-group-addon">W</span>
+                    </div>
+                    <img class="gn-img-extent" alt="thumbnail" src="https://ows.emodnet-humanactivities.eu/geonetwork/srv/api/regions/geom.png?geomsrs=EPSG:4326&amp;geom=POLYGON((97.633027%2014.961111,97.633027%2086.842727,-87.706484%2086.842727,-87.706484%2014.961111,97.633027%2014.961111))" />
+                  </div>
+                  <br />
+                  <br />
+                </section>
+                <section class="gn-md-side-social">
+                  <h2>
+                    <i class="fa fa-fw fa-tag">
+                      <!--image-->
+                    </i>
+                    <span>
+                      <!--gmd:MD_Metadata-->
+                      Keywords
+                    </span>
+                  </h2>
+                </section>
+                <br />
+                <section class="gn-md-side-providedby">
+                  <h2>
+                    <i class="fa fa-fw fa-cog">
+                      <!--icon-->
+                    </i>
+                    <span>Provided by</span>
+                  </h2>
+                  <img class="gn-source-logo" alt="logo" src="https://ows.emodnet-humanactivities.eu/geonetwork/srv/../images/logos/45b373cc-8183-4ef8-864f-5bf1479df10f.png" />
+                </section>
+                <section class="gn-md-side-access">
+                  <a class="btn btn-block btn-primary" href="https://ows.emodnet-humanactivities.eu/geonetwork/srv/eng/catalog.search#/metadata/0f2f3ff1-30ef-49e1-96e7-8ca78d58a07c">
+                    <i class="fa fa-fw fa-link">
+                      <!--icon-->
+                    </i>
+                    Access to the portal
+                  </a>
+                  <div class="hidden-xs hidden-sm">Read here the full details and access to the data.</div>
+                </section>
+                <section class="gn-md-side-associated">
+                  <h2>
+                    <i class="fa fa-fw fa-link">
+                      <!--icon-->
+                    </i>
+                    <span>Associated resources</span>
+                  </h2>
+                  <div gn-related="md" data-user="user" data-layout="card" data-types="parent|children|services|datasets|hassources|sources|fcats|siblings|associated">Not available</div>
+                </section>
+              </div>
+            </div>
+            <footer>
+              <!--Not yet-->
+            </footer>
+          </article>
+          <br />
+          <br />
+        </div>
+      </div>
+      <div class="navbar navbar-default gn-bottom-bar" role="navigation">
+        <ul class="nav navbar-nav">
+          <li class="gn-footer-text" />
+          <li>
+            <a href="http://geonetwork-opensource.org/">
+              <i class="fa fa-fw"> </i>
+              <span>About</span>
+            </a>
+          </li>
+          <li class="hidden-sm">
+            <a href="https://github.com/geonetwork/core-geonetwork">
+              <i class="fa fa-github"> </i>
+              <span>Github</span>
+            </a>
+          </li>
+          <li>
+            <a href="/geonetwork/doc/api" title="Learn how to use the catalog REST API."> </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</html>

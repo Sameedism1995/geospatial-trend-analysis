@@ -1,0 +1,384 @@
+Exploratory Data Analysis
+Topic: ML-Based Geospatial Analysis of Coastal Water Quality and Urban Exposure
+
+	•	Introduction and Data Description
+This report presents the exploratory data analysis conducted on datasets collected to study the relationship between maritime shipping activity and coastal water quality in the Åland Sea and Turku Archipelago. The study area covers the sea region between longitude 19.5–22.5° East and latitude 59.7–60.7° North, an area known for heavy ferry and cargo traffic connecting Sweden and Finland through the Åland Islands.
+
+Three datasets were collected and merged for this study.
+
+	•	Sentinel-2 Satellite:
+The first dataset consists of water quality observations derived from Sentinel-2 satellite imagery for the year 2023. These observations include three spectral indices commonly used in remote sensing of water bodies:
+
+	•	Normalized Difference Chlorophyll Index (NDCI) which estimates chlorophyll-a concentration in surface water and serves as an indicator of algal growth and eutrophication.
+	•	Normalized Difference Turbidity Index (NDTI) which captures water murkiness caused by suspended particles such as sediment, organic matter, or pollutants.
+	•	Normalized Difference Water Index (NDWI) which provides a broader measure of water content and overall surface water condition.
+
+	•	European Marine Observation and Data Network (EMODnet):
+The second dataset comes from the European Marine Observation and Data Network (EMODnet) and provides vessel traffic density, measured in hours per square kilometer, averaged over the period 2017–2023. The dataset distinguishes between four vessel categories:
+	•	Cargo ships
+	•	Passenger ferries
+	•	Tankers
+	•	Fishing vessels
+
+It also includes a combined total vessel density variable representing all vessel types.
+
+	•	HELCOM HOLAS 3 Chlorophyll-a:
+The third dataset is the HELCOM HOLAS 3 chlorophyll-a assessment, which contains ecological quality assessments for water bodies across the Baltic Sea based on in-situ laboratory measurements collected between 2016 and 2021. This dataset serves as independent ground-truth validation data for the satellite-derived observations.
+After spatial joining through a nearest-neighbor approach, the merged master dataset contains 1,302 observations and 37 variables, covering 10 months of the year 2023 across the full study area.
+
+
+
+	•	Understanding the Water Quality Variables
+Before examining the relationship between shipping and water quality, it is important to understand the basic statistical characteristics of the three water quality indicators.
+
+	•	NDCI Distribution:
+NDCI values range from −1.0 to 0.494, with a mean of −0.085. Most values cluster within a narrow range between −0.11 and −0.02, but the distribution contains a long tail of extreme negative values.
+The distribution is heavily left-skewed, with:
+	•	Skewness: −2.602
+	•	Kurtosis: 13.927
+
+A Shapiro–Wilk test confirms that the data is not normally distributed (p < 0.001).
+
+The negative mean indicates relatively low chlorophyll concentrations across most of the study area, consistent with the oligotrophic to mesotrophic conditions typical of the Åland Sea. However, the extreme negative values may reflect cloud shadows, land interference, or sensor artifacts, which should be considered during later analysis.
+
+	•	NDTI Distribution
+NDTI values range from −1.0 to 0.024, with:
+	•	Mean: −0.307
+	•	Standard deviation: 0.147
+The distribution is also left-skewed, though less strongly than NDCI:
+	•	Skewness: −1.134
+	•	Kurtosis: 4.232
+
+The consistently negative values indicate that the waters in the study area are generally clear, which aligns with expectations for this region of the Baltic Sea where suspended sediment loads are relatively low.
+
+	•	NDWI Distribution
+NDWI has the most balanced distribution among the three indicators.
+	•	Range: 0.001 to 1.0
+	•	Mean: 0.501
+	•	Skewness: −0.065
+The distribution is nearly symmetric, and values are spread relatively evenly across the range. This behavior is expected because NDWI measures general water surface properties, which tend to vary gradually across space and time.
+
+
+Table 1: Summary Statistics of Water Quality Indicators
+Indicator
+Mean
+Std Dev
+Min
+25th Pct
+Median
+75th Pct
+Max
+Skewness
+NDCI
+-0.085
+0.121
+-1.000
+-0.109
+-0.058
+-0.024
+0.494
+-2.602
+NDTI
+-0.307
+0.147
+-1.000
+-0.377
+-0.297
+-0.222
+0.024
+-1.134
+NDWI
+0.501
+0.219
+0.001
+0.374
+0.487
+0.642
+1.000
+-0.065
+
+The indicators also show meaningful correlations with each other.
+	•	NDCI and NDTI: Moderately positive correlation (r = 0.43)
+	•	NDWI and NDCI: Negative correlation (r = −0.56)
+	•	NDWI and NDTI: Strong negative correlation (r = −0.87)
+
+These relationships are ecologically reasonable. Algal blooms increase chlorophyll and turbidity simultaneously, while clearer water tends to produce higher NDWI values.
+
+
+
+
+
+
+
+3. Vessel Traffic Characteristics
+The shipping data is extremely unevenly distributed. The study area contains defined shipping lanes, while large portions of the sea surface experience little or no vessel activity.
+
+Out of 1,302 observations, 621 (47.7%) have zero total vessel density.
+When examining individual vessel types, the proportion of zeros increases further.
+Table 2: Zero-Inflation in Vessel Density Data
+Vessel Type
+Observations with Zero Density
+Percentage
+Total (All Types)
+621
+47.7%
+Cargo
+1,006
+77.3%
+Passenger
+1,021
+78.4%
+Tanker
+989
+76.0%
+Fishing
+908
+69.7%
+
+This pattern reflects the real structure of maritime traffic, where vessels follow defined shipping routes rather than spreading evenly across the sea.
+
+For example, the Stockholm–Turku ferry corridor runs through a narrow section of the archipelago, producing extremely high traffic density along a thin route while nearby waters remain largely unused.
+
+Outlier Patterns
+The shipping data also contains many statistical outliers, representing the high-density shipping lanes themselves.
+
+
+
+
+
+
+
+
+
+
+Table 3: Outlier Prevalence in Key Variables
+Variable
+Number of Outliers
+Percentage
+NDCI
+96
+7.4%
+NDTI
+45
+3.5%
+NDWI
+0
+0.0%
+Total Vessel Density
+201
+15.4%
+Cargo Density
+296
+22.7%
+Passenger Density
+281
+21.6%
+Tanker Density
+313
+24.0%
+Fishing Density
+222
+17.1%
+
+Among vessel types, passenger traffic dominates with the highest mean density (0.246 hours/km²). This reflects the intensive ferry operations between Stockholm, Mariehamn, and Turku, operated by companies such as Viking Line and Tallink Silja.
+Cargo vessels represent the second most prominent traffic type, followed by tankers and fishing vessels.
+4. Seasonal and Spatial Patterns
+Water quality indicators exhibit strong seasonal variation.
+Monthly averages of NDCI, NDTI, and NDWI change considerably across the year due to environmental processes typical of the Baltic Sea:
+	•	Spring: nutrient runoff from snowmelt
+	•	Summer: increased temperature and sunlight driving algal blooms
+	•	Autumn: reduced light and vertical mixing of the water column
+These natural cycles account for much of the variation in the water quality data and must be considered when evaluating the influence of shipping.
+
+
+
+
+
+
+
+Spatial Variation
+Water quality also varies geographically.
+The eastern part of the study area, closer to the Turku Archipelago, shows different water characteristics compared to the western open waters of the Åland Sea. Coastal waters tend to be:
+	•	Shallower
+	•	More enclosed
+	•	More influenced by land-based nutrient inputs.
+	•	Distance from Ports
+	•	Most observations occur far from major ports.
+Table 4: Observation Distribution by Distance to Nearest Port
+Distance Zone
+Number of Observations
+Percentage
+0–5 km
+15
+1.2%
+5–10 km
+29
+2.2%
+10–20 km
+107
+8.2%
+20–50 km
+661
+50.8%
+> 50 km
+490
+37.6%
+
+Most frequently associated ports:
+	•	Langnäs
+	•	Mariehamn
+	•	Turku
+	•	Naantali
+	•	Kapellskär
+
+5. Relationships Between Shipping and Water Quality
+To investigate possible relationships between shipping activity and water quality, several statistical analyses were conducted.
+High vs Low Traffic Comparison
+Independent samples t-tests were used to compare high-traffic areas (above the 75th percentile) with low-traffic areas (below the 25th percentile).
+Table 5: Water Quality Comparison Between High and Low Traffic Areas
+
+Indicator
+High Traffic Mean
+Low Traffic Mean
+t-statistic
+p-value
+Cohen's d
+NDCI
+-0.080
+-0.089
+1.062
+0.289
+0.072
+NDTI
+-0.328
+-0.312
+-1.578
+0.115
+-0.105
+NDWI
+0.522
+0.508
+0.983
+0.326
+0.067
+
+None of the results are statistically significant, and the effect sizes are extremely small.
+However, this does not necessarily imply that shipping has no impact, because the test ignores spatial structure and other complexities in the data.
+Distance to Port Analysis
+When water quality was examined across port distance zones, significant differences emerged.
+Table 6: ANOVA for Water Quality Across Port Distance Zones
+	
+Indicator
+F-statistic
+p-value
+Statistically Significant
+NDCI
+6.723
+0.000024
+Yes
+NDTI
+8.971
+< 0.000001
+Yes
+NDWI
+10.752
+< 0.000001
+Yes
+This suggests that shipping influences water quality through cumulative spatial effects, particularly near ports and shipping corridors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Spearman Correlation Analysis
+Spearman rank correlations provide additional insights.
+Table 7: Spearman Rank Correlations
+
+Shipping Variable
+NDCI (r)
+p-value
+NDTI (r)
+p-value
+NDWI (r)
+p-value
+Total vessel density
++0.024
+0.392
+-0.014
+0.607
++0.007
+0.814
+Tanker density
+-0.094
+0.001
+-0.069
+0.013
++0.070
+0.011
+Passenger density
++0.029
+0.296
++0.006
+0.822
+-0.017
+0.546
+Distance to port
+-0.184
+<0.0001
+-0.168
+<0.0001
++0.194
+<0.0001
+
+Distance to port emerges as the strongest predictor. Water tends to be cleaner farther from ports, as indicated by decreasing chlorophyll and turbidity and increasing NDWI.
+6. HELCOM Validation Data
+The HELCOM HOLAS 3 assessment provides independent confirmation of water quality conditions in the region.
+Five water bodies within the study area have been assessed, and all fall under the “Moderate” ecological quality class, failing to meet the “Good” status required by the EU Water Framework Directive.
+Table 8: HELCOM Water Body Assessments
+Water Body
+HELCOM ID
+EQRS Score
+Quality Class
+Status
+Åland innerskärgård
+FIN-012
+0.467
+Moderate
+Fail
+Lounainen ulkosaaristo
+FIN-002
+0.476
+Moderate
+Fail
+Lounainen välisaaristo
+FIN-005
+0.490
+Moderate
+Fail
+Åland ytterskärgård
+FIN-014
+0.504
+Moderate
+Fail
+Åland mellanskärgård
+FIN-013
+0.519
+Moderate
+Fail
+
+7. Summary of Observations
+Several key insights emerge from the exploratory analysis:
+	•	Water quality indicators are non-normally distributed and exhibit strong seasonal variation.
+	•	Vessel density data is highly zero-inflated and contains many outliers corresponding to shipping lanes.
+	•	Simple high-versus-low traffic comparisons do not reveal significant differences in water quality.
+	•	When spatial factors are considered, particularly distance from ports, strong statistical relationships appear.
+	•	Tanker traffic shows the most consistent association with water quality indicators.
+	•	HELCOM assessments confirm that water bodies in the study area do not meet environmental quality targets, providing broader context for the satellite observations.
