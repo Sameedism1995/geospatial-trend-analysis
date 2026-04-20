@@ -31,6 +31,150 @@ class SourceConfig:
     critical: bool = False
 
 
+FEATURE_CATALOG: dict[str, list[dict[str, Any]]] = {
+    "water_quality": [
+        {"name": "NDCI", "description": "Normalized Difference Chlorophyll Index", "candidates": ["ndci_mean", "ndci_median", "ndci"], "source_module": "data_sources.sentinel2_water_quality"},
+        {"name": "NDTI", "description": "Normalized Difference Turbidity Index", "candidates": ["ndti_mean", "ndti_median", "ndti"], "source_module": "data_sources.sentinel2_water_quality"},
+        {"name": "NDWI", "description": "Normalized Difference Water Index", "candidates": ["ndwi_mean", "ndwi_median", "ndwi"], "source_module": "data_sources.sentinel2_water_quality"},
+        {"name": "B4/B3", "description": "Red/Green reflectance ratio proxy", "candidates": ["b4_b3", "red_green_ratio"], "source_module": "data_sources.sentinel2_water_quality"},
+        {"name": "FAI", "description": "Floating Algae Index", "candidates": ["fai_mean", "fai_median", "fai"], "source_module": "data_sources.sentinel2_water_quality"},
+        {"name": "SWIR B11", "description": "Sentinel-2 SWIR band 11", "candidates": ["b11_mean", "b11_median", "b11"], "source_module": "data_sources.sentinel2_water_quality"},
+        {"name": "SST", "description": "Sea Surface Temperature", "candidates": ["sst"], "source_module": "data_sources.sentinel2_water_quality"},
+    ],
+    "maritime_activity": [
+        {"name": "vessel_density", "description": "AIS/EMODnet vessel density proxy", "candidates": ["vessel_density", "vessel_density_t"], "source_module": "vessels"},
+        {"name": "total_density", "description": "Total traffic density aggregate", "candidates": ["total_density"], "source_module": "vessels"},
+        {"name": "density_total_log", "description": "Log-transformed vessel density", "candidates": ["density_total_log"], "source_module": "vessels"},
+        {"name": "seasonal_metrics", "description": "Seasonal activity indicators", "candidates": ["season", "seasonal_metric"], "source_module": "vessels"},
+    ],
+    "atmospheric": [
+        {"name": "NO2 mean", "description": "Weekly tropospheric NO2 mean", "candidates": ["no2_mean_t", "NO2_mean"], "source_module": "data_sources.no2_gee_pipeline"},
+        {"name": "NO2 variability", "description": "Weekly NO2 variability (std)", "candidates": ["no2_std_t"], "source_module": "data_sources.no2_gee_pipeline"},
+        {"name": "Sentinel-1 disturbance proxy", "description": "Dark-water anomaly probability/count", "candidates": ["oil_slick_probability_t", "oil_slick_count_t", "detection_score"], "source_module": "data_sources.sentinel1_oil_pipeline"},
+    ],
+    "exposure": [
+        {"name": "distance_to_port", "description": "Distance from grid cell to nearest port", "candidates": ["distance_to_port", "distance_to_port_km"], "source_module": "analysis.exposure"},
+        {"name": "distance_to_lane", "description": "Distance to major shipping corridor", "candidates": ["distance_to_lane", "distance_to_shipping_km"], "source_module": "analysis.exposure"},
+    ],
+    "validation": [
+        {"name": "chlorophyll-a in-situ", "description": "In-situ chlorophyll validation reference", "candidates": ["chlorophyll_a_insitu", "chl_a"], "source_module": "validation"},
+        {"name": "EQRS score", "description": "Ecological quality ratio score", "candidates": ["eqrs_score", "eqrs"], "source_module": "validation"},
+        {"name": "water quality class", "description": "Categorical water quality label", "candidates": ["water_quality_class", "quality_class"], "source_module": "validation"},
+    ],
+    "land": [
+        {"name": "NDVI mean", "description": "Land NDVI (water-masked) mean per grid-week", "candidates": ["ndvi_mean"], "source_module": "data_sources.land_impact.sentinel2_land_metrics"},
+        {"name": "NDVI std", "description": "Land NDVI variability per grid-week", "candidates": ["ndvi_std"], "source_module": "data_sources.land_impact.sentinel2_land_metrics"},
+        {"name": "NDVI median", "description": "Land NDVI median per grid-week", "candidates": ["ndvi_median"], "source_module": "data_sources.land_impact.sentinel2_land_metrics"},
+        {"name": "coastal_exposure_score", "description": "Buffered coastal exposure to maritime activity (0-1)", "candidates": ["coastal_exposure_score"], "source_module": "features.land_sea_buffering"},
+        {"name": "distance_to_high_vessel_cell", "description": "Distance (km) to nearest high-activity vessel cell", "candidates": ["distance_to_nearest_high_vessel_density_cell"], "source_module": "features.land_sea_buffering"},
+        {"name": "land_response_index", "description": "Normalised NDVI-based land response index", "candidates": ["land_response_index"], "source_module": "features.land_sea_interactions"},
+    ],
+}
+
+
+FEATURE_REGISTRY: dict[str, list[dict[str, Any]]] = {
+    "water_quality": [],
+    "maritime_activity": [],
+    "atmospheric": [],
+    "exposure": [],
+    "validation": [],
+    "land": [],
+}
+
+
+SOURCE_CATEGORY_MAP: dict[str, list[str]] = {
+    "vessels": ["maritime_activity"],
+    "no2": ["atmospheric"],
+    "sentinel1": ["atmospheric"],
+    "sentinel2_water_quality": ["water_quality"],
+    "land_impact_ndvi": ["land"],
+    "features": ["water_quality", "maritime_activity", "atmospheric", "exposure", "validation", "land"],
+}
+
+
+def _resolve_feature_stats(df: pd.DataFrame, candidates: list[str]) -> tuple[str | None, str]:
+    for candidate in candidates:
+        if candidate in df.columns:
+            series = pd.to_numeric(df[candidate], errors="coerce")
+            coverage = float(series.notna().mean() * 100.0) if len(series) else 0.0
+            if series.notna().any():
+                mean = float(series.mean())
+                std = float(series.std()) if series.notna().sum() > 1 else 0.0
+                return candidate, f"mean={mean:.4f}, std={std:.4f}, coverage={coverage:.1f}%"
+            return candidate, f"mean=NA, std=NA, coverage={coverage:.1f}%"
+    return None, "missing"
+
+
+def print_feature_table(category: str, features: list[dict[str, Any]], logger: logging.Logger) -> None:
+    if not features:
+        logger.info("[FEATURE TABLE: %s] no matching features found", category.replace("_", " ").title())
+        return
+    header = f"[FEATURE TABLE: {category.replace('_', ' ').title()}]"
+    logger.info(header)
+    col1, col2 = 28, 48
+    logger.info("%-28s %-48s %s", "Feature", "Description", "Stats")
+    logger.info("%s", "-" * 108)
+    for feature in features:
+        logger.info(
+            "%-28s %-48s %s",
+            str(feature["name"])[:col1],
+            str(feature["description"])[:col2],
+            str(feature["stats"]),
+        )
+
+
+def register_and_print_feature_tables(
+    df: pd.DataFrame,
+    source_name: str,
+    source_module: str,
+    logger: logging.Logger,
+) -> None:
+    categories = SOURCE_CATEGORY_MAP.get(source_name, [])
+    for category in categories:
+        rows: list[dict[str, Any]] = []
+        for spec in FEATURE_CATALOG.get(category, []):
+            resolved_col, stats = _resolve_feature_stats(df, spec["candidates"])
+            entry = {
+                "name": spec["name"],
+                "description": spec["description"],
+                "stats": stats,
+                "source_module": source_module or spec["source_module"],
+                "resolved_column": resolved_col,
+            }
+            FEATURE_REGISTRY[category].append(entry)
+            rows.append(entry)
+        print_feature_table(category, rows, logger)
+
+
+def print_feature_registry_summary(logger: logging.Logger) -> None:
+    logger.info("[GLOBAL FEATURE REGISTRY SUMMARY]")
+    total = 0
+    labels = {
+        "water_quality": "Water Quality",
+        "maritime_activity": "Maritime",
+        "atmospheric": "Atmospheric",
+        "exposure": "Exposure",
+        "validation": "Validation",
+        "land": "Land (LAND IMPACT EXTENSION)",
+    }
+    for key in ["water_quality", "maritime_activity", "atmospheric", "exposure", "validation", "land"]:
+        count = len(FEATURE_REGISTRY.get(key, []))
+        total += count
+        logger.info("- %s: %d features", labels[key], count)
+    logger.info("- Total features: %d", total)
+
+
+def write_feature_registry_summary_json(path: Path) -> None:
+    counts = {k: int(len(v)) for k, v in FEATURE_REGISTRY.items()}
+    payload = {
+        "counts": counts,
+        "total_features": int(sum(counts.values())),
+        "registry": FEATURE_REGISTRY,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+
+
 def setup_logger(log_path: Path) -> logging.Logger:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     logger = logging.getLogger("full_pipeline")
@@ -46,7 +190,7 @@ def setup_logger(log_path: Path) -> logging.Logger:
     return logger
 
 
-def discover_sources() -> list[SourceConfig]:
+def discover_sources(include_land_impact: bool = False) -> list[SourceConfig]:
     import data_sources
 
     out: list[SourceConfig] = []
@@ -57,33 +201,78 @@ def discover_sources() -> list[SourceConfig]:
             ROOT / "data" / "aux" / "sentinel1_oil_slicks.parquet",
             ROOT / "data" / "aux" / "sentinel1_oil_validation.json",
         ),
+        "sentinel2_water_quality": (
+            "sentinel2_water_quality",
+            ROOT / "data" / "aux" / "sentinel2_water_quality.parquet",
+            ROOT / "data" / "aux" / "sentinel2_water_quality_validation.json",
+        ),
     }
     for mod in pkgutil.iter_modules(data_sources.__path__):
-        if mod.name.startswith("_") or mod.name in {"gee_grid_utils", "run_eo_pipeline"}:
+        if mod.name.startswith("_") or mod.name in {"gee_grid_utils", "run_eo_pipeline", "land_impact"}:
             continue
         if mod.name in known_outputs:
             name, out_p, val_p = known_outputs[mod.name]
             out.append(SourceConfig(name=name, module_name=f"data_sources.{mod.name}", output_path=out_p, validation_path=val_p))
+
+    # LAND IMPACT EXTENSION LAYER — additive, opt-in source.
+    if include_land_impact:
+        out.append(
+            SourceConfig(
+                name="land_impact_ndvi",
+                module_name="data_sources.land_impact.sentinel2_land_metrics",
+                output_path=ROOT / "data" / "aux" / "sentinel2_land_metrics.parquet",
+                validation_path=ROOT / "data" / "aux" / "sentinel2_land_metrics_validation.json",
+            )
+        )
     return out
 
 
-def run_source_extraction(source: SourceConfig, input_dataset: Path, quick_test: bool, logger: logging.Logger) -> tuple[pd.DataFrame, dict[str, Any]]:
+def run_source_extraction(
+    source: SourceConfig,
+    input_dataset: Path,
+    quick_test: bool,
+    sentinel_safe_mode: bool,
+    force_refresh: bool,
+    logger: logging.Logger,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
     stage = f"[SOURCE: {source.name}]"
     logger.info("%s Starting extraction", stage)
     module = importlib.import_module(source.module_name)
     validation: dict[str, Any] = {}
 
     # Quick mode favors reproducibility/speed by reusing existing artifacts when available.
-    if quick_test and source.output_path.exists():
+    # land_impact_ndvi NEVER reuses when --land-impact is active (the orchestrator already
+    # cleared any stale aux artifacts in the bootstrap cache-invalidation step).
+    reuse_allowed = (
+        not (source.name == "sentinel1" and sentinel_safe_mode)
+        and not force_refresh
+        and source.name != "land_impact_ndvi"
+    )
+    if quick_test and source.output_path.exists() and reuse_allowed:
         logger.info("%s quick-test reusing existing artifact: %s", stage, source.output_path)
         df = pd.read_parquet(source.output_path)
         if not df.empty:
             df = df.sample(min(len(df), 1500), random_state=42).copy()
         return df, validation
 
+    # Full-mode reuse: if the aux parquet already exists and we're not forcing a refresh,
+    # reuse it. Expensive GEE extractions don't change between runs on the same study window.
+    if not quick_test and source.output_path.exists() and reuse_allowed:
+        logger.info("%s reusing existing aux artifact: %s (use --force-refresh to re-extract)", stage, source.output_path)
+        df = pd.read_parquet(source.output_path)
+        return df, validation
+
     if hasattr(module, "run_extraction"):
         # Preferred standard interface requested by user.
-        cfg = {"input": input_dataset, "output": source.output_path, "validation_json": source.validation_path, "quick_test": quick_test}
+        cfg = {
+            "input": input_dataset,
+            "output": source.output_path,
+            "validation_json": source.validation_path,
+            "quick_test": quick_test,
+            "safe_mode": bool(sentinel_safe_mode and source.name == "sentinel1"),
+            # Explicit overwrite flag — land_impact_ndvi always re-runs for thesis reproducibility.
+            "overwrite": source.name == "land_impact_ndvi",
+        }
         df = module.run_extraction(cfg)
         if not isinstance(df, pd.DataFrame):
             raise RuntimeError(f"{source.module_name}.run_extraction did not return DataFrame")
@@ -96,6 +285,10 @@ def run_source_extraction(source: SourceConfig, input_dataset: Path, quick_test:
             kwargs["resume"] = not quick_test
         if "debug_log_json" in sig.parameters:
             kwargs["debug_log_json"] = ROOT / "data" / "validation" / f"{source.name}_debug_log.json"
+        if "safe_mode" in sig.parameters and source.name == "sentinel1":
+            kwargs["safe_mode"] = bool(sentinel_safe_mode)
+        if "quick_test" in sig.parameters:
+            kwargs["quick_test"] = bool(quick_test)
 
         buffer_value = getattr(module, "DEFAULT_BUFFER_DEG_NO2", getattr(module, "DEFAULT_BUFFER_DEG_S1", 0.1))
         validation = module.run_pipeline(
@@ -354,15 +547,360 @@ def run_eda(features_path: Path, skip_eda: bool, logger: logging.Logger) -> None
         logger.exception("[EDA] Failed to run EDA: %s", exc)
 
 
+def run_correlation_analysis(
+    features_path: Path,
+    skip_correlation: bool,
+    show_correlation: bool,
+    logger: logging.Logger,
+) -> None:
+    if skip_correlation:
+        logger.info("[CORRELATION] Skipped by flag")
+        return
+    if not features_path.exists():
+        logger.warning("[CORRELATION] Features parquet missing: %s", features_path)
+        return
+    try:
+        from analysis.correlation_analysis import run as run_correlation
+
+        run_correlation(
+            input_path=features_path,
+            reports_dir=ROOT / "outputs" / "reports",
+            plots_dir=ROOT / "outputs" / "plots" / "correlations",
+            show_plots=show_correlation,
+        )
+        logger.info("[CORRELATION] Correlation analysis completed")
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("[CORRELATION] Failed to run correlation analysis: %s", exc)
+
+
+def run_feature_interaction_map_stage(
+    features: pd.DataFrame,
+    enabled: bool,
+    logger: logging.Logger,
+) -> None:
+    if not enabled:
+        logger.info("[FEATURE_INTERACTION] Skipped by flag")
+        return
+    if features.empty:
+        logger.warning("[FEATURE_INTERACTION] Skipped: feature dataframe is empty")
+        return
+    try:
+        from analysis.feature_interaction_map import run_feature_interaction_map
+
+        run_feature_interaction_map(features, FEATURE_REGISTRY, logger)
+        logger.info("[FEATURE_INTERACTION] Completed")
+    except Exception as exc:  # noqa: BLE001
+        # Non-blocking analytical layer: log and continue pipeline completion.
+        logger.exception("[FEATURE_INTERACTION] Failed but continuing pipeline: %s", exc)
+
+
+def run_scientific_validation_stage(
+    features: pd.DataFrame,
+    enabled: bool,
+    logger: logging.Logger,
+) -> None:
+    if not enabled:
+        logger.info("[SCIENTIFIC VALIDATION] Skipped by flag")
+        return
+    if features.empty:
+        logger.warning("[SCIENTIFIC VALIDATION] Skipped: feature dataframe is empty")
+        return
+    try:
+        from analysis.scientific_validation import run_scientific_validation
+
+        run_scientific_validation(features, FEATURE_REGISTRY, logger)
+        logger.info("[SCIENTIFIC VALIDATION] Completed")
+    except Exception as exc:  # noqa: BLE001
+        # Non-blocking analytical layer: never crash pipeline.
+        logger.exception("[SCIENTIFIC VALIDATION] Failed but continuing pipeline: %s", exc)
+
+
+def run_anomaly_detection_stage(
+    features: pd.DataFrame,
+    enabled: bool,
+    logger: logging.Logger,
+) -> pd.DataFrame:
+    if not enabled:
+        logger.info("[ANOMALY] Skipped by flag")
+        return pd.DataFrame()
+    if features.empty:
+        logger.warning("[ANOMALY] Skipped: feature dataframe is empty")
+        return pd.DataFrame()
+    try:
+        from analysis.anomaly_detection import run_anomaly_detection
+
+        out = run_anomaly_detection(features, FEATURE_REGISTRY, logger)
+        logger.info("[ANOMALY] Completed")
+        return out
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("[ANOMALY] Failed but continuing pipeline: %s", exc)
+        return pd.DataFrame()
+
+
+def run_coastal_impact_score_stage(
+    features: pd.DataFrame,
+    enabled: bool,
+    logger: logging.Logger,
+) -> pd.DataFrame:
+    if not enabled:
+        logger.info("[COASTAL IMPACT] Skipped by flag")
+        return pd.DataFrame()
+    if features.empty:
+        logger.warning("[COASTAL IMPACT] Skipped: feature dataframe is empty")
+        return pd.DataFrame()
+    try:
+        from analysis.coastal_impact_score import run_coastal_impact_score
+
+        out = run_coastal_impact_score(features, FEATURE_REGISTRY, logger)
+        logger.info("[COASTAL IMPACT] Completed")
+        return out
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("[COASTAL IMPACT] Failed but continuing pipeline: %s", exc)
+        return pd.DataFrame()
+
+
+def run_final_visualization_stage(
+    features: pd.DataFrame,
+    enabled: bool,
+    logger: logging.Logger,
+) -> None:
+    if not enabled:
+        logger.info("[FINAL VIS] Skipped by flag")
+        return
+    if features.empty:
+        logger.warning("[FINAL VIS] Skipped: feature dataframe is empty")
+        return
+    try:
+        from visualization.impact_heatmap import run_final_visualization
+
+        run_final_visualization(features, logger)
+        logger.info("[FINAL VIS] Completed")
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("[FINAL VIS] Failed but continuing pipeline: %s", exc)
+
+
+# ---------------------------------------------------------------------------
+# LAND IMPACT EXTENSION LAYER — additive analytical stages
+# ---------------------------------------------------------------------------
+
+def run_land_impact_extension(
+    features: pd.DataFrame,
+    features_path: Path,
+    *,
+    enabled: bool,
+    logger: logging.Logger,
+) -> pd.DataFrame:
+    """Run the Land Impact extension stack on the ML-ready feature frame.
+
+    Order:
+      1. land-sea buffering (coastal exposure features)
+      2. land-sea interaction indices + lagged product terms
+      3. lagged land-sea correlation analysis
+      4. optional RF with permutation importance
+      5. final land-impact report CSV
+
+    Persists the enriched features back to `features_path` so downstream
+    stages (correlation, anomaly, coastal impact, finalization) observe the
+    new NDVI/buffering/interaction columns. Returns the enriched frame.
+    """
+    if not enabled:
+        logger.info("[LAND IMPACT] Skipped by flag")
+        return features
+    if features.empty:
+        logger.warning("[LAND IMPACT] Skipped: feature dataframe is empty")
+        return features
+
+    # Coverage safeguard (non-blocking): NDVI is only defined over coastal/inland
+    # cells, so low coverage is EXPECTED for maritime-dominant study areas. We
+    # log a warning if coverage drops below 5% but NEVER abort — downstream
+    # stages (buffering, interactions, correlation, ML, report) continue to run
+    # on whatever NDVI samples are available.
+    ndvi_coverage_percent: float | None = None
+    if "ndvi_mean" in features.columns:
+        ndvi_values = pd.to_numeric(features["ndvi_mean"], errors="coerce")
+        valid = int(ndvi_values.notna().sum())
+        ndvi_coverage_percent = round(100.0 * valid / max(1, len(features)), 4)
+        if ndvi_coverage_percent < 5.0:
+            logger.warning(
+                "[LAND IMPACT] NDVI coverage %.2f%% below 5%% threshold — continuing pipeline (non-blocking). "
+                "Typical for maritime-dominant study areas where most grids are offshore.",
+                ndvi_coverage_percent,
+            )
+        else:
+            logger.info("[LAND IMPACT] NDVI coverage %.2f%%", ndvi_coverage_percent)
+    else:
+        logger.warning(
+            "[LAND IMPACT] ndvi_mean column missing from features — downstream NDVI-dependent outputs will be empty"
+        )
+
+    enriched = features
+
+    try:
+        from features.land_sea_buffering import run_land_sea_buffering
+
+        enriched = run_land_sea_buffering(enriched, logger=logger)
+        logger.info("[LAND IMPACT] Coastal-exposure features appended")
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("[LAND IMPACT] Buffering failed but continuing: %s", exc)
+
+    try:
+        from features.land_sea_interactions import add_land_sea_interactions
+
+        enriched = add_land_sea_interactions(enriched, logger=logger)
+        logger.info("[LAND IMPACT] Interaction features appended")
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("[LAND IMPACT] Interaction feature build failed but continuing: %s", exc)
+
+    try:
+        enriched.to_parquet(features_path, index=False)
+        logger.info(
+            "[LAND IMPACT] Persisted enriched features to %s (shape=%d×%d)",
+            features_path,
+            len(enriched),
+            len(enriched.columns),
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("[LAND IMPACT] Failed to persist enriched features: %s", exc)
+
+    reports_dir = ROOT / "outputs" / "reports"
+    lag_summary_path = reports_dir / "land_sea_lag_summary.csv"
+    try:
+        from analysis.land_sea_correlation import run_land_sea_correlation
+
+        run_land_sea_correlation(enriched, reports_dir=reports_dir, logger=logger)
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("[LAND IMPACT] Lagged correlation stage failed but continuing: %s", exc)
+
+    try:
+        from analysis.land_impact_ml import run_land_impact_ml
+
+        run_land_impact_ml(enriched, reports_dir=reports_dir, logger=logger)
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("[LAND IMPACT] ML stage failed but continuing: %s", exc)
+
+    try:
+        from analysis.land_impact_report import run_land_impact_report
+
+        run_land_impact_report(
+            enriched,
+            reports_dir=reports_dir,
+            lag_summary_path=lag_summary_path,
+            logger=logger,
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("[LAND IMPACT] Final report stage failed but continuing: %s", exc)
+
+    # Refresh land-category feature registry entries against the enriched frame.
+    try:
+        register_and_print_feature_tables(enriched, "land_impact_ndvi", "land_impact_extension", logger)
+    except Exception:  # noqa: BLE001
+        pass
+
+    return enriched
+
+
+def print_final_thesis_summary(logger: logging.Logger) -> None:
+    reports = ROOT / "outputs" / "reports"
+    logger.info("[THESIS SUMMARY] Top 10 coastal impact zones")
+    try:
+        cis = pd.read_csv(reports / "coastal_impact_score.csv")
+        cols = [c for c in ["grid_cell_id", "week_start_utc", "coastal_impact_score"] if c in cis.columns]
+        if cols:
+            for _, row in cis.sort_values("coastal_impact_score", ascending=False).head(10)[cols].iterrows():
+                logger.info("- %s | %s | score=%.4f", row.get("grid_cell_id"), row.get("week_start_utc"), float(row.get("coastal_impact_score", np.nan)))
+    except Exception:  # noqa: BLE001
+        logger.info("- unavailable")
+
+    logger.info("[THESIS SUMMARY] Top 10 anomalous grid-week events")
+    try:
+        adf = pd.read_csv(reports / "anomaly_scores.csv")
+        cols = [c for c in ["grid_cell_id", "week_start_utc", "anomaly_score"] if c in adf.columns]
+        if cols:
+            for _, row in adf.sort_values("anomaly_score", ascending=False).head(10)[cols].iterrows():
+                logger.info("- %s | %s | anomaly=%.4f", row.get("grid_cell_id"), row.get("week_start_utc"), float(row.get("anomaly_score", np.nan)))
+    except Exception:  # noqa: BLE001
+        logger.info("- unavailable")
+
+    logger.info("[THESIS SUMMARY] Strongest cross-domain correlations")
+    try:
+        from analysis.results_aggregator import summarize_correlations
+
+        corr = summarize_correlations(min_abs=0.1)
+        for row in corr.get("top10", [])[:10]:
+            logger.info(
+                "- %s vs %s (%s): %.4f",
+                row.get("feature_x"),
+                row.get("feature_y"),
+                row.get("method"),
+                float(row.get("value", np.nan)),
+            )
+    except Exception:  # noqa: BLE001
+        logger.info("- unavailable")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Full multi-source extraction → validation → preview → merge → features → EDA")
     parser.add_argument("--quick-test", action="store_true", help="Run lightweight sample mode")
     parser.add_argument("--skip-eda", action="store_true", help="Skip final EDA stage")
     parser.add_argument("--skip-validation", action="store_true", help="Skip validation stage")
+    parser.add_argument("--skip-correlation", action="store_true", help="Skip correlation analysis stage")
+    parser.add_argument("--show-correlation", action="store_true", help="Show correlation plots interactively during run")
+    parser.add_argument("--feature-interaction-map", action="store_true", help="Run feature interaction map analysis stage")
+    parser.add_argument("--scientific-validation", action="store_true", help="Run temporal/lag/ML scientific validation stage")
+    parser.add_argument("--anomaly-detection", action="store_true", help="Run anomaly detection on combined feature space")
+    parser.add_argument("--coastal-impact-score", action="store_true", help="Compute composite coastal impact score")
+    parser.add_argument("--final-visualization", action="store_true", help="Render final environmental pressure visualization")
+    parser.add_argument(
+        "--sentinel-safe-mode",
+        action="store_true",
+        help="Enable Sentinel-1 extraction safety mode (limits grids and increases runtime logging).",
+    )
+    parser.add_argument(
+        "--force-refresh",
+        action="store_true",
+        help="Force re-extraction of remote-sensing sources (skip aux artifact reuse).",
+    )
+    parser.add_argument(
+        "--land-impact",
+        action="store_true",
+        help=(
+            "Enable the LAND IMPACT EXTENSION LAYER: NDVI-on-land extraction, "
+            "coastal buffering features, interaction indices, lagged land-sea "
+            "correlation, optional RF + permutation importance, and a final "
+            "land_impact_analysis.csv report."
+        ),
+    )
     args = parser.parse_args()
 
     logger = setup_logger(ROOT / "logs" / "pipeline_run.log")
     logger.info("=== Full Pipeline Start ===")
+    for key in FEATURE_REGISTRY:
+        FEATURE_REGISTRY[key].clear()
+
+    # LAND IMPACT bootstrap cache invalidation.
+    # When --land-impact is passed we GUARANTEE a fresh NDVI-on-land extraction
+    # (thesis reproducibility requirement). Any stale aux artifact + validation
+    # JSON is removed before the source-discovery loop executes.
+    if args.land_impact:
+        ndvi_cache_files = [
+            ROOT / "data" / "aux" / "sentinel2_land_metrics.parquet",
+            ROOT / "data" / "aux" / "sentinel2_land_metrics_validation.json",
+        ]
+        removed = [p for p in ndvi_cache_files if p.exists()]
+        for p in removed:
+            try:
+                p.unlink()
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("[LAND IMPACT] Failed to remove %s: %s", p, exc)
+        if removed:
+            logger.info(
+                "NDVI aux cache cleared — forcing fresh extraction (removed %d file(s))",
+                len(removed),
+            )
+            for p in removed:
+                logger.info("  removed: %s", p)
+        else:
+            logger.info("NDVI aux cache check: no stale artifacts found — fresh extraction will run")
 
     input_dataset = ROOT / "data" / "modeling_dataset.parquet"
     interm_dir = ROOT / "data" / "intermediate"
@@ -385,10 +923,18 @@ def main() -> None:
         source_reports["vessels"] = rep
         logger.info("[SOURCE: vessels] rows=%d non_null_pct=%.2f", len(vessel_df), (1.0 - vessel_df.isna().mean().mean()) * 100.0)
         generate_source_previews("vessels", vessel_df, preview_root / "vessels")
+        register_and_print_feature_tables(vessel_df, "vessels", "vessels", logger)
 
-    for source in discover_sources():
+    for source in discover_sources(include_land_impact=args.land_impact):
         try:
-            df, extraction_meta = run_source_extraction(source, input_dataset, args.quick_test, logger)
+            df, extraction_meta = run_source_extraction(
+                source,
+                input_dataset,
+                args.quick_test,
+                args.sentinel_safe_mode,
+                args.force_refresh,
+                logger,
+            )
             if args.quick_test and not df.empty:
                 df = df.sample(min(len(df), 1500), random_state=42).copy()
             path = interm_dir / f"{source.name}.parquet"
@@ -404,6 +950,7 @@ def main() -> None:
                 len(qc.get("constant_columns", [])),
             )
             generate_source_previews(source.name, df, preview_root / source.name)
+            register_and_print_feature_tables(df, source.name, source.module_name, logger)
         except Exception as exc:  # noqa: BLE001
             logger.exception("[SOURCE: %s] extraction failed: %s", source.name, exc)
             source_reports[source.name] = {"error": str(exc)}
@@ -421,12 +968,34 @@ def main() -> None:
     features.to_parquet(features_path, index=False)
     logger.info("[FEATURES] Wrote %s with %d rows and %d cols", features_path, len(features), len(features.columns))
 
+    # LAND IMPACT EXTENSION LAYER — additive; non-blocking; runs before downstream
+    # analytics so correlation/anomaly/coastal-impact see the new land features.
+    features = run_land_impact_extension(
+        features,
+        features_path,
+        enabled=args.land_impact,
+        logger=logger,
+    )
+
     validation_report = global_validation(merged, features, args.skip_validation, logger)
     val_out = validation_dir / "full_pipeline_validation_report.json"
     val_out.write_text(json.dumps(validation_report, indent=2, default=str), encoding="utf-8")
     logger.info("[VALIDATION] Wrote %s", val_out)
 
     run_eda(features_path, skip_eda=args.skip_eda, logger=logger)
+    run_correlation_analysis(
+        features_path,
+        skip_correlation=args.skip_correlation,
+        show_correlation=args.show_correlation,
+        logger=logger,
+    )
+    run_feature_interaction_map_stage(features, enabled=args.feature_interaction_map, logger=logger)
+    run_scientific_validation_stage(features, enabled=args.scientific_validation, logger=logger)
+    run_anomaly_detection_stage(features, enabled=args.anomaly_detection, logger=logger)
+    run_coastal_impact_score_stage(features, enabled=args.coastal_impact_score, logger=logger)
+    run_final_visualization_stage(features, enabled=args.final_visualization, logger=logger)
+    # Register post-merge feature groups that may be added downstream.
+    register_and_print_feature_tables(features, "features", "pipeline.features", logger)
 
     full_summary = {
         "sources": source_reports,
@@ -443,6 +1012,11 @@ def main() -> None:
     summary_path.write_text(json.dumps(full_summary, indent=2, default=str), encoding="utf-8")
     logger.info("=== Full Pipeline Complete ===")
     logger.info("Summary written: %s", summary_path)
+    print_feature_registry_summary(logger)
+    feature_registry_path = validation_dir / "feature_registry_summary.json"
+    write_feature_registry_summary_json(feature_registry_path)
+    logger.info("Feature registry summary written: %s", feature_registry_path)
+    print_final_thesis_summary(logger)
 
 
 if __name__ == "__main__":

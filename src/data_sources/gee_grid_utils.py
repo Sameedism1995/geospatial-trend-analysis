@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 import pandas as pd
+from utils.ee_init import safe_initialize_ee
 
 # Default ±deg half-width around each grid centroid (rectangle sampling region)
 DEFAULT_BUFFER_DEG_NO2 = 0.1
@@ -91,10 +92,4 @@ def initialize_earth_engine(ee) -> None:
     Authenticate first: `earthengine authenticate`
     Set GOOGLE_CLOUD_PROJECT or EE_PROJECT if your Cloud project is required.
     """
-    import os
-
-    project = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("EE_PROJECT")
-    if project:
-        ee.Initialize(project=project, opt_url="https://earthengine.googleapis.com")
-    else:
-        ee.Initialize(opt_url="https://earthengine.googleapis.com")
+    safe_initialize_ee(ee)

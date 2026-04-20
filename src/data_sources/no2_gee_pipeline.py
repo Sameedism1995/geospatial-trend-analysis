@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import sys
 from pathlib import Path
 from typing import Any
@@ -33,10 +34,14 @@ from data_sources.gee_grid_utils import (  # noqa: E402
     study_bbox,
     week_filter_dates_ee,
 )
+from utils.ee_timeout import safe_ee_call  # noqa: E402
 
 S5P_COLLECTION = "COPERNICUS/S5P/NRTI/L3_NO2"
 NO2_BAND = "tropospheric_NO2_column_number_density"
 REDUCE_SCALE_M = 3500
+EE_TIMEOUT_SECONDS = 120
+EE_MAX_RETRIES = 2
+LOGGER = logging.getLogger("no2_gee_pipeline")
 
 
 def _import_ee():
@@ -96,7 +101,17 @@ def extract_no2_weekly(
     for wk, start_dt, end_dt in iter_week_utc_bounds(weeks):
         start_ee, end_ee = week_filter_dates_ee(ee, start_dt, end_dt)
         ic = ic_base.filterDate(start_ee, end_ee)
-        n_img = ic.size().getInfo()
+        try:
+            n_img_raw = safe_ee_call(
+                lambda: ic.size().getInfo(),
+                timeout_seconds=EE_TIMEOUT_SECONDS,
+                max_retries=EE_MAX_RETRIES,
+                logger=LOGGER,
+                context=f"no2.scene_count week={pd.Timestamp(wk).date()}",
+            )
+            n_img = int(n_img_raw) if n_img_raw is not None else 0
+        except Exception:  # noqa: BLE001
+            n_img = 0
         if n_img == 0:
             for _, r in grids.iterrows():
                 rows.append(
@@ -116,7 +131,16 @@ def extract_no2_weekly(
             scale=REDUCE_SCALE_M,
             tileScale=4,
         )
-        feats = reduced.getInfo().get("features", [])
+        reduced_info = safe_ee_call(
+            lambda: reduced.getInfo(),
+            timeout_seconds=EE_TIMEOUT_SECONDS,
+            max_retries=EE_MAX_RETRIES,
+            logger=LOGGER,
+            context=f"no2.reduceRegions week={pd.Timestamp(wk).date()}",
+        )
+        feats = (reduced_info or {}).get("features", [])
+        if reduced_info is None:
+            LOGGER.warning("[NO2][SKIP] week=%s reason=EE_TIMEOUT_OR_ERROR", pd.Timestamp(wk).date())
         by_id: dict[str, tuple[float | None, float | None]] = {}
         for f in feats:
             props = f.get("properties", {})

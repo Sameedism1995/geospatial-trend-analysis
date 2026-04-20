@@ -159,6 +159,29 @@ Outputs:
 - `data/master_dataset.parquet`
 - `docs/master_dataset_schema.md`
 
+## Run Full Multi-Source Pipeline
+
+Run the integrated extraction, merge, feature engineering, validation, EDA, and correlation-analysis workflow:
+
+```bash
+python src/pipeline/run_full_pipeline.py
+```
+
+Optional flags:
+
+```bash
+python src/pipeline/run_full_pipeline.py --quick-test
+python src/pipeline/run_full_pipeline.py --skip-validation
+python src/pipeline/run_full_pipeline.py --skip-eda
+python src/pipeline/run_full_pipeline.py --skip-correlation
+```
+
+Correlation outputs:
+- `outputs/reports/pearson_correlation.csv`
+- `outputs/reports/spearman_correlation.csv`
+- `outputs/reports/correlation_evaluation.csv`
+- `outputs/plots/correlations/`
+
 ## Notes
 
 - A sample dataset is included at `data/sample_water_quality.csv`.
