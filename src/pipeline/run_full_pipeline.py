@@ -241,12 +241,10 @@ def run_source_extraction(
     validation: dict[str, Any] = {}
 
     # Quick mode favors reproducibility/speed by reusing existing artifacts when available.
-    # land_impact_ndvi NEVER reuses when --land-impact is active (the orchestrator already
-    # cleared any stale aux artifacts in the bootstrap cache-invalidation step).
+    # land_impact_ndvi reuses its cached parquet by default; pass --force-refresh to clear it.
     reuse_allowed = (
         not (source.name == "sentinel1" and sentinel_safe_mode)
         and not force_refresh
-        and source.name != "land_impact_ndvi"
     )
     if quick_test and source.output_path.exists() and reuse_allowed:
         logger.info("%s quick-test reusing existing artifact: %s", stage, source.output_path)
@@ -270,8 +268,8 @@ def run_source_extraction(
             "validation_json": source.validation_path,
             "quick_test": quick_test,
             "safe_mode": bool(sentinel_safe_mode and source.name == "sentinel1"),
-            # Explicit overwrite flag — land_impact_ndvi always re-runs for thesis reproducibility.
-            "overwrite": source.name == "land_impact_ndvi",
+            # Honour force-refresh for land_impact_ndvi too; otherwise reuse cache.
+            "overwrite": bool(source.name == "land_impact_ndvi" and force_refresh),
         }
         df = module.run_extraction(cfg)
         if not isinstance(df, pd.DataFrame):
@@ -801,23 +799,63 @@ def run_land_impact_extension(
 
 def print_final_thesis_summary(logger: logging.Logger) -> None:
     reports = ROOT / "outputs" / "reports"
-    logger.info("[THESIS SUMMARY] Top 10 coastal impact zones")
+    logger.info("[THESIS SUMMARY] Top 10 coastal impact zones (best week per distinct cell)")
     try:
         cis = pd.read_csv(reports / "coastal_impact_score.csv")
         cols = [c for c in ["grid_cell_id", "week_start_utc", "coastal_impact_score"] if c in cis.columns]
-        if cols:
-            for _, row in cis.sort_values("coastal_impact_score", ascending=False).head(10)[cols].iterrows():
-                logger.info("- %s | %s | score=%.4f", row.get("grid_cell_id"), row.get("week_start_utc"), float(row.get("coastal_impact_score", np.nan)))
+        if cols and "grid_cell_id" in cis.columns:
+            best_per_cell = (
+                cis.sort_values("coastal_impact_score", ascending=False)
+                .drop_duplicates("grid_cell_id", keep="first")
+                .head(10)[cols]
+            )
+            for _, row in best_per_cell.iterrows():
+                logger.info(
+                    "- %s | %s | score=%.4f",
+                    row.get("grid_cell_id"),
+                    row.get("week_start_utc"),
+                    float(row.get("coastal_impact_score", np.nan)),
+                )
     except Exception:  # noqa: BLE001
         logger.info("- unavailable")
 
-    logger.info("[THESIS SUMMARY] Top 10 anomalous grid-week events")
+    logger.info("[THESIS SUMMARY] Top 10 spatial-outlier grid-week events")
     try:
         adf = pd.read_csv(reports / "anomaly_scores.csv")
         cols = [c for c in ["grid_cell_id", "week_start_utc", "anomaly_score"] if c in adf.columns]
         if cols:
             for _, row in adf.sort_values("anomaly_score", ascending=False).head(10)[cols].iterrows():
-                logger.info("- %s | %s | anomaly=%.4f", row.get("grid_cell_id"), row.get("week_start_utc"), float(row.get("anomaly_score", np.nan)))
+                logger.info(
+                    "- %s | %s | anomaly=%.4f",
+                    row.get("grid_cell_id"),
+                    row.get("week_start_utc"),
+                    float(row.get("anomaly_score", np.nan)),
+                )
+    except Exception:  # noqa: BLE001
+        logger.info("- unavailable")
+
+    logger.info("[THESIS SUMMARY] Top 10 within-cell temporal anomalies")
+    try:
+        tdf_path = reports / "anomaly_scores_temporal.csv"
+        if tdf_path.exists():
+            tdf = pd.read_csv(tdf_path)
+            anom = tdf[tdf.get("temporal_anomaly_label") == "anomalous"].copy()
+            anom["abs_z"] = anom["temporal_z_score"].abs()
+            cols = [
+                c
+                for c in ["grid_cell_id", "week_start_utc", "anomaly_score", "temporal_z_score"]
+                if c in anom.columns
+            ]
+            for _, row in anom.sort_values("abs_z", ascending=False).head(10)[cols].iterrows():
+                logger.info(
+                    "- %s | %s | z=%.2f | anomaly=%.4f",
+                    row.get("grid_cell_id"),
+                    row.get("week_start_utc"),
+                    float(row.get("temporal_z_score", np.nan)),
+                    float(row.get("anomaly_score", np.nan)),
+                )
+        else:
+            logger.info("- temporal anomaly report not produced")
     except Exception:  # noqa: BLE001
         logger.info("- unavailable")
 
@@ -878,29 +916,40 @@ def main() -> None:
         FEATURE_REGISTRY[key].clear()
 
     # LAND IMPACT bootstrap cache invalidation.
-    # When --land-impact is passed we GUARANTEE a fresh NDVI-on-land extraction
-    # (thesis reproducibility requirement). Any stale aux artifact + validation
-    # JSON is removed before the source-discovery loop executes.
+    # `--land-impact` alone reuses the existing NDVI parquet. Pair it with
+    # `--force-refresh` to clear the cache and force a fresh GEE re-extraction.
     if args.land_impact:
         ndvi_cache_files = [
             ROOT / "data" / "aux" / "sentinel2_land_metrics.parquet",
             ROOT / "data" / "aux" / "sentinel2_land_metrics_validation.json",
         ]
-        removed = [p for p in ndvi_cache_files if p.exists()]
-        for p in removed:
-            try:
-                p.unlink()
-            except Exception as exc:  # noqa: BLE001
-                logger.warning("[LAND IMPACT] Failed to remove %s: %s", p, exc)
-        if removed:
-            logger.info(
-                "NDVI aux cache cleared — forcing fresh extraction (removed %d file(s))",
-                len(removed),
-            )
+        if args.force_refresh:
+            removed = [p for p in ndvi_cache_files if p.exists()]
             for p in removed:
-                logger.info("  removed: %s", p)
+                try:
+                    p.unlink()
+                except Exception as exc:  # noqa: BLE001
+                    logger.warning("[LAND IMPACT] Failed to remove %s: %s", p, exc)
+            if removed:
+                logger.info(
+                    "NDVI aux cache cleared via --force-refresh (removed %d file(s))",
+                    len(removed),
+                )
+                for p in removed:
+                    logger.info("  removed: %s", p)
+            else:
+                logger.info("NDVI aux cache check: nothing to clear; fresh extraction will run")
         else:
-            logger.info("NDVI aux cache check: no stale artifacts found — fresh extraction will run")
+            existing = [p for p in ndvi_cache_files if p.exists()]
+            if existing:
+                logger.info(
+                    "[LAND IMPACT] reusing cached NDVI parquet (%d artifact(s)); pass --force-refresh to re-extract",
+                    len(existing),
+                )
+            else:
+                logger.info(
+                    "[LAND IMPACT] no NDVI cache present — extraction will run on first execution"
+                )
 
     input_dataset = ROOT / "data" / "modeling_dataset.parquet"
     interm_dir = ROOT / "data" / "intermediate"
