@@ -41,13 +41,19 @@
 - `emodnet_last_record_ts_static` (timestamp, UTC)
 - `emodnet_record_count` (replicated static count on each week row)
 
-## HELCOM Weekly Aggregates (Nearest-Week Assignment)
-- `helcom_record_count` (int)
+## HELCOM Weekly Aggregates (Spatial-Intersect Panel)
+- `helcom_record_count` (int, number of HELCOM reference datasets whose bounding
+  polygon contains this grid cell)
 - `helcom_raw_refs` (list[str])
 - `helcom_feature_ids` (list[str])
+- `helcom_titles` (list[str], ISO-19139 dataset titles covering this cell)
 - `helcom_first_record_ts` (timestamp, UTC)
 - `helcom_last_record_ts` (timestamp, UTC)
-- HELCOM records are assigned to the nearest canonical week from the panel time axis.
+- HELCOM catalog records describe static pan-Baltic reference layers. Each
+  record's bounding box is intersected with the study grid; every cell whose
+  centroid lies inside the bbox is flagged `has_helcom=True` and the fields
+  above are attached. The record set is broadcast across every canonical week
+  because the catalog layers are not week-specific.
 
 ## Provenance
 - `provenance_json` (json string)
@@ -58,7 +64,7 @@
 ## Temporal Consistency Rules
 - No mixing of granularities:
   - Sentinel -> weekly aggregated
-  - HELCOM -> nearest canonical week
+  - HELCOM -> static bbox-polygon intersection replicated across weeks
   - EMODnet -> static replicated across weeks
 - Canonical weeks are derived from Sentinel observation weeks (or available temporal sources fallback).
 

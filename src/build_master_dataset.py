@@ -237,36 +237,139 @@ def _nearest_week(ts: pd.Timestamp, canonical_weeks: list[pd.Timestamp]) -> pd.T
     return min(canonical_weeks, key=lambda w: abs((ts - w).total_seconds()))
 
 
-def helcom_nearest_week_aggregate(df: pd.DataFrame, canonical_weeks: list[pd.Timestamp]) -> pd.DataFrame:
-    if df.empty:
-        return pd.DataFrame(
-            columns=[
-                "week_start_utc",
-                "grid_cell_id",
-                "helcom_record_count",
-                "helcom_raw_refs",
-                "helcom_feature_ids",
-                "helcom_first_record_ts",
-                "helcom_last_record_ts",
-            ]
-        )
+def _extract_helcom_bbox(payload_obj: dict[str, Any]) -> list[float] | None:
+    bbox = payload_obj.get("bbox")
+    if isinstance(bbox, list) and len(bbox) >= 4:
+        try:
+            return [float(v) for v in bbox[:4]]
+        except Exception:  # noqa: BLE001
+            return None
+    return None
 
-    x = df.copy()
-    payload_objs = x["payload"].apply(parse_payload)
-    x["feature_origin"] = payload_objs.apply(_extract_feature_origin)
-    x["week_start_utc"] = x["event_ts"].apply(lambda t: _nearest_week(t, canonical_weeks))
-    agg = (
-        x.groupby(["week_start_utc", "grid_cell_id"], dropna=False)
-        .agg(
-            helcom_record_count=("raw_record_ref", "count"),
-            helcom_raw_refs=("raw_record_ref", lambda s: sorted(set(s.dropna().astype(str)))),
-            helcom_feature_ids=("feature_origin", lambda s: sorted(set(v for v in s if isinstance(v, str)))),
-            helcom_first_record_ts=("event_ts", "min"),
-            helcom_last_record_ts=("event_ts", "max"),
+
+def _extract_helcom_titles(payload_obj: dict[str, Any]) -> list[str]:
+    out: list[str] = []
+    title = payload_obj.get("title") or payload_obj.get("record_title")
+    if isinstance(title, str) and title.strip():
+        out.append(title.strip())
+    return out
+
+
+def helcom_spatial_panel_aggregate(
+    df: pd.DataFrame,
+    canonical_weeks: list[pd.Timestamp],
+    canonical_grid_ids: list[str],
+) -> pd.DataFrame:
+    """Intersect every HELCOM record's bounding box with the weekly grid panel.
+
+    Prior versions joined HELCOM records only on the single grid cell
+    containing the bbox-centroid. HELCOM records describe pan-Baltic
+    datasets (fishing intensity, biodiversity, radionuclides, …) whose
+    bounding boxes span the full study AOI, so the correct join is a
+    spatial within-bbox test. The temporal axis is broadcast across every
+    canonical week because HELCOM catalog records describe static reference
+    layers (or, when dates exist, multi-year aggregates) that apply to the
+    whole study period.
+    """
+    base_cols = [
+        "week_start_utc",
+        "grid_cell_id",
+        "helcom_record_count",
+        "helcom_raw_refs",
+        "helcom_feature_ids",
+        "helcom_titles",
+        "helcom_first_record_ts",
+        "helcom_last_record_ts",
+    ]
+    if df.empty or not canonical_weeks or not canonical_grid_ids:
+        return pd.DataFrame(columns=base_cols)
+
+    payload_objs = df["payload"].apply(parse_payload)
+    df = df.copy()
+    df["_bbox"] = payload_objs.apply(_extract_helcom_bbox)
+    df["_titles"] = payload_objs.apply(_extract_helcom_titles)
+    df["_feature_origin"] = payload_objs.apply(_extract_feature_origin)
+
+    # Precompute grid centroids once.
+    centroids = {
+        gid: grid_centroid_from_id(gid, GRID_RES_DEG) for gid in canonical_grid_ids
+    }
+    centroids = {gid: v for gid, v in centroids.items() if v[0] is not None}
+    if not centroids:
+        return pd.DataFrame(columns=base_cols)
+
+    centroid_lat = np.array([v[0] for v in centroids.values()])
+    centroid_lon = np.array([v[1] for v in centroids.values()])
+    centroid_ids = np.array(list(centroids.keys()))
+
+    per_record_grids: list[tuple[str, str, str, list[str], pd.Timestamp]] = []
+    for _, row in df.iterrows():
+        bbox = row["_bbox"]
+        if not isinstance(bbox, list) or len(bbox) < 4:
+            continue
+        minx, miny, maxx, maxy = bbox[:4]
+        mask = (
+            (centroid_lon >= minx)
+            & (centroid_lon <= maxx)
+            & (centroid_lat >= miny)
+            & (centroid_lat <= maxy)
         )
-        .reset_index()
-    )
-    return agg
+        if not mask.any():
+            continue
+        rec_id = str(row.get("raw_record_ref", ""))
+        feat_id = row.get("_feature_origin") or row.get("grid_id") or rec_id
+        titles = row["_titles"] if isinstance(row["_titles"], list) else []
+        ts = row.get("event_ts", pd.NaT)
+        for gid in centroid_ids[mask].tolist():
+            per_record_grids.append((gid, rec_id, str(feat_id), titles, ts))
+
+    if not per_record_grids:
+        return pd.DataFrame(columns=base_cols)
+
+    grid_to_records: dict[str, dict[str, Any]] = {}
+    for gid, rec_id, feat_id, titles, ts in per_record_grids:
+        slot = grid_to_records.setdefault(
+            gid,
+            {"raw_refs": set(), "feature_ids": set(), "titles": set(), "ts_list": []},
+        )
+        if rec_id:
+            slot["raw_refs"].add(rec_id)
+        if feat_id:
+            slot["feature_ids"].add(feat_id)
+        for t in titles:
+            slot["titles"].add(t)
+        if pd.notna(ts):
+            slot["ts_list"].append(ts)
+
+    grid_records: list[dict[str, Any]] = []
+    for gid, slot in grid_to_records.items():
+        ts_values = slot["ts_list"]
+        grid_records.append(
+            {
+                "grid_cell_id": gid,
+                "helcom_record_count": len(slot["raw_refs"]),
+                "helcom_raw_refs": sorted(slot["raw_refs"]),
+                "helcom_feature_ids": sorted(slot["feature_ids"]),
+                "helcom_titles": sorted(slot["titles"]),
+                "helcom_first_record_ts": min(ts_values) if ts_values else pd.NaT,
+                "helcom_last_record_ts": max(ts_values) if ts_values else pd.NaT,
+            }
+        )
+    grid_df = pd.DataFrame(grid_records)
+    if grid_df.empty:
+        return pd.DataFrame(columns=base_cols)
+
+    # Broadcast over every canonical week. HELCOM catalog records describe
+    # reference layers valid for the whole study window.
+    weeks_df = pd.DataFrame({"week_start_utc": canonical_weeks})
+    grid_df["_key"] = 1
+    weeks_df["_key"] = 1
+    out = weeks_df.merge(grid_df, on="_key").drop(columns="_key")
+    return out[base_cols]
+
+
+# Back-compat alias retained for anything that still imports the old name.
+helcom_nearest_week_aggregate = helcom_spatial_panel_aggregate
 
 
 def build_master_dataset(project_root: Path) -> pd.DataFrame:
@@ -353,7 +456,7 @@ def build_master_dataset(project_root: Path) -> pd.DataFrame:
         sentinel_weekly["sentinel_last_record_ts"] = sentinel_weekly["week_start_utc"]
     else:
         sentinel_weekly = sentinel_weekly_aggregate(sentinel_raw)
-    helcom_weekly = helcom_nearest_week_aggregate(helcom_raw, all_weeks)
+    helcom_weekly = helcom_spatial_panel_aggregate(helcom_raw, all_weeks, grid_ids)
     emodnet_static = emodnet_static_aggregate(emodnet_raw)
 
     master = master.merge(sentinel_weekly, on=["week_start_utc", "grid_cell_id"], how="left")
@@ -462,13 +565,19 @@ def write_schema_doc(path: Path) -> None:
 - `emodnet_last_record_ts_static` (timestamp, UTC)
 - `emodnet_record_count` (replicated static count on each week row)
 
-## HELCOM Weekly Aggregates (Nearest-Week Assignment)
-- `helcom_record_count` (int)
+## HELCOM Weekly Aggregates (Spatial-Intersect Panel)
+- `helcom_record_count` (int, number of HELCOM reference datasets whose bounding
+  polygon contains this grid cell)
 - `helcom_raw_refs` (list[str])
 - `helcom_feature_ids` (list[str])
+- `helcom_titles` (list[str], ISO-19139 dataset titles covering this cell)
 - `helcom_first_record_ts` (timestamp, UTC)
 - `helcom_last_record_ts` (timestamp, UTC)
-- HELCOM records are assigned to the nearest canonical week from the panel time axis.
+- HELCOM catalog records describe static pan-Baltic reference layers. Each
+  record's bounding box is intersected with the study grid; every cell whose
+  centroid lies inside the bbox is flagged `has_helcom=True` and the fields
+  above are attached. The record set is broadcast across every canonical week
+  because the catalog layers are not week-specific.
 
 ## Provenance
 - `provenance_json` (json string)
@@ -479,7 +588,7 @@ def write_schema_doc(path: Path) -> None:
 ## Temporal Consistency Rules
 - No mixing of granularities:
   - Sentinel -> weekly aggregated
-  - HELCOM -> nearest canonical week
+  - HELCOM -> static bbox-polygon intersection replicated across weeks
   - EMODnet -> static replicated across weeks
 - Canonical weeks are derived from Sentinel observation weeks (or available temporal sources fallback).
 

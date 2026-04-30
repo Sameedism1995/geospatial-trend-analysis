@@ -81,15 +81,20 @@ def standardize_result(result: ApiCallResult) -> list[dict[str, Any]]:
             # Only keep spatially mappable records.
             if lat is None or lon is None:
                 continue
+            # HELCOM-enriched payload may carry its own geometry_wkt (polygon
+            # from bbox) and record_timestamp_utc (from ISO citation dates).
+            # Fall through to None when the client did not enrich the record.
+            geometry_wkt = item.get("geometry_wkt")
+            record_ts = _normalize_time(item.get("record_timestamp_utc"))
             rows.append(
                 {
                     "source": result.source,
                     "dataset": result.dataset,
-                    "record_timestamp_utc": None,
+                    "record_timestamp_utc": record_ts,
                     "ingested_at_utc": ingested_at,
                     "latitude": lat,
                     "longitude": lon,
-                    "geometry_wkt": None,
+                    "geometry_wkt": geometry_wkt,
                     "crs": item.get("crs") or "EPSG:4326",
                     "grid_id": item.get("name") or item.get("record_id") or item.get("title"),
                     "raw_record_ref": result.request_signature,
