@@ -73,6 +73,30 @@ def load_source_records(project_root: Path, source: str) -> pd.DataFrame:
     parts = [pd.read_parquet(p) for p in files]
     out = pd.concat(parts, ignore_index=True)
     out["source"] = source
+
+    # HELCOM reruns append new dated partitions alongside older ones — same catalogue
+    # UUID resolves to duplicate rows. Keep only the freshest `ingested_at_utc` row per
+    # (dataset × catalogue UUID) so downstream polygon-grid aggregates do not inflate.
+    if source == "helcom" and not out.empty:
+
+        def _helcom_catalog_key(row: pd.Series) -> str:
+            payload = parse_payload(row.get("payload"))
+            rid = payload.get("record_id") if isinstance(payload, dict) else None
+            if isinstance(rid, str) and rid.strip():
+                return rid.strip()
+            gid = row.get("grid_id")
+            if isinstance(gid, str) and gid.strip():
+                return gid.strip()
+            return str(row.get("raw_record_ref", ""))
+
+        out["_helcom_cat"] = out.apply(_helcom_catalog_key, axis=1)
+        out["_helcom_ing"] = pd.to_datetime(out["ingested_at_utc"], errors="coerce", utc=True)
+        out = (
+            out.sort_values("_helcom_ing", na_position="first")
+            .drop_duplicates(subset=["dataset", "_helcom_cat"], keep="last")
+            .drop(columns=["_helcom_cat", "_helcom_ing"])
+        )
+
     out["event_ts"] = pd.to_datetime(out["record_timestamp_utc"], errors="coerce", utc=True)
     fallback = pd.to_datetime(out["ingested_at_utc"], errors="coerce", utc=True)
     out["event_ts"] = out["event_ts"].fillna(fallback)
