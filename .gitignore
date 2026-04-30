@@ -36,3 +36,6 @@ node_modules/
 
 # Large downloaded / extracted geodata (GitHub file limits; regenerate via ingestion)
 data/downloads/
+
+# Local helper env file written by run scripts
+.current_run.env
