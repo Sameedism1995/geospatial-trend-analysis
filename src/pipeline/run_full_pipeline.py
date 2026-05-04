@@ -1013,6 +1013,19 @@ def main() -> None:
     logger.info("[MERGE] Wrote %s with %d rows", merged_path, len(merged))
 
     features = feature_engineering(merged, logger)
+    if not features.empty:
+        try:
+            from features.port_exposure import add_port_exposure_score
+            from features.port_proximity import compute_port_proximity
+
+            features = compute_port_proximity(features, project_root=ROOT, logger=logger)
+            features = add_port_exposure_score(features, logger=logger)
+        except Exception as exc:  # noqa: BLE001
+            logger.exception(
+                "[PORT LAYER] Port proximity / exposure step failed (continuing without it): %s",
+                exc,
+            )
+
     features_path = processed_dir / "features_ml_ready.parquet"
     features.to_parquet(features_path, index=False)
     logger.info("[FEATURES] Wrote %s with %d rows and %d cols", features_path, len(features), len(features.columns))
@@ -1043,6 +1056,24 @@ def main() -> None:
     run_anomaly_detection_stage(features, enabled=args.anomaly_detection, logger=logger)
     run_coastal_impact_score_stage(features, enabled=args.coastal_impact_score, logger=logger)
     run_final_visualization_stage(features, enabled=args.final_visualization, logger=logger)
+
+    if not features.empty:
+        try:
+            from analysis.port_exposure_analysis import generate_port_summary
+            from visualization.port_exposure_map import write_port_exposure_map
+
+            if "nearest_port" in features.columns:
+                coastal_summary = ROOT / "outputs" / "reports" / "coastal_impact_score.csv"
+                generate_port_summary(
+                    features,
+                    ROOT,
+                    coastal_impact_csv=coastal_summary if coastal_summary.exists() else None,
+                    logger=logger,
+                )
+                write_port_exposure_map(features, ROOT, logger=logger)
+        except Exception as exc:  # noqa: BLE001
+            logger.exception("[PORT LAYER] Summary or map generation failed (non-blocking): %s", exc)
+
     # Register post-merge feature groups that may be added downstream.
     register_and_print_feature_tables(features, "features", "pipeline.features", logger)
 

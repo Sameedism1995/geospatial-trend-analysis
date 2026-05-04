@@ -116,9 +116,16 @@ def _lag_response_curve(
     if out.empty:
         return out, pd.DataFrame()
 
-    peak_idx = out["correlation"].abs().idxmax()
-    best_lag = int(out.loc[peak_idx, "lag"])
-    best_corr = float(out.loc[peak_idx, "correlation"]) if pd.notna(out.loc[peak_idx, "correlation"]) else np.nan
+    corr_series = pd.to_numeric(out["correlation"], errors="coerce")
+    finite = corr_series.notna()
+    if finite.any():
+        peak_idx = corr_series.abs().loc[finite].idxmax()
+        best_lag = int(out.loc[peak_idx, "lag"])
+        best_corr = float(corr_series.loc[peak_idx])
+    else:
+        # All correlations undefined (sparse pairs): avoid idxmax(KeyError nan) path.
+        best_lag = int(lags[0]) if lags else 0
+        best_corr = np.nan
     best_sign = (
         "positive"
         if pd.notna(best_corr) and best_corr > 0
