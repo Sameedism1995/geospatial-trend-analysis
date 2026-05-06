@@ -1,0 +1,45 @@
+Subject: Stockholm grid coverage fixed - revised hub strategy
+
+Hi Florian,
+
+Following up on my last note: I rebuilt the spatial grid so that
+the Stockholm hub now has valid 0-50 km local coverage.  Previously
+the nearest grid cell was 81 km from Stockholm and the local NO2
+test was inconclusive.
+
+What I did:
+1. Generated a 0.1-deg grid around Stockholm, within 150 km of the
+   Stockholm port coordinate.
+2. Extracted fresh Sentinel-5P NO2 and Sentinel-2 NDWI/NDTI/NDVI
+   for the new cells via Google Earth Engine.
+3. Vessel density is not available for the new cells (no public
+   AIS density product is wired into the cached dataset for the
+   Stockholm vicinity); I report this as missing rather than
+   imputing.
+4. Re-ran the hub strategy analysis on the expanded dataset and
+   restricted port-level interpretation to 0-100 km.  Distances
+   beyond 100 km remain regional background only.
+
+Stockholm NO2 result (0-100 km):
+- Decreases with distance from port: True
+- Higher near Stockholm than near Mariehamn (0-50 km):
+  True
+- Urban-atmospheric NO2 interpretation: SUPPORTED
+
+Caveats stated explicitly in the report:
+- Sentinel-5P column data integrates the full troposphere; we
+  cannot separate urban-source from ship-source NO2 with column
+  data alone.
+- Vessel density at Stockholm is not available in this run; the
+  full Stockholm-vs-Mariehamn ship-source comparison still needs
+  an AIS density input for the new cells.
+- Findings are association, not causality.
+
+All outputs are saved under
+outputs/reports/run_stockholm_grid_expanded/,
+outputs/figures/run_stockholm_grid_expanded/, and
+outputs/visualizations/run_stockholm_grid_expanded/.
+Previous runs are preserved.
+
+Best,
+Sameed

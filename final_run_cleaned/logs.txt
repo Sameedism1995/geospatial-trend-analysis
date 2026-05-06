@@ -1,0 +1,39 @@
+15:40:40 | INFO | anomaly_audit_fix | === Data anomaly audit + fix ===
+15:40:40 | INFO | anomaly_audit_fix | Input: final_run/processed/features_ml_ready.parquet
+15:40:40 | INFO | anomaly_audit_fix | Output: final_run_cleaned
+15:40:41 | INFO | anomaly_audit_fix | Loaded shape: (16065, 46)
+15:40:41 | INFO | anomaly_audit_fix | Columns: ['grid_cell_id', 'week_start_utc', 'vessel_density_t', 'grid_centroid_lat', 'grid_centroid_lon', 'no2_mean_t', 'no2_std_t', 'oil_slick_probability_t', 'oil_slick_count_t', 'ndwi_mean', 'ndwi_median', 'ndwi_std', 'ndti_mean', 'ndti_median', 'ndti_std', 'ndci_mean', 'ndci_median', 'ndci_std', 'fai_mean', 'fai_median', 'fai_std', 'b11_mean', 'b11_median', 'b11_std', 'ndvi_mean', 'ndvi_median', 'ndvi_std', 'NO2_mean', 'NO2_trend', 'vessel_density', 'detection_score', 'nan_ratio_row', 'nearest_port', 'distance_to_port_km', 'port_exposure_score', 'distance_to_nearest_high_vessel_density_cell', 'coastal_exposure_band', 'coastal_exposure_score', 'maritime_pressure_index', 'atmospheric_transfer_index', 'land_response_index', 'vessel_x_no2', 'no2_x_ndvi', 'vessel_x_ndvi_lag1', 'vessel_x_ndvi_lag2', 'vessel_x_ndvi_lag3']
+15:40:41 | INFO | anomaly_audit_fix | Detected schema: time=week_start_utc grid=grid_cell_id lat=grid_centroid_lat lon=grid_centroid_lon
+15:40:41 | INFO | anomaly_audit_fix | Wrote final_run_cleaned/validation/missingness_audit.csv
+15:40:41 | INFO | anomaly_audit_fix | Wrote final_run_cleaned/validation/missingness_summary.md
+15:40:41 | INFO | anomaly_audit_fix | Oil features unusable=True reason=probability and detection_score are 100% missing; count is all-zero
+15:40:41 | INFO | anomaly_audit_fix | Wrote final_run_cleaned/validation/vessel_temporal_diagnostic.csv
+15:40:41 | INFO | anomaly_audit_fix | Vessel temporal: static_share=100.0% flat_weekly=True → is_static=True
+15:40:41 | INFO | anomaly_audit_fix | Wrote final_run_cleaned/validation/no2_weekly_outliers.csv (outlier weeks: 4)
+15:40:41 | INFO | anomaly_audit_fix | Water-quality flags: ndwi_extreme=60 ndti_extreme=60 any_water_extreme=257
+15:40:41 | INFO | anomaly_audit_fix | Skew transforms added: 22 columns
+15:40:41 | INFO | anomaly_audit_fix | Wrote final_run_cleaned/validation/high_correlation_pairs.csv (72 pairs)
+15:40:41 | INFO | anomaly_audit_fix | Alias clusters: 17 (dropping 37 alias members)
+15:40:42 | INFO | anomaly_audit_fix | Temporal smoothing plots: 4
+15:40:42 | INFO | anomaly_audit_fix | Cleaned sliding-window plots: 5
+15:40:42 | INFO | anomaly_audit_fix | Wrote final_run_cleaned/processed/features_cleaned_full.parquet (16065 × 81)
+15:40:42 | INFO | anomaly_audit_fix | Wrote final_run_cleaned/processed/features_ml_safe.parquet (16065 × 29) | excluded 52 cols
+15:40:42 | INFO | anomaly_audit_fix | Wrote final_run_cleaned/validation/recommended_feature_set.txt
+15:40:42 | INFO | anomaly_audit_fix | Wrote final_run_cleaned/VALIDATION_AND_FIX_REPORT.md
+15:40:42 | INFO | anomaly_audit_fix | === Done ===
+15:40:42 | INFO | anomaly_audit_fix | Anomalies found / addressed: 328
+15:40:42 | INFO | anomaly_audit_fix | Features excluded from ml_safe: 52
+15:40:42 | INFO | anomaly_audit_fix | Cleaned full dataset: final_run_cleaned/processed/features_cleaned_full.parquet
+15:40:42 | INFO | anomaly_audit_fix | Cleaned ML-safe dataset: final_run_cleaned/processed/features_ml_safe.parquet
+15:40:42 | INFO | anomaly_audit_fix | Validation report: final_run_cleaned/VALIDATION_AND_FIX_REPORT.md
+15:40:42 | INFO | anomaly_audit_fix | Recommended thesis-safe plots:
+15:40:42 | INFO | anomaly_audit_fix |   final_run_cleaned/outputs/visualizations/temporal_smoothing/smoothing_no2_mean_t.png
+15:40:42 | INFO | anomaly_audit_fix |   final_run_cleaned/outputs/visualizations/temporal_smoothing/smoothing_ndwi_mean.png
+15:40:42 | INFO | anomaly_audit_fix |   final_run_cleaned/outputs/visualizations/temporal_smoothing/smoothing_ndti_mean.png
+15:40:42 | INFO | anomaly_audit_fix |   final_run_cleaned/outputs/visualizations/temporal_smoothing/smoothing_vessel_density_t.png
+15:40:42 | INFO | anomaly_audit_fix |   final_run_cleaned/outputs/visualizations/sliding_window_cleaned/sliding_window_vessel_density_spatial_proxy_log1p.png
+15:40:42 | INFO | anomaly_audit_fix |   final_run_cleaned/outputs/visualizations/sliding_window_cleaned/sliding_window_no2_mean_t_rolling3.png
+15:40:42 | INFO | anomaly_audit_fix |   final_run_cleaned/outputs/visualizations/sliding_window_cleaned/sliding_window_ndwi_mean_winsor.png
+15:40:42 | INFO | anomaly_audit_fix |   final_run_cleaned/outputs/visualizations/sliding_window_cleaned/sliding_window_ndti_mean_winsor.png
+15:40:42 | INFO | anomaly_audit_fix |   final_run_cleaned/outputs/visualizations/sliding_window_cleaned/sliding_window_ndvi_mean_winsor.png
+15:40:42 | INFO | anomaly_audit_fix | Wrote final_run_cleaned/validation/audit_summary.json

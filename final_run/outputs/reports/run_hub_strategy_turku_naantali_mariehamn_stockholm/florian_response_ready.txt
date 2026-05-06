@@ -1,0 +1,44 @@
+Subject: revised hub strategy — addressing your concern
+
+Hi Florian,
+
+I revised the hub strategy after your feedback so that local port
+impact and regional background are no longer mixed.
+
+1. Turku and Naantali are ~15 km apart on the same Finnish coast,
+   so I combined them into a single Turku-Naantali coastal hub.
+   Treating them separately had been double-counting the same
+   coastal/industrial system.
+
+2. Mariehamn is retained as an independent island/offshore hub,
+   used as the low-urban-background contrast.
+
+3. Stockholm is added as a spatially distinct urban port hub.
+   This lets us test whether the near-port NO2 signal is really
+   urban/atmospheric rather than ship-source: if Stockholm shows
+   a clear 0-50 km NO2 increase but Mariehamn does not, NO2 is
+   acting as an urban regional signal.
+   Caveat: the existing 315-cell grid was built around
+   Mariehamn / Turku / Naantali and the nearest grid cell is
+   ~81 km from Stockholm.  The 0-50 km Stockholm test is
+   therefore INCONCLUSIVE in this dataset; I report Stockholm
+   50-200 km as the closest substitute and flag it explicitly
+   in no2_interpretation_check.md.  A follow-up run with a
+   Stockholm-extended grid is the natural next step.
+
+4. Port-level interpretation is now restricted to 0-100 km only,
+   with a 25 km sliding window and 10 km step.
+
+5. Distances of 100-300, 300-500 and 500-1000 km are reported only
+   as regional background bands; every regional figure title says
+   'REGIONAL BACKGROUND PATTERN - NOT PORT IMPACT' so the
+   thesis cannot misread them as port effects.
+
+All outputs for this revised analysis are saved under
+outputs/reports/run_hub_strategy_turku_naantali_mariehamn_stockholm/,
+outputs/figures/run_hub_strategy_turku_naantali_mariehamn_stockholm/, and
+outputs/visualizations/run_hub_strategy_turku_naantali_mariehamn_stockholm/.
+Previous runs are preserved for comparison.
+
+Best,
+Sameed

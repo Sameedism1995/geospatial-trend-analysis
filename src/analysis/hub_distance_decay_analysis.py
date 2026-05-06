@@ -14,6 +14,7 @@ Run:
 
 from __future__ import annotations
 
+import argparse
 import logging
 import sys
 from pathlib import Path
@@ -33,6 +34,18 @@ OUT_HUB_PLOTS = PROJECT_ROOT / "outputs" / "visualizations" / "hub_level_distanc
 OUT_SW_PLOTS = PROJECT_ROOT / "outputs" / "visualizations" / "sliding_window_distance_decay"
 OUT_SW_REPORTS = PROJECT_ROOT / "outputs" / "reports" / "sliding_window_distance_decay"
 OUT_NO2_REPORT = PROJECT_ROOT / "outputs" / "reports" / "no2_distance_diagnostic.md"
+
+
+def _resolve_paths(out_root: Path | None, dataset: Path | None) -> tuple[Path, Path, Path, Path, Path | None]:
+    """Return (hub_plots_dir, sw_plots_dir, sw_reports_dir, no2_report_path, dataset_override)."""
+    if out_root is None:
+        return OUT_HUB_PLOTS, OUT_SW_PLOTS, OUT_SW_REPORTS, OUT_NO2_REPORT, dataset
+    base = Path(out_root)
+    hub_plots = base / "outputs" / "visualizations" / "hub_level_distance_decay"
+    sw_plots = base / "outputs" / "visualizations" / "sliding_window_distance_decay"
+    sw_reports = base / "outputs" / "reports" / "sliding_window_distance_decay"
+    no2_report = base / "outputs" / "reports" / "no2_distance_diagnostic.md"
+    return hub_plots, sw_plots, sw_reports, no2_report, dataset
 
 WINDOW_KM = 50.0
 STEP_KM = 10.0
@@ -64,14 +77,22 @@ def configure_logging() -> None:
     )
 
 
-def load_dataset() -> tuple[pd.DataFrame, Path]:
-    for path in (DATA_PATH_PRIMARY, DATA_PATH_FALLBACK):
+def load_dataset(dataset_override: Path | None = None) -> tuple[pd.DataFrame, Path]:
+    candidates: list[Path] = []
+    if dataset_override is not None:
+        candidates.append(Path(dataset_override))
+    candidates.extend([DATA_PATH_PRIMARY, DATA_PATH_FALLBACK])
+    for path in candidates:
         if path.exists():
-            LOGGER.info("Loading dataset: %s", path.relative_to(PROJECT_ROOT))
+            try:
+                rel = path.relative_to(PROJECT_ROOT)
+            except ValueError:
+                rel = path
+            LOGGER.info("Loading dataset: %s", rel)
             df = pd.read_parquet(path)
             return df, path
     raise FileNotFoundError(
-        f"No processed dataset found. Looked for: {DATA_PATH_PRIMARY}, {DATA_PATH_FALLBACK}"
+        f"No processed dataset found. Looked for: {[str(c) for c in candidates]}"
     )
 
 
@@ -506,11 +527,24 @@ def _safe(name: str) -> str:
     return "".join(c if c.isalnum() or c in "-_" else "_" for c in str(name))
 
 
-def main() -> int:
-    configure_logging()
+def _rel(path: Path) -> str:
+    try:
+        return str(Path(path).relative_to(PROJECT_ROOT))
+    except ValueError:
+        return str(path)
+
+
+def run_analysis(
+    dataset: Path | None = None,
+    out_root: Path | None = None,
+) -> dict[str, object]:
+    """Run the full hub distance-decay analysis. Returns a summary dict."""
+    hub_plots_dir, sw_plots_dir, sw_reports_dir, no2_report_path, dataset_override = _resolve_paths(out_root, dataset)
+
     LOGGER.info("Project root: %s", PROJECT_ROOT)
-    df, used_path = load_dataset()
+    df, used_path = load_dataset(dataset_override)
     LOGGER.info("Dataset shape: %s", df.shape)
+    LOGGER.info("Output base: %s", out_root if out_root else "(project default)")
 
     detected = detect_columns(df)
     prepped = prepare_frame(df, detected)
@@ -521,28 +555,54 @@ def main() -> int:
     LOGGER.info("Indicators used: %s", indicator_map)
 
     LOGGER.info("=== Hub-level distance-decay plots ===")
-    hub_plot_paths = plot_hub_panels(prepped, indicator_map, OUT_HUB_PLOTS)
-    comparison_path = plot_hub_comparison(prepped, indicator_map, OUT_HUB_PLOTS)
+    hub_plot_paths = plot_hub_panels(prepped, indicator_map, hub_plots_dir)
+    comparison_path = plot_hub_comparison(prepped, indicator_map, hub_plots_dir)
 
     LOGGER.info("=== Sliding-window distance-decay ===")
-    sw_summaries = run_sliding_windows(prepped, indicator_map, OUT_SW_PLOTS, OUT_SW_REPORTS)
+    sw_summaries = run_sliding_windows(prepped, indicator_map, sw_plots_dir, sw_reports_dir)
 
     LOGGER.info("=== NO2 diagnostic ===")
-    findings = no2_diagnostic(prepped, detected.get("no2"), OUT_SW_PLOTS, OUT_NO2_REPORT)
+    findings = no2_diagnostic(prepped, detected.get("no2"), sw_plots_dir, no2_report_path)
 
     LOGGER.info("--- Summary ---")
-    LOGGER.info("Dataset: %s", used_path.relative_to(PROJECT_ROOT))
+    LOGGER.info("Dataset: %s", _rel(used_path))
     LOGGER.info("Detected columns: %s", detected)
     LOGGER.info("Hubs analysed: %d", prepped["hub"].nunique())
     LOGGER.info("Hub-level plots: %d", len(hub_plot_paths))
     if comparison_path:
-        LOGGER.info("Hub comparison plot: %s", comparison_path.relative_to(PROJECT_ROOT))
+        LOGGER.info("Hub comparison plot: %s", _rel(comparison_path))
     LOGGER.info("Sliding-window indicators: %s", list(sw_summaries.keys()))
     if findings:
         LOGGER.info("NO2 200-500km mean: %.3e (n=%d)", findings.get("band_mean", float("nan")), findings.get("band_n", 0))
         LOGGER.info("NO2 <200km mean: %.3e | >500km mean: %.3e", findings.get("near_mean", float("nan")), findings.get("far_mean", float("nan")))
         LOGGER.info("Hub composition in 200-500km band: %s", findings.get("band_hub_counts"))
-    LOGGER.info("NO2 diagnostic report: %s", OUT_NO2_REPORT.relative_to(PROJECT_ROOT))
+    LOGGER.info("NO2 diagnostic report: %s", _rel(no2_report_path))
+    return {
+        "dataset": str(used_path),
+        "detected_columns": detected,
+        "indicators_used": indicator_map,
+        "hubs": sorted(prepped["hub"].dropna().unique().tolist()),
+        "hub_plot_paths": [str(p) for p in hub_plot_paths],
+        "hub_comparison_plot": str(comparison_path) if comparison_path else None,
+        "sliding_window_indicators": list(sw_summaries.keys()),
+        "no2_findings": findings,
+        "out_dirs": {
+            "hub_plots": str(hub_plots_dir),
+            "sliding_window_plots": str(sw_plots_dir),
+            "sliding_window_reports": str(sw_reports_dir),
+            "no2_report": str(no2_report_path),
+        },
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--dataset", type=Path, default=None, help="Path to features parquet (overrides default).")
+    parser.add_argument("--out-root", type=Path, default=None, help="Root directory under which outputs/ will be written (e.g. final_run).")
+    args = parser.parse_args()
+
+    configure_logging()
+    run_analysis(dataset=args.dataset, out_root=args.out_root)
     return 0
 
 

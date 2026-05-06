@@ -291,11 +291,16 @@ def extract_oil_weekly(
     start_ee, end_ee = week_filter_dates_ee(ee, bounded_start, bounded_end)
     _emit("[S1] STEP 3: applying filters (date/bounds)")
     # Build ingestion collections explicitly for VV+VH (preferred) and VH-only (fallback).
+    # NOTE: do NOT apply .limit(...) before the per-week filter — Sentinel-1 has
+    # thousands of scenes per week over a multi-degree bbox, and a global cap
+    # here causes per-week subsets to come back empty. GEE paginates large
+    # collections internally; we filter by instrumentMode first to keep only
+    # IW (the only mode we use in the dark-pixel proxy) and let the per-week
+    # filterDate downstream constrain volume.
     s1_base_iw = (
         ee.ImageCollection(S1_COLLECTION)
         .filterBounds(bbox)
         .filterDate(start_ee, end_ee)
-        .limit(500)
         .filter(ee.Filter.eq("instrumentMode", "IW"))
     )
     s1_dual = s1_base_iw.filter(
