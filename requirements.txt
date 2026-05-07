@@ -6,6 +6,7 @@ matplotlib
 seaborn
 scikit-learn
 scipy
+networkx
 statsmodels
 geopandas
 shapely
