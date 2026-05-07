@@ -1,0 +1,16 @@
+# Copy to sources_local.py and uncomment to register more datasets.
+
+EXTRA_DATA_SOURCES: list[dict] = [
+    # {
+    #     "id": "my_aux_table",
+    #     "rel_path": "outputs/reports/my_new_run/summary.csv",
+    #     "kind": "csv",
+    #     "port_column": "port",
+    #     "category": "custom",
+    #     "label": "Human-readable name",
+    # },
+]
+
+
+# Optional roots for PNG/HTML gallery additions:
+# EXTRA_FIGURE_ROOTS = ["outputs/my_new_run/figures"]

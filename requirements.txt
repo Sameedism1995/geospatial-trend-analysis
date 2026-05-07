@@ -16,6 +16,7 @@ rioxarray
 pyproj
 folium
 plotly
+streamlit
 jupyter
 pyarrow
 pyyaml
