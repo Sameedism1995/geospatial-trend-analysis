@@ -37,5 +37,6 @@ node_modules/
 # Large downloaded / extracted geodata (GitHub file limits; regenerate via ingestion)
 data/downloads/
 
-# Local helper env file written by run scripts
-.current_run.env
+# Large generated exports (> GitHub 100MB file limit); regenerate locally
+**/ALL_STATISTICS_LONG.csv
+

@@ -6,6 +6,7 @@ import inspect
 import json
 import logging
 import pkgutil
+import shutil
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -173,6 +174,182 @@ def write_feature_registry_summary_json(path: Path) -> None:
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
+
+
+def _sanitize_for_path(segment: str) -> str:
+    s = "".join(ch if ch.isalnum() or ch in "_-." else "_" for ch in str(segment))
+    return s[:200] if len(s) > 200 else s
+
+
+def wipe_extraction_aux_and_intermediate(logger: logging.Logger) -> list[str]:
+    """Remove regenerated artefacts so the next extraction run is genuinely fresh."""
+    keep_aux_names = frozenset({"baltic_ports.csv"})
+    removed_labels: list[str] = []
+
+    aux = ROOT / "data" / "aux"
+    interm = ROOT / "data" / "intermediate"
+    aux.mkdir(parents=True, exist_ok=True)
+    interm.mkdir(parents=True, exist_ok=True)
+
+    for folder, label in ((aux, "aux"), (interm, "intermediate")):
+        for child in list(folder.iterdir()):
+            if label == "aux" and child.name in keep_aux_names:
+                continue
+            rel = child.relative_to(ROOT)
+            try:
+                if child.is_file():
+                    child.unlink()
+                elif child.is_dir():
+                    shutil.rmtree(child)
+                removed_labels.append(str(rel))
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("[CACHE WIPE] could not remove %s: %s", rel, exc)
+
+    logger.info("[CACHE WIPE] removed %d auxiliary/intermediate artefacts", len(removed_labels))
+    return removed_labels
+
+
+def write_preprocess_diagnostics(
+    stage_slug: str,
+    df: pd.DataFrame,
+    preprocess_root: Path,
+    logger: logging.Logger,
+) -> None:
+    """Missingness overview, histogram and box/outlier plots for every numeric column, plus optional pairwise correlation heatmap."""
+    import seaborn as sns
+
+    slug = _sanitize_for_path(stage_slug)
+    out = preprocess_root / slug
+    out.mkdir(parents=True, exist_ok=True)
+    if df.empty:
+        logger.info("[PREPROCESS DIAG] %s: empty dataframe, skipped", slug)
+        return
+
+    num_cols_raw = df.select_dtypes(include=[np.number]).columns.tolist()
+    num_cols = [c for c in num_cols_raw if df[c].nunique(dropna=True) > 0]
+    nan_pct_series = df.isna().mean() * 100.0
+    nan_pct = nan_pct_series.sort_values(ascending=False)
+
+    summary_payload: dict[str, Any] = {
+        "stage": slug,
+        "rows": int(len(df)),
+        "column_count": int(len(df.columns)),
+        "numeric_columns": len(num_cols),
+        "median_nan_pct_any_column": float(nan_pct.median()) if not nan_pct.empty else 0.0,
+        "constant_numeric_skipped": [c for c in num_cols_raw if c not in num_cols],
+    }
+    json_path = out / "preprocessing_summary.json"
+    json_path.write_text(json.dumps(summary_payload, indent=2, default=str), encoding="utf-8")
+
+    # --- Missingness: all columns (very tall canvas if wide schema is fine for thesis QC)
+    if not nan_pct.empty:
+        nh = float(np.clip(max(8.0, len(nan_pct) * 0.16), 8.0, 120.0))
+        plt.figure(figsize=(10, nh))
+        plt.barh(nan_pct.index.astype(str)[::-1], nan_pct.values[::-1], color="steelblue", alpha=0.85)
+        plt.xlabel("missing %")
+        plt.title(f"{slug}: missing percentage by column ({len(nan_pct)} cols)")
+        plt.tight_layout()
+        plt.savefig(out / "missingness_all_columns.png", dpi=200, bbox_inches="tight")
+        plt.close()
+
+    row_na_frac = df.isna().mean(axis=1)
+    plt.figure(figsize=(8, 5))
+    plt.hist(pd.to_numeric(row_na_frac, errors="coerce").dropna(), bins=48, edgecolor="black", linewidth=0.3)
+    plt.title(f"{slug}: row-wise fraction of missing cells")
+    plt.xlabel("fraction NA per row")
+    plt.ylabel("count")
+    plt.tight_layout()
+    plt.savefig(out / "row_missing_fraction_hist.png", dpi=200)
+    plt.close()
+
+    for c in num_cols:
+        fname = _sanitize_for_path(str(c))
+        vals = pd.to_numeric(df[c], errors="coerce").dropna()
+        if vals.empty:
+            continue
+        _save_hist(df[c], out / f"hist_numeric__{fname}.png", f"{slug}: {c}")
+        samp = vals if len(vals) <= 12000 else vals.sample(12000, random_state=42)
+        plt.figure(figsize=(6, 3.8))
+        try:
+            sns.boxplot(x=samp, color="lightgray", linewidth=1.1, orient="h")
+            plt.title(f"Box/outliers: {c}")
+            plt.xlabel(c)
+            plt.tight_layout()
+            plt.savefig(out / f"boxplot_numeric__{fname}.png", dpi=190, bbox_inches="tight")
+        except Exception:  # noqa: BLE001
+            pass
+        finally:
+            plt.close()
+
+    if len(num_cols) >= 2:
+        numer = pd.concat([pd.to_numeric(df[c], errors="coerce") for c in num_cols], axis=1)
+        numer.columns = num_cols
+        numer = numer.loc[:, numer.nunique(dropna=True) > 1]
+        if numer.shape[1] > 52:
+            var_rank = numer.var(skipna=True).sort_values(ascending=False).head(52)
+            numer = numer[var_rank.index]
+        samp_n = numer
+        if len(samp_n) > 28000:
+            samp_n = samp_n.sample(28000, random_state=42)
+        min_periods = min(512, len(samp_n))
+        corr = samp_n.corr(method="spearman", min_periods=min_periods)
+        if corr.shape[0] >= 2 and not corr.isna().all().all():
+            plt.figure(figsize=(max(10, corr.shape[0] * 0.35), max(10, corr.shape[0] * 0.35)))
+            sns.heatmap(
+                corr,
+                cmap="vlag",
+                center=0.0,
+                vmin=-1.0,
+                vmax=1.0,
+                linewidths=0.2,
+                cbar_kws={"shrink": 0.7},
+            )
+            plt.title(f"{slug}: Spearman corr (≤52 numerics)")
+            plt.tight_layout()
+            plt.savefig(out / "numeric_corr_heatmap.png", dpi=220, bbox_inches="tight")
+            plt.close()
+
+    ts_col = next(
+        (c for c in ["week_start_utc", "week_start", "week", "timestamp", "date", "time"] if c in df.columns),
+        None,
+    )
+    if ts_col and num_cols:
+        t = pd.to_datetime(df[ts_col], errors="coerce", utc=True)
+        grp = pd.DataFrame({"time": t, "value": pd.to_numeric(df[num_cols[0]], errors="coerce")}).dropna()
+        if not grp.empty:
+            weekly = grp.groupby(grp["time"].dt.tz_localize(None).dt.to_period("W")).agg(mean_value=("value", "mean")).reset_index()
+            weekly["time"] = weekly["time"].astype(str)
+            plt.figure(figsize=(11, 4.8))
+            plt.plot(weekly["time"], weekly["mean_value"], marker="o", markersize=2, linewidth=1.0)
+            plt.xticks(rotation=90)
+            plt.title(f"{slug}: weekly mean of `{num_cols[0]}`")
+            plt.ylabel(num_cols[0])
+            plt.tight_layout()
+            plt.savefig(out / "timeseries_weekly_primary_numeric.png", dpi=200)
+            plt.close()
+
+    lat = next((c for c in ["grid_centroid_lat", "centroid_lat", "latitude", "lat"] if c in df.columns), None)
+    lon = next((c for c in ["grid_centroid_lon", "centroid_lon", "longitude", "lon", "lng"] if c in df.columns), None)
+    if lat and lon and num_cols:
+        tmp = df[[lat, lon, num_cols[0]]].copy()
+        tmp[lat] = pd.to_numeric(tmp[lat], errors="coerce")
+        tmp[lon] = pd.to_numeric(tmp[lon], errors="coerce")
+        tmp[num_cols[0]] = pd.to_numeric(tmp[num_cols[0]], errors="coerce")
+        tmp = tmp.dropna()
+        if len(tmp) > 12000:
+            tmp = tmp.sample(12000, random_state=42)
+        if not tmp.empty:
+            plt.figure(figsize=(8.5, 6))
+            s = plt.scatter(tmp[lon], tmp[lat], c=tmp[num_cols[0]], cmap="viridis", s=10, alpha=0.82)
+            plt.colorbar(s, label=num_cols[0])
+            plt.title(f"{slug}: spatial map (first numeric `{num_cols[0]}`)")
+            plt.xlabel(lon)
+            plt.ylabel(lat)
+            plt.tight_layout()
+            plt.savefig(out / "spatial_first_numeric.png", dpi=210)
+            plt.close()
+
+    logger.info("[PREPROCESS DIAG] wrote artefacts under outputs/preprocessing_diagnostics/%s/", slug)
 
 
 def setup_logger(log_path: Path) -> logging.Logger:
@@ -351,11 +528,13 @@ def _save_hist(series: pd.Series, path: Path, title: str) -> None:
     plt.close()
 
 
-def generate_source_previews(source_name: str, df: pd.DataFrame, out_dir: Path) -> None:
+def generate_source_previews(source_name: str, df: pd.DataFrame, out_dir: Path, *, exhaustive_numeric_plots: bool = False) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     if df.empty:
         return
-    numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()[:6]
+    numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+    if not exhaustive_numeric_plots:
+        numeric_cols = numeric_cols[:6]
     for c in numeric_cols:
         _save_hist(df[c], out_dir / f"hist_{c}.png", f"{source_name}: {c} distribution")
 
@@ -524,7 +703,13 @@ def global_validation(merged: pd.DataFrame, features: pd.DataFrame, skip_validat
     return report
 
 
-def run_eda(features_path: Path, skip_eda: bool, logger: logging.Logger) -> None:
+def run_eda(
+    features_path: Path,
+    skip_eda: bool,
+    logger: logging.Logger,
+    *,
+    exhaustive_nan_bars: bool = False,
+) -> None:
     if skip_eda:
         logger.info("[EDA] Skipped by flag")
         return
@@ -539,6 +724,7 @@ def run_eda(features_path: Path, skip_eda: bool, logger: logging.Logger) -> None
             output_dir=ROOT / "outputs" / "eda",
             summary_path=ROOT / "outputs" / "eda_summary.md",
             weekly_breakdown=True,
+            exhaustive_nan_bars=exhaustive_nan_bars,
         )
         logger.info("[EDA] EDA report completed")
     except Exception as exc:  # noqa: BLE001
@@ -908,6 +1094,11 @@ def main() -> None:
             "land_impact_analysis.csv report."
         ),
     )
+    parser.add_argument(
+        "--skip-exhaustive-preprocess-plots",
+        action="store_true",
+        help="Skip per-stage missing/outlier QC plots under outputs/preprocessing_diagnostics/.",
+    )
     args = parser.parse_args()
 
     logger = setup_logger(ROOT / "logs" / "pipeline_run.log")
@@ -915,49 +1106,33 @@ def main() -> None:
     for key in FEATURE_REGISTRY:
         FEATURE_REGISTRY[key].clear()
 
-    # LAND IMPACT bootstrap cache invalidation.
-    # `--land-impact` alone reuses the existing NDVI parquet. Pair it with
-    # `--force-refresh` to clear the cache and force a fresh GEE re-extraction.
+    exhaustive_preprocess = not args.skip_exhaustive_preprocess_plots
+
+    if args.force_refresh:
+        wipe_extraction_aux_and_intermediate(logger)
+
     if args.land_impact:
-        ndvi_cache_files = [
-            ROOT / "data" / "aux" / "sentinel2_land_metrics.parquet",
-            ROOT / "data" / "aux" / "sentinel2_land_metrics_validation.json",
-        ]
+        ndvi_aux = ROOT / "data" / "aux" / "sentinel2_land_metrics.parquet"
         if args.force_refresh:
-            removed = [p for p in ndvi_cache_files if p.exists()]
-            for p in removed:
-                try:
-                    p.unlink()
-                except Exception as exc:  # noqa: BLE001
-                    logger.warning("[LAND IMPACT] Failed to remove %s: %s", p, exc)
-            if removed:
-                logger.info(
-                    "NDVI aux cache cleared via --force-refresh (removed %d file(s))",
-                    len(removed),
-                )
-                for p in removed:
-                    logger.info("  removed: %s", p)
-            else:
-                logger.info("NDVI aux cache check: nothing to clear; fresh extraction will run")
+            logger.info("[LAND IMPACT] expecting fresh NDVI extract (aux wiped by --force-refresh)")
+        elif ndvi_aux.exists():
+            logger.info(
+                "[LAND IMPACT] reusing cached NDVI parquet (%s); pass --force-refresh for full re-extraction",
+                ndvi_aux.name,
+            )
         else:
-            existing = [p for p in ndvi_cache_files if p.exists()]
-            if existing:
-                logger.info(
-                    "[LAND IMPACT] reusing cached NDVI parquet (%d artifact(s)); pass --force-refresh to re-extract",
-                    len(existing),
-                )
-            else:
-                logger.info(
-                    "[LAND IMPACT] no NDVI cache present — extraction will run on first execution"
-                )
+            logger.info("[LAND IMPACT] no NDVI parquet yet — NDVI extraction will run when source is invoked")
 
     input_dataset = ROOT / "data" / "modeling_dataset.parquet"
     interm_dir = ROOT / "data" / "intermediate"
     preview_root = ROOT / "outputs" / "previews"
+    preprocess_root = ROOT / "outputs" / "preprocessing_diagnostics"
     processed_dir = ROOT / "processed"
     validation_dir = ROOT / "data" / "validation"
     for p in [interm_dir, preview_root, processed_dir, validation_dir]:
         p.mkdir(parents=True, exist_ok=True)
+    if exhaustive_preprocess:
+        preprocess_root.mkdir(parents=True, exist_ok=True)
 
     source_frames: dict[str, pd.DataFrame] = {}
     source_reports: dict[str, Any] = {}
@@ -971,7 +1146,14 @@ def main() -> None:
         rep = quality_checks(vessel_df)
         source_reports["vessels"] = rep
         logger.info("[SOURCE: vessels] rows=%d non_null_pct=%.2f", len(vessel_df), (1.0 - vessel_df.isna().mean().mean()) * 100.0)
-        generate_source_previews("vessels", vessel_df, preview_root / "vessels")
+        generate_source_previews(
+            "vessels",
+            vessel_df,
+            preview_root / "vessels",
+            exhaustive_numeric_plots=exhaustive_preprocess,
+        )
+        if exhaustive_preprocess:
+            write_preprocess_diagnostics("step00_vessels", vessel_df, preprocess_root, logger)
         register_and_print_feature_tables(vessel_df, "vessels", "vessels", logger)
 
     for source in discover_sources(include_land_impact=args.land_impact):
@@ -998,7 +1180,14 @@ def main() -> None:
                 (1.0 - df.isna().mean().mean()) * 100.0 if not df.empty else 0.0,
                 len(qc.get("constant_columns", [])),
             )
-            generate_source_previews(source.name, df, preview_root / source.name)
+            generate_source_previews(
+                source.name,
+                df,
+                preview_root / source.name,
+                exhaustive_numeric_plots=exhaustive_preprocess,
+            )
+            if exhaustive_preprocess:
+                write_preprocess_diagnostics(f"step10_source_{source.name}", df, preprocess_root, logger)
             register_and_print_feature_tables(df, source.name, source.module_name, logger)
         except Exception as exc:  # noqa: BLE001
             logger.exception("[SOURCE: %s] extraction failed: %s", source.name, exc)
@@ -1011,6 +1200,8 @@ def main() -> None:
     merged_path = processed_dir / "merged_dataset.parquet"
     merged.to_parquet(merged_path, index=False)
     logger.info("[MERGE] Wrote %s with %d rows", merged_path, len(merged))
+    if exhaustive_preprocess and not merged.empty:
+        write_preprocess_diagnostics("step20_merged_dataset", merged, preprocess_root, logger)
 
     features = feature_engineering(merged, logger)
     if not features.empty:
@@ -1027,8 +1218,12 @@ def main() -> None:
             )
 
     features_path = processed_dir / "features_ml_ready.parquet"
+    features_before_land = features.copy()
     features.to_parquet(features_path, index=False)
     logger.info("[FEATURES] Wrote %s with %d rows and %d cols", features_path, len(features), len(features.columns))
+
+    if exhaustive_preprocess and not features_before_land.empty:
+        write_preprocess_diagnostics("step30_features_before_land_impact", features_before_land, preprocess_root, logger)
 
     # LAND IMPACT EXTENSION LAYER — additive; non-blocking; runs before downstream
     # analytics so correlation/anomaly/coastal-impact see the new land features.
@@ -1039,12 +1234,15 @@ def main() -> None:
         logger=logger,
     )
 
+    if exhaustive_preprocess and not features.empty:
+        write_preprocess_diagnostics("step40_features_final_ml_ready", features, preprocess_root, logger)
+
     validation_report = global_validation(merged, features, args.skip_validation, logger)
     val_out = validation_dir / "full_pipeline_validation_report.json"
     val_out.write_text(json.dumps(validation_report, indent=2, default=str), encoding="utf-8")
     logger.info("[VALIDATION] Wrote %s", val_out)
 
-    run_eda(features_path, skip_eda=args.skip_eda, logger=logger)
+    run_eda(features_path, skip_eda=args.skip_eda, logger=logger, exhaustive_nan_bars=exhaustive_preprocess)
     run_correlation_analysis(
         features_path,
         skip_correlation=args.skip_correlation,
@@ -1081,11 +1279,17 @@ def main() -> None:
         "sources": source_reports,
         "merged_rows": int(len(merged)),
         "features_shape": [int(features.shape[0]), int(features.shape[1])],
+        "exhaustive_preprocess_diagnostics": bool(exhaustive_preprocess),
         "paths": {
             "merged_dataset": str(merged_path),
             "features_ml_ready": str(features_path),
             "validation_report": str(val_out),
             "log_file": str(ROOT / "logs" / "pipeline_run.log"),
+            **(
+                {"preprocessing_diagnostics": str(preprocess_root)}
+                if exhaustive_preprocess
+                else {}
+            ),
         },
     }
     summary_path = validation_dir / "full_pipeline_run_summary.json"

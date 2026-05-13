@@ -1,0 +1,41 @@
+sources:
+  emodnet:
+    requests_per_second: 0.8
+    max_retries: 3
+    backoff_base_s: 1.0
+    wms_capabilities_urls:
+      - "https://ows.emodnet-bathymetry.eu/wms?service=WMS&request=GetCapabilities"
+      - "https://ows.emodnet-humanactivities.eu/wms?service=WMS&request=GetCapabilities"
+
+  helcom:
+    requests_per_second: 0.8
+    max_retries: 3
+    backoff_base_s: 1.0
+    record_formatter_xml_endpoint: "https://metadata.helcom.fi/geonetwork/srv/api/records/{record_id}/formatters/xml"
+    max_records: 10
+    dataset_ids:
+      - "2a7a0489-112b-42d1-ac5b-55e128fa2b18"
+      - "2ac9b4b4-cf84-4c56-aad3-6c2b6192be37"
+      - "5ae006f4-12e5-48b2-9346-28d841192d37"
+      - "61074132-7da2-4db2-b56e-f185f1047999"
+      - "66ea1777-bcb3-446a-a523-8198d2552e8c"
+      - "6b028511-96b3-422d-abca-9de1406dbe40"
+      - "86df5520-1f64-43d8-a14a-ce69651edf39"
+      - "9728d911-e547-4743-9ba8-98b59aa7084f"
+      - "df623053-bd43-415c-80ff-1bcf02fdce9f"
+      - "fbbb5f1b-49cc-496d-95de-2644ce009c04"
+
+  sentinel:
+    requests_per_second: 0.6
+    max_retries: 3
+    backoff_base_s: 1.0
+    oauth_token_url: "https://services.sentinel-hub.com/oauth/token"
+    catalog_search_url: "https://services.sentinel-hub.com/api/v1/catalog/1.0.0/search"
+    collection: "sentinel-2-l2a"
+    limit: 100
+    max_pages: 1
+    max_cloud_coverage: 30
+    default_bbox: [19.5, 59.7, 22.5, 60.7]
+    default_time_from: "2023-01-01T00:00:00Z"
+    default_time_to: "2023-12-31T23:59:59Z"
+

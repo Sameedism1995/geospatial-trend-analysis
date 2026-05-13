@@ -16,8 +16,12 @@ Usage:
     python3 src/run_final_pipeline.py --no-force-refresh   (reuse cached aux parquets)
 
 `--force-refresh` is the default (clears reuse so ingestion runs fresh). If GEE
-auth or remote APIs are unavailable, individual sources will fail per-source,
-the orchestrator continues, and a clear warning is written to FINAL_RUN_SUMMARY.md.
+auth or remote APIs are unavailable, the wrapper normally **falls back** to
+reusing cached `data/aux/` parquets (unless you pass **`--no-stale-gee-fallback`**).
+
+Preprocessing QC figures (missingness, outliers, per-column distributions) land
+under `outputs/preprocessing_diagnostics/` unless you pass
+**`--skip-exhaustive-preprocess-plots`**.
 """
 
 from __future__ import annotations
@@ -38,8 +42,6 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 FINAL_RUN_ROOT = ROOT / "final_run"
-
-LOGGER = logging.getLogger("final_pipeline")
 
 
 # ---------------------------------------------------------------------------
@@ -146,6 +148,7 @@ def run_full_pipeline(
     quick_test: bool,
     force_refresh: bool,
     logger: logging.Logger,
+    skip_exhaustive_preprocess_plots: bool = False,
 ) -> dict[str, Any]:
     """Run pipeline.run_full_pipeline.main() with our chosen flags. Captures result."""
     logger.info("[PIPELINE] Importing pipeline.run_full_pipeline")
@@ -156,6 +159,8 @@ def run_full_pipeline(
         argv.append("--quick-test")
     if force_refresh:
         argv.append("--force-refresh")
+    if skip_exhaustive_preprocess_plots:
+        argv.append("--skip-exhaustive-preprocess-plots")
     argv.extend(
         [
             "--feature-interaction-map",
@@ -228,6 +233,11 @@ def mirror_outputs(paths: dict[str, Path], logger: logging.Logger) -> dict[str, 
         shutil.copy2(eda_md, paths["reports"] / "eda_summary.md")
         counts["eda_summary_md"] = 1
     counts["outputs_plots"] = _copy_tree(ROOT / "outputs" / "plots", paths["viz_plots"], logger)
+    counts["outputs_preprocessing_diag"] = _copy_tree(
+        ROOT / "outputs" / "preprocessing_diagnostics",
+        paths["visualizations"] / "preprocessing_diagnostics",
+        logger,
+    )
     counts["outputs_previews"] = _copy_tree(ROOT / "outputs" / "previews", paths["viz_previews"], logger)
     counts["outputs_visualizations"] = _copy_tree(ROOT / "outputs" / "visualizations", paths["visualizations"], logger)
     pipeline_log = ROOT / "logs" / "pipeline_run.log"
@@ -401,6 +411,20 @@ def main() -> int:
              "to <project>/<run-name>/ instead of <project>/final_run/.  Use this "
              "to keep multiple runs isolated.",
     )
+    parser.add_argument(
+        "--skip-exhaustive-preprocess-plots",
+        action="store_true",
+        help="Avoid per-column preprocessing QC plots under outputs/preprocessing_diagnostics/ (much faster).",
+    )
+    parser.add_argument(
+        "--no-stale-gee-fallback",
+        action="store_true",
+        help=(
+            "When Earth Engine probe fails, still pass --force-refresh into the extractor "
+            "(do not silently reuse stale data/aux caches). Prefer this for a genuinely "
+            "fresh run once GEE is configured."
+        ),
+    )
     args = parser.parse_args()
 
     global FINAL_RUN_ROOT  # noqa: PLW0603
@@ -420,14 +444,19 @@ def main() -> int:
     gee_status = gee_probe(logger)
     requested_force_refresh = not args.no_force_refresh
     force_refresh = requested_force_refresh
-    if requested_force_refresh and not gee_status.get("available"):
+    if requested_force_refresh and not gee_status.get("available") and not args.no_stale_gee_fallback:
         logger.warning(
             "[FINAL RUN] GEE unavailable — disabling --force-refresh to avoid empty merged dataset. "
             "Pipeline will reuse the cached aux parquets (most recent successful GEE extraction)."
         )
         force_refresh = False
 
-    pipeline_status = run_full_pipeline(quick_test=args.quick_test, force_refresh=force_refresh, logger=logger)
+    pipeline_status = run_full_pipeline(
+        quick_test=args.quick_test,
+        force_refresh=force_refresh,
+        logger=logger,
+        skip_exhaustive_preprocess_plots=args.skip_exhaustive_preprocess_plots,
+    )
     pipeline_status["requested_force_refresh"] = requested_force_refresh
     pipeline_status["effective_force_refresh"] = force_refresh
 

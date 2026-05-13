@@ -207,7 +207,14 @@ def _save_hist(series: pd.Series, title: str, xlabel: str, out_path: Path, bins:
     plt.close()
 
 
-def create_plots(df: pd.DataFrame, schema: dict[str, str | None], stats: dict[str, Any], out_dir: Path) -> None:
+def create_plots(
+    df: pd.DataFrame,
+    schema: dict[str, str | None],
+    stats: dict[str, Any],
+    out_dir: Path,
+    *,
+    exhaustive_nan_bars: bool = False,
+) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     vv = _numeric(df, schema["vv_mean_col"])
     vh = _numeric(df, schema["vh_mean_col"])
@@ -272,15 +279,18 @@ def create_plots(df: pd.DataFrame, schema: dict[str, str | None], stats: dict[st
 
     nan_pct = pd.Series(stats["data_quality"]["nan_percentage_per_feature"]).sort_values(ascending=False)
     if not nan_pct.empty:
-        top = nan_pct.head(30)
-        plt.figure(figsize=(12, 6))
-        plt.bar(top.index.astype(str), top.values)
-        plt.title("NaN Percentage by Feature (Top 30)")
-        plt.xlabel("Feature")
-        plt.ylabel("NaN %")
-        plt.xticks(rotation=75, ha="right")
+        top = nan_pct if exhaustive_nan_bars else nan_pct.head(30)
+        nh = float(np.clip(max(6.0, len(top) * 0.2), 6.0, 140.0))
+        plt.figure(figsize=(12, nh))
+        plt.barh(top.index.astype(str)[::-1], top.values[::-1], color="#4a6991", alpha=0.9)
+        if exhaustive_nan_bars:
+            ttl = "NaN percentage by feature (all numeric/columns in stats)"
+        else:
+            ttl = "NaN percentage by feature (Top 30)"
+        plt.title(ttl)
+        plt.xlabel("NaN %")
         plt.tight_layout()
-        plt.savefig(out_dir / "nan_percentage_per_feature.png", dpi=300)
+        plt.savefig(out_dir / "nan_percentage_per_feature.png", dpi=300, bbox_inches="tight")
         plt.close()
 
 
@@ -380,7 +390,14 @@ def write_summary_markdown(stats: dict[str, Any], summary_path: Path) -> None:
     summary_path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def run(input_path: Path, output_dir: Path, summary_path: Path, weekly_breakdown: bool = True) -> None:
+def run(
+    input_path: Path,
+    output_dir: Path,
+    summary_path: Path,
+    weekly_breakdown: bool = True,
+    *,
+    exhaustive_nan_bars: bool = False,
+) -> None:
     if not input_path.exists():
         raise FileNotFoundError(f"Input dataset not found: {input_path}")
 
@@ -392,7 +409,7 @@ def run(input_path: Path, output_dir: Path, summary_path: Path, weekly_breakdown
         stats["temporal_stability"] = {}
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    create_plots(df, schema, stats, output_dir)
+    create_plots(df, schema, stats, output_dir, exhaustive_nan_bars=exhaustive_nan_bars)
     write_summary_markdown(stats, summary_path)
 
     stats_path = output_dir / "eda_stats.json"
@@ -427,8 +444,19 @@ def main() -> None:
         action="store_true",
         help="Disable per-week aggregation statistics.",
     )
+    parser.add_argument(
+        "--exhaustive-nan-bars",
+        action="store_true",
+        help="Plot NaN % for every feature in the stats table (vs top 30 only).",
+    )
     args = parser.parse_args()
-    run(args.input, args.output_dir, args.summary_path, weekly_breakdown=not args.no_weekly_breakdown)
+    run(
+        args.input,
+        args.output_dir,
+        args.summary_path,
+        weekly_breakdown=not args.no_weekly_breakdown,
+        exhaustive_nan_bars=args.exhaustive_nan_bars,
+    )
 
 
 if __name__ == "__main__":
