@@ -1,0 +1,3 @@
+# Figure 5.10 — Rolling-baseline anomalies
+
+Weekly cross-cell medians retain the original nine-week rolling baseline and pooled 93rd-percentile anomaly rule documented in ``anomaly_detection_summary.csv``. The left panel compresses anomalies to month-start bins (any anomaly week inside the month activates the stripe) for NO₂, MEI, NDTI and FAI, replacing the unusable raster of weekly timestamps. Centre panel counts how many stress systems co-fire each week, applies a centred three-week rolling median smoother, draws thin vertical markers for overlap weeks with three or more simultaneous anomalies, and labels only those weeks. Right panel retains a single pairwise co-occurrence count matrix summarising concurrency across the headline indicators.

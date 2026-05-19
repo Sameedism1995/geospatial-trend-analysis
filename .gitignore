@@ -30,6 +30,7 @@ htmlcov/
 # Secrets — never commit
 .env
 **/.env
+.current_run.env
 
 # Dependencies
 node_modules/

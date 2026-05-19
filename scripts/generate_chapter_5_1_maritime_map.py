@@ -212,26 +212,39 @@ def build_panel() -> None:
 
     mpl.rcParams.update(
         {
-            "font.family": "serif",
-            "font.size": 10,
-            "axes.titlesize": 12,
-            "axes.labelsize": 10,
+            "figure.facecolor": "white",
+            "axes.facecolor": "#f9fafc",
+            "font.family": "sans-serif",
+            "font.sans-serif": ["DejaVu Sans", "Arial", "Liberation Sans", "sans-serif"],
+            "font.size": 10.25,
+            "axes.titlesize": 12.0,
+            "axes.titleweight": "semibold",
+            "axes.labelsize": 10.35,
+            "axes.labelpad": 4,
+            "axes.edgecolor": "#465a70",
+            "axes.linewidth": 0.9,
+            "xtick.labelsize": 9.2,
+            "ytick.labelsize": 9.2,
             "figure.dpi": 120,
+            "savefig.dpi": 400,
+            "savefig.facecolor": "white",
+            "pdf.fonttype": 42,
         }
     )
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    fig = plt.figure(figsize=(8.2, 9.4), layout="constrained")
+    fig = plt.figure(figsize=(8.35, 9.55), layout="constrained")
     ax = fig.add_subplot(111)
-    ax.set_facecolor("#f5f9fc")
+    ax.set_facecolor("#fafbfd")
 
     gdf.plot(
         ax=ax,
         column="mean_vessel_density_t",
         cmap=cmap,
         norm=norm,
-        linewidth=0.22,
-        edgecolor="#6b7c8f",
+        linewidth=0.18,
+        edgecolor="#5e6f80",
+        alpha=0.94,
         zorder=2,
         legend=False,
     )
@@ -289,17 +302,18 @@ def build_panel() -> None:
     ax.set_xlabel("Longitude (°E)")
     ax.set_ylabel("Latitude (°N)")
     ax.set_title(
-        "Baltic study region: discrete grid-cell choropleth of mean vessel-density (ML panel)",
-        pad=10,
-        fontweight="semibold",
+        "Baltic study region · discrete lattice choropleth of mean vessel-density (ML panel)",
+        pad=12,
+        color="#172133",
     )
     ax.set_aspect("equal", adjustable="box")
-    ax.grid(True, linestyle=":", linewidth=0.45, color="0.55", alpha=0.45, zorder=0)
+    ax.grid(True, linestyle=":", linewidth=0.62, color="0.72", alpha=0.42, zorder=0)
 
     sm = ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
-    cbar = fig.colorbar(sm, ax=ax, orientation="horizontal", shrink=0.72, pad=0.09, extend="max")
-    cbar.set_label("Mean weekly vessel-density index (EMODnet; time-averaged per grid cell)")
+    cbar = fig.colorbar(sm, ax=ax, orientation="horizontal", shrink=0.74, pad=0.098, extend="max")
+    cbar.set_label("Mean weekly vessel-density index (time-averaged per grid cell)")
+    cbar.ax.tick_params(labelsize=9.1)
 
     port_handles = [
         mlines.Line2D(

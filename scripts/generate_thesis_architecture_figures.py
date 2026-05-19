@@ -9,10 +9,11 @@ from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "outputs" / "reports" / "thesis_methodology" / "figures"
+OUT_FINAL = ROOT / "outputs" / "final_figures"
 DPI = 300
 
 
-def _box(ax, xy, w, h, text, fc, ec="#2c3e50", fontsize=8.5):
+def _box(ax, xy, w, h, text, fc, ec="#394b59", fontsize=8.5):
     x, y = xy
     r = FancyBboxPatch(
         (x, y),
@@ -21,7 +22,7 @@ def _box(ax, xy, w, h, text, fc, ec="#2c3e50", fontsize=8.5):
         boxstyle="round,pad=0.02,rounding_size=0.02",
         facecolor=fc,
         edgecolor=ec,
-        linewidth=1.2,
+        linewidth=1.05,
         zorder=2,
     )
     ax.add_patch(r)
@@ -38,13 +39,13 @@ def _box(ax, xy, w, h, text, fc, ec="#2c3e50", fontsize=8.5):
     return (x + w / 2, y + h), (x + w / 2, y)  # top center, bottom center
 
 
-def _arrow(ax, p0, p1, color="#34495e"):
+def _arrow(ax, p0, p1, color="#3d5166"):
     arr = FancyArrowPatch(
         p0,
         p1,
         arrowstyle="-|>",
         mutation_scale=12,
-        linewidth=1.3,
+        linewidth=1.35,
         color=color,
         zorder=1,
     )
@@ -307,11 +308,160 @@ def figure_data_flow_integration():
     return path
 
 
+def figure_conceptual_research_alignment() -> tuple[Path, Path]:
+    """Vertical conceptual flow: maritime traffic → monitoring outcomes (thesis insert)."""
+    plt.rcParams.update(
+        {
+            "font.family": "DejaVu Sans",
+            "font.size": 10.35,
+            "figure.dpi": 118,
+            "savefig.dpi": 380,
+            "savefig.facecolor": "white",
+            "pdf.fonttype": 42,
+        }
+    )
+    stem = "fig_conceptual_research_alignment_diagram"
+
+    fig, ax = plt.subplots(figsize=(7.35, 11.52))
+    ax.set_xlim(0.2, 9.95)
+    ax.set_ylim(3.85, 12.25)
+    ax.axis("off")
+    ax.set_facecolor("#fdfefe")
+    fig.patch.set_facecolor("white")
+
+    ax.text(
+        5.08,
+        11.92,
+        "Conceptual research alignment",
+        fontsize=14.05,
+        fontweight="bold",
+        ha="center",
+        va="bottom",
+        color="#172133",
+    )
+    ax.text(
+        5.08,
+        11.48,
+        "From maritime forcing to interpreted coastal exposure and sustained monitoring",
+        fontsize=9.55,
+        ha="center",
+        va="bottom",
+        style="italic",
+        color="#4f5d6e",
+    )
+
+    bx, bw = 1.06, 8.05
+    xs = bx + bw / 2
+    palette = ["#e9f4fc", "#ecf8ef", "#f4eef9", "#fff6eb", "#edf1f9"]
+    stacks = [
+        (10.06, 0.9, "Maritime Traffic"),
+        (
+            8.44,
+            1.22,
+            "Atmospheric & Marine Indicators\n(NO₂, NDTI, FAI, MEI)",
+        ),
+        (6.93, 0.88, "Spatial Exposure Analysis"),
+        (5.72, 0.92, "Coastal / Port Exposure Interpretation"),
+        (4.35, 0.94, "Sustainable Environmental Monitoring"),
+    ]
+
+    for idx, (_yb, hh, lbl) in enumerate(stacks):
+        _box(ax, (bx, _yb), bw, hh, lbl, palette[idx], fontsize=10.05 if idx != 4 else 9.95)
+
+    for i in range(len(stacks) - 1):
+        y_bot_upper, h_u, _ = stacks[i]
+        y_bot_lower, h_l, _ = stacks[i + 1]
+        _arrow(ax, (xs, y_bot_upper), (xs, y_bot_lower + h_l))
+
+    png_kw = dict(bbox_inches="tight", pad_inches=0.4, facecolor="white")
+    pdf_kw = dict(bbox_inches="tight", pad_inches=0.38, facecolor="white")
+    OUT_FINAL.mkdir(parents=True, exist_ok=True)
+    png_p = OUT_FINAL / f"{stem}.png"
+    pdf_p = OUT_FINAL / f"{stem}.pdf"
+    fig.savefig(png_p, dpi=380, **png_kw)
+    fig.savefig(pdf_p, dpi=320, **{k: v for k, v in pdf_kw.items()})
+    plt.close(fig)
+
+    cap = """## Conceptual research alignment diagram\n\nSimple vertical logic chain for the thesis **Results** storyline: maritime activity couples to remote-sensing atmospheric and aquatic indicators that are summarized in **spatial exposure** diagnostics, interpreted with respect to coastal and adjacent-port context, and linked to notions of ongoing **environmental monitoring** under sustainability framing.\n"""
+    (OUT_FINAL / f"{stem}_caption.md").write_text(cap, encoding="utf-8")
+
+    return png_p, pdf_p
+
+
+def figure_ml_workflow_pipeline_simple():
+    """Vertical analytic chain: panel → scaling → ensemble → interpretation (thesis methods insert)."""
+
+    stem = "fig_ml_workflow_pipeline"
+    cx, bw = 5.0, 6.75
+    h_step = 0.52
+    gap = 0.18
+    y_top = 10.42
+
+    steps = (
+        ("Raw datasets", "#ffffff"),
+        ("Preprocessing", "#f5f7fa"),
+        ("Feature engineering", "#ffffff"),
+        ("Balanced panel generation", "#f5f7fa"),
+        ("Train / test split", "#ffffff"),
+        ("Feature scaling", "#f5f7fa"),
+        ("Ridge + HGBR", "#eef4ff"),
+        ("Evaluation metrics", "#f5f7fa"),
+        ("Environmental interpretation", "#edf9f5"),
+    )
+
+    fig, ax = plt.subplots(figsize=(7.85, 10.6), dpi=DPI)
+    ax.set_xlim(0.2, 11.2)
+    ax.set_ylim(0.42, y_top + 0.35)
+    ax.axis("off")
+    ax.set_facecolor("#ffffff")
+    fig.patch.set_facecolor("white")
+
+    ax.text(cx, y_top + 0.22, "ML analytic workflow", fontsize=14.25, fontweight="bold", ha="center", color="#1f2933")
+    ax.text(
+        cx,
+        y_top + 0.02,
+        "From harmonised observational stacks to associative environmental interpretation",
+        fontsize=9.15,
+        ha="center",
+        style="italic",
+        color="#5c6b73",
+    )
+
+    boxes = []
+    y = y_top - 1.08
+    for label, fc in steps:
+        yb = y - h_step
+        _box(ax, (cx - bw / 2, yb), bw, h_step, label, fc, fontsize=10.05)
+        boxes.append(dict(xm=cx, yb=yb, yt=y))
+        y = yb - gap
+
+    for a, b in zip(boxes, boxes[1:]):
+        _arrow(ax, (a["xm"], a["yb"] - 0.015), (b["xm"], b["yt"] + 0.015), color="#3d5a73")
+
+    OUT_FINAL.mkdir(parents=True, exist_ok=True)
+    png_path = OUT_FINAL / f"{stem}.png"
+    pdf_path = OUT_FINAL / f"{stem}.pdf"
+    fig.savefig(png_path, dpi=DPI, bbox_inches="tight", pad_inches=0.28, facecolor="white")
+    fig.savefig(pdf_path, dpi=DPI, bbox_inches="tight", pad_inches=0.26, facecolor="white")
+    plt.close(fig)
+    cap = OUT_FINAL / f"{stem}_caption.md"
+    cap.write_text(
+        "## ML workflow pipeline (simple)\n\n"
+        "End-to-end flow from ingestion-ready stacks through the balanced weekly panel, "
+        "held-out modelling, Ridge + histogram gradient boosted regression ensemble, quantitative evaluation, "
+        "and associative environmental interpretation. **Not causal inference.**\n",
+        encoding="utf-8",
+    )
+    return png_path, pdf_path
+
+
 def main():
     p1 = figure_system_architecture()
     p2 = figure_pipeline_orchestration()
     p3 = figure_data_flow_integration()
-    for p in (p1, p2, p3):
+    p4a, p4b = figure_conceptual_research_alignment()
+    p5a, p5b = figure_ml_workflow_pipeline_simple()
+    for p in (p1, p2, p3, p4a, p4b, p5a, p5b):
         print(p.relative_to(ROOT))
 
 
