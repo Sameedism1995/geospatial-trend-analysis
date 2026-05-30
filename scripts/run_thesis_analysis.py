@@ -234,14 +234,22 @@ def decay_band_numeric(zone: str) -> float:
 
 
 def load_decay_csv() -> tuple[pd.DataFrame, str]:
+    def _read_and_normalise(path: Path) -> pd.DataFrame:
+        df = pd.read_csv(path)
+        if "distance_band" in df.columns and "distance_zone" not in df.columns:
+            df = df.rename(columns={"distance_band": "distance_zone"})
+        if "wind_regime" not in df.columns:
+            df["wind_regime"] = "all"
+        return df
+
     if PRIMARY_DECAY.is_file():
-        return pd.read_csv(PRIMARY_DECAY), str(PRIMARY_DECAY.relative_to(ROOT))
+        return _read_and_normalise(PRIMARY_DECAY), str(PRIMARY_DECAY.relative_to(ROOT))
     if FALLBACK_DECAY.is_file():
         WARNINGS.append(
             f"Primary decay file missing; used fallback: {FALLBACK_DECAY.relative_to(ROOT)}"
         )
         MISSING.append(str(PRIMARY_DECAY.relative_to(ROOT)))
-        return pd.read_csv(FALLBACK_DECAY), str(FALLBACK_DECAY.relative_to(ROOT))
+        return _read_and_normalise(FALLBACK_DECAY), str(FALLBACK_DECAY.relative_to(ROOT))
     MISSING.append(str(PRIMARY_DECAY.relative_to(ROOT)))
     MISSING.append(str(FALLBACK_DECAY.relative_to(ROOT)))
     raise FileNotFoundError("No distance decay CSV found.")

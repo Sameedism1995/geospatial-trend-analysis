@@ -1,7 +1,1 @@
-- maritime_exposure_index: insufficient numeric series for coastline–distance comparison.
-- Mean atmospheric_coastal_exposure_index decreases from the nearest band toward offshore distances, consistent with stronger coastal/port proximity signals near shore (association only).
-- Mean environmental_stress_index decreases from the nearest band toward offshore distances, consistent with stronger coastal/port proximity signals near shore (association only).
-- Mean local_no2_excess decreases from the nearest band toward offshore distances, consistent with stronger coastal/port proximity signals near shore (association only).
-- Mean oil_slick_proxy increases with distance from the focal port bands in this summary table (association only); interpret jointly with metric definition and coverage.
-- Mean ndti_mean decreases from the nearest band toward offshore distances, consistent with stronger coastal/port proximity signals near shore (association only).
-- Mean ndwi_mean increases with distance from the focal port bands in this summary table (association only); interpret jointly with metric definition and coverage.
+

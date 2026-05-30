@@ -28,20 +28,14 @@ Among the Spearman matrix subset, the largest-magnitude association is **ndwi_me
 Distance-stratified summaries (port-centred bands) summarise how decadal/week-aggregated means move from 0–3 km to 15–30 km. 
 **Automated synopsis (distance-decay metrics):**
 
-- maritime_exposure_index: insufficient numeric series for coastline–distance comparison.
-- Mean atmospheric_coastal_exposure_index decreases from the nearest band toward offshore distances, consistent with stronger coastal/port proximity signals near shore (association only).
-- Mean environmental_stress_index decreases from the nearest band toward offshore distances, consistent with stronger coastal/port proximity signals near shore (association only).
-- Mean local_no2_excess decreases from the nearest band toward offshore distances, consistent with stronger coastal/port proximity signals near shore (association only).
-- Mean oil_slick_proxy increases with distance from the focal port bands in this summary table (association only); interpret jointly with metric definition and coverage.
-- Mean ndti_mean decreases from the nearest band toward offshore distances, consistent with stronger coastal/port proximity signals near shore (association only).
-- Mean ndwi_mean increases with distance from the focal port bands in this summary table (association only); interpret jointly with metric definition and coverage.
+> (No automated lines; check decay summaries.)
 
-**Quantitative cue:** aggregated band slope cue — ndwi_mean: Δ(far−near)=0.172176 (non_decreasing)
+**Quantitative cue:** aggregated band slope cue — n/a
 
 ## 5. Wind-Regime Findings
 
 Comparing decay-table rows labelled shoreward versus nonshoreward highlights indicators whose band means shift under onshore-aligned flow assumptions (see `wind_regime_summary.csv`). 
-**Largest shoreward amplification (tabular % difference):** coastal_wind_alignment_score at Stockholm: shoreward vs nonshoreward mean gap ≈ 472.51% (table means).
+**Largest shoreward amplification (tabular % difference):** n/a
 
 ## 6. Lagged Relationship Findings
 
@@ -49,7 +43,7 @@ Comparing decay-table rows labelled shoreward versus nonshoreward highlights ind
 
 ## 7. Port Comparisons
 
-Highest mean across listed decay-metric bundle: Turku (row-mean of available metrics). See `port_comparison_summary.csv`, `normalized_port_metrics.csv`, and figure exports.
+Cannot rank ports (missing decay means). See `port_comparison_summary.csv`, `normalized_port_metrics.csv`, and figure exports.
 
 ## 8. Limitations
 
