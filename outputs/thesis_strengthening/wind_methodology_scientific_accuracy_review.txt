@@ -1,0 +1,294 @@
+Wind Methodology — Scientific Accuracy Review
+================================================
+
+Document reviewed: outputs/thesis_strengthening/Thesis_Final_Draft_revised.docx
+Primary section: 3.3.4 Wind and Meteorological Data
+Pipeline reference: src/analysis/run_coastal_wind_transport.py,
+                    src/analysis/run_land_pollution_drivers_wind.py,
+                    src/analysis/run_coastal_exposure_analysis.py
+Data verified: processed/features_ml_ready.parquet,
+                outputs/reports/run_coastal_wind_transport/coastal_wind_alignment_features.csv
+Date of recomputation: May 2026
+
+This file consolidates the full audit output (PASS/FAIL, inconsistencies, and
+corrected text only where necessary). Do not modify the thesis document from
+this file without supervisor review.
+
+
+A) PASS / FAIL SUMMARY
+----------------------
+
+#  Topic                          Verdict
+--  -----------------------------  ------------------------------------------
+1   Geographic coordinates         FAIL
+2   Wind data source               PASS
+3   Wind processing workflow       PASS (minor wording gap on wind-toward)
+4   Spatial sampling methodology   FAIL
+5   Shoreward classification       PASS
+6   Reported statistics            PARTIAL FAIL (speed units/label; shoreward %)
+7   Methodological limitations     FAIL
+
+
+B) INCONSISTENCIES FOUND
+------------------------
+
+1. Geographic coordinates — FAIL
+--------------------------------
+
+Issue              | Thesis text                          | Code / data
+-------------------|--------------------------------------|------------------------------------------
+Typo / corruption  | "latitudes -0.75³-63.05°N"            | Stray ³; invalid notation
+Wrong spatial frame| -0.75°–63.05°N, -24.35°–22.45°E      | Full 315-cell lattice extent (includes
+                   | as "study domain"                    | off-domain artefacts), not Baltic corridor
+                   |                                      | or coastal wind panel
+Coastal wind panel | (not stated correctly)               | 29 cells: 59.85°–60.65°N, 21.05°–22.45°E
+Verified corridor  | (not in §3.3.4)                      | 193 cells: 59.45°–60.45°N, 19.25°–22.35°E
+
+
+2. Wind data source — PASS
+--------------------------
+
+- API: https://archive-api.open-meteo.com/v1/archive
+  (fetch_open_meteo_cluster_wind in run_land_pollution_drivers_wind.py)
+- Hourly parameters: wind_speed_10m, wind_direction_10m
+- Described as Open-Meteo ERA5 Archive / ECMWF ERA5 reanalysis — matches code
+
+
+3. Wind processing workflow — PASS (minor gap)
+----------------------------------------------
+
+Step                          | Thesis | Implementation
+------------------------------|--------|-----------------------------------------------
+Hourly fetch                  | Yes    | Yes
+Speed + direction → U,V       | Yes    | wind_uv_from_open_meteo() per hour;
+                              |        | then groupby(week).mean() on u, v
+Weekly ISO week (Mon–Sun UTC) | Yes    | week_start_utc Monday-normalised
+Reconstruct speed/direction   | Yes    | wind_speed_mean; wind_direction_to_degrees
+                              |        | = wind_to_direction_deg(u_mean, v_mean)
+
+Gap (wording only): Aggregation paragraph does not state that classification uses
+wind-toward from mean u,v (atan2(u,v)), while the next paragraph defines
+meteorological FROM convention. Implementation is correct; one linking sentence
+is needed.
+
+
+4. Spatial sampling methodology — FAIL
+--------------------------------------
+
+Item              | Thesis                          | Implementation
+------------------|---------------------------------|------------------------------------------
+Coastal criteria  | coast ≤30 km, vessel dist <30 km| Same (coastal_panel mask)
+Cell count        | n = 30 cells                    | 29 unique cells; 1,479 cell-weeks; 51 weeks
+k-means           | "via k-means clustering"        | n_clust = 1 for 29 cells → k-means NOT run;
+                  |                                 | centroid = median lat/lon (build_wind_clusters)
+Single centroid   | One series → all panel cells    | PASS — one cluster (~60.45°N, 21.85°E)
+
+
+5. Shoreward classification — PASS
+----------------------------------
+
+Verified on coastal_wind_alignment_features.csv (200-row check, max score error 0):
+
+- Wind-toward: wind_to_direction_deg(u_mean, v_mean)
+- Landward bearing: bearing_cell_to_coast_deg = initial bearing centroid →
+  nearest Natural Earth coast sample
+- Angular difference: smallest_angle_deg(θ_to, θ_landward)
+- Score: coastal_wind_alignment_score = cos(Δθ)
+- Shoreward: score ≥ cos(45°) ≈ 0.707 → coastal_wind_shoreward_45deg
+
+Thesis formula cos(|θ_wind-toward − θ_landward|) ≥ cos(45°) is equivalent to the
+implementation (smallest-angle cosine).
+
+
+6. Reported statistics — PARTIAL FAIL
+-------------------------------------
+
+Wind speed (thesis: 4.76 ± 1.22 m/s, range 2.76–8.25 m/s; 51 weeks; 2023-01-01 to
+2023-12-17):
+
+Stat   | Thesis (m/s) | Stored wind_speed_mean | Stored ÷ 3.6 (m/s)
+-------|--------------|------------------------|--------------------
+Mean   | 4.76         | 17.12 (km/h)           | 4.76
+SD     | 1.22         | 4.39                   | 1.22
+Min    | 2.76         | 9.92                   | 2.76
+Max    | 8.25         | 29.70                  | 8.25
+
+Open-Meteo returns wind_speed_10m in km/h; pipeline stores mean hourly km/h
+without conversion. Reported m/s values match ÷3.6 but thesis does not document
+that conversion. Code comment (~line 925 in run_land_pollution_drivers_wind.py)
+notes km/h.
+
+Shoreward share:
+
+              | Thesis   | Recomputed (current archive)
+--------------|----------|-----------------------------
+Shoreward     | 29.3%    | 29.9% (442 / 1,479)
+Non-shoreward | 70.7%    | 70.1%
+
+29.3% matches 433/1,479 (29.28%) — likely earlier export or rounding, not formula
+error.
+
+Week count / dates: PASS — 51 weeks, 2023-01-01 to 2023-12-17.
+
+
+7. Methodological limitations — FAIL
+------------------------------------
+
+§3.3.4 explains SMHI/FMI preference but does not explicitly state ERA5 is
+reanalysis (not in-situ) and a regional-scale transport indicator. Not clearly
+stated in §6.8 either.
+
+
+§4.5.3 (internal consistency note)
+----------------------------------
+
+Still inconsistent with §3.3.4 and code ("coastline orientation angle"; missing
+ERA5/alignment equation). Align separately if Florian reviews full Chapter 4.
+
+
+C) CORRECTED TEXT (ONLY WHERE NECESSARY)
+----------------------------------------
+
+§3.3.4 — Replace FIRST PARAGRAPH (domain sentence)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+REPLACE:
+  The study domain covered Baltic Sea coastline zone between latitudes
+  -0.75³-63.05°N and longitudes -24.35°-22.45°E, including the focal ports of
+  Turku, Mariehamn, Helsinki and Naantali.
+
+WITH:
+  Wind retrieval for the coastal wind-regime panel focused on grid cells in the
+  Turku–Mariehamn maritime corridor (approximately 59.85°–60.65°N,
+  21.05°–22.45°E; 29 lattice cells in the 2023 panel). The broader thesis
+  lattice spans additional coordinates in the archived panel, but wind time
+  series were not fetched independently for every lattice cell (see spatial
+  clustering below).
+
+
+§3.3.4 — Replace SPATIAL CLUSTERING SENTENCE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+REPLACE:
+  …grid cells within the coastal analysis panel (n = 30 cells; selection
+  criteria: distance to coast ≤30 km and distance to nearest high vessel-density
+  cell <30 km) were grouped into a single spatial cluster via k-means
+  clustering, with the cluster centroid positioned at the median latitude and
+  longitude of the panel cells.
+
+WITH:
+  …the coastal analysis panel comprised 29 grid cells (1,479 cell-week records)
+  meeting distance to coast ≤30 km and distance to the nearest weekly high
+  vessel-density seed cell <30 km. Because the panel contained fewer than 50
+  cells, the clustering routine assigned one wind-sampling location at the
+  median latitude and longitude of those cells (60.45°N, 21.85°E in this build).
+  Hourly ERA5 data were retrieved for that location and assigned to all panel
+  cells for each week.
+
+
+§3.3.4 — ADD ONE SENTENCE (after U/V aggregation paragraph)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+INSERT after "Weekly mean speed and direction were reconstructed from the
+aggregated vector components.":
+
+  For directional classification, weekly mean zonal and meridional components
+  were converted to a wind-toward bearing (θ_to = atan2(U, V), degrees clockwise
+  from north, direction toward which the wind blows); this differs from the
+  meteorological from direction reported by the API.
+
+
+§3.3.4 — Replace WIND SPEED STATISTICS SENTENCE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+REPLACE:
+  …the weekly mean wind speed within the coastal panel was 4.76 ± 1.22 m/s
+  (range: 2.76–8.25 m/s).
+
+WITH:
+  …the weekly mean 10 m wind speed within the coastal panel was 4.76 ± 1.22 m s⁻¹
+  (range: 2.76–8.25 m s⁻¹), computed as the mean of hourly Open-Meteo values
+  converted from km h⁻¹ to m s⁻¹ (÷3.6) before reporting.
+
+Alternative (report in API units):
+  …the weekly mean 10 m wind speed within the coastal panel was 17.1 ± 4.4 km h⁻¹
+  (range: 9.9–29.7 km h⁻¹), taken as the arithmetic mean of hourly Open-Meteo
+  values without unit conversion.
+
+
+§3.3.4 — Replace SHOREWARD PERCENTAGE SENTENCE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+REPLACE:
+  …29.3% … shoreward and 70.7% … non-shoreward.
+
+WITH:
+  …29.9% (442 of 1,479) … shoreward and 70.1% … non-shoreward.
+
+Or use qualitative wording: "approximately 30%" shoreward.
+
+
+§3.3.4 or §6.8 — ADD LIMITATION (new sentence)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ADD:
+  Wind fields are taken from ECMWF ERA5 reanalysis (via Open-Meteo), not from
+  in-situ coastal or harbour anemometers, and therefore represent regional-scale
+  transport indicators suitable for directional stratification rather than
+  verification of local wind or plume transport at the port scale.
+
+
+D) SECTIONS ALREADY ACCURATE (NO REWRITE)
+-----------------------------------------
+
+- Open-Meteo ERA5 Archive URL and ECMWF ERA5 attribution
+- Variable names wind_speed_10m, wind_direction_10m; hourly native resolution
+- Hourly → weekly workflow via U/V component means and ISO weeks
+- Coastal panel selection criteria (≤30 km coast; <30 km to high vessel-density seed)
+- Landward bearing from cell centroid to nearest Natural Earth 1:110m coast sample
+- Shoreward rule cos(Δθ) ≥ cos(45°) and ±45° sector wording
+- SMHI/FMI preference paragraph (accurate as rationale for gridded reanalysis)
+
+
+E) CONSERVATIVE NOTES
+---------------------
+
+- Recomputations used processed/features_ml_ready.parquet and
+  coastal_wind_alignment_features.csv with coastal_panel logic from prepare_panel /
+  run_coastal_wind_transport.py.
+- Shoreward percentages may shift slightly if wind CSV is regenerated from the API.
+- 29.3% vs 29.9% gap is consistent with prior export (433 vs 442 shoreward flags),
+  not a classification formula error.
+
+
+CODE TRACEABILITY
+-----------------
+
+Step                    | Module / function
+------------------------|--------------------------------------------------
+Hourly ERA5 fetch         | fetch_open_meteo_cluster_wind()
+FROM → u,v                | wind_uv_from_open_meteo()
+Weekly mean u,v           | groupby(week_start_utc).mean()
+Wind-toward               | wind_to_direction_deg(u, v)
+Nearest coast point       | grid_nearest_coast_reference_table()
+Landward bearing          | initial_bearing_deg(cell → coast ref)
+Δθ and score              | smallest_angle_deg → cos(radians(Δθ))
+Shoreward flag            | score >= cos(45°)
+Coastal panel mask        | distance_to_coast_km ≤ 30 & shipping distance < 30 km
+Wind cluster (this build) | build_wind_clusters → 1 cluster at median lat/lon
+
+
+RELATED FILES IN REPOSITORY
+---------------------------
+
+outputs/thesis_strengthening/florian_wind_methodology_audit.md
+  — Extended proposed rewrites for §3.3.4, §4.5.3, and §6.8
+
+outputs/sensitivity_analysis/wind_threshold_mannwhitney.csv
+  — Shoreward counts at ±30°, ±45°, ±60° on coastal panel (n=1,479)
+
+Regenerate wind statistics:
+  python3 -c "
+  # See wind_methodology_scientific_accuracy_review.txt verification script
+  # in conversation or re-run coastal wind transport pipeline
+  "

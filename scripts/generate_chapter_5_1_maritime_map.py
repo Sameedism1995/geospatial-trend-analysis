@@ -43,14 +43,12 @@ NE_LAND_URL = "https://naciscdn.org/naturalearth/110m/physical/ne_110m_land.zip"
 
 # Focal ports (WGS84): Turku & Naantali from hub_strategy conventions
 PORT_COORDS: dict[str, tuple[float, float]] = {
-    "Stockholm": (59.3293, 18.0686),
     "Turku": (60.435, 22.225),
     "Mariehamn": (60.0973, 19.9348),
     "Naantali": (60.4669, 22.0258),
 }
 
 STAR_COLOR_BY_PORT: dict[str, str] = {
-    "Stockholm": "#0072b2",
     "Turku": "#d55e00",
     "Mariehamn": "#009e73",
     "Naantali": "#cc79a7",
@@ -146,6 +144,8 @@ def build_panel() -> None:
         raise FileNotFoundError(PARQUET)
 
     df = pd.read_parquet(PARQUET)
+    if "nearest_port" in df.columns:
+        df = df[~df["nearest_port"].astype(str).isin(["Stockholm"])].copy()
     vd_col = "vessel_density_t"
     if vd_col not in df.columns:
         vd_col = "vessel_density"
@@ -281,7 +281,7 @@ def build_panel() -> None:
             linewidths=0.5,
             zorder=14,
         )
-        dx, dy = {"Stockholm": (-1.1, 0.22), "Turku": (0.35, -0.35), "Mariehamn": (0.25, 0.28), "Naantali": (0.35, 0.22)}.get(
+        dx, dy = {"Turku": (0.35, -0.35), "Mariehamn": (0.25, 0.28), "Naantali": (0.35, 0.22)}.get(
             pname, (0.4, 0.2)
         )
         ax.annotate(
@@ -404,7 +404,7 @@ def build_panel() -> None:
     top.to_csv(OUT_DIR / "chapter_5_1_highest_vessel_density_cells.csv", index=False)
 
     port_blocks = []
-    for port in ["Stockholm", "Turku", "Mariehamn", "Naantali"]:
+    for port in ["Turku", "Mariehamn", "Naantali"]:
         sub = agg_b.loc[agg_b["nearest_port"] == port].nlargest(8, "mean_vessel_density_t").copy()
         if sub.empty:
             continue

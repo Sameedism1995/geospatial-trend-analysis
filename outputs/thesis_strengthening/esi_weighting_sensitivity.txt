@@ -1,0 +1,39 @@
+ESI WEIGHTING SENSITIVITY CHECK
+================================
+Method: Component z-scores identical to build_indices() in
+  src/analysis/run_coastal_exposure_analysis.py (weekly z-scores for
+  local_no2_excess, vessel_density_t, ndti_weekly_anomaly, oil_slick_probability_t).
+
+Input: processed/features_ml_ready.parquet + wind merge + prepare_panel() + build_indices()
+Panel size: 16,065 grid-week rows (thesis panel)
+
+Primary ESI (sensitivity): rank-percentile of equal-weight mean of the four z-scores (25% each).
+Alternative ESI: rank-percentile of weighted sum — 35% NO2 excess, 35% vessel density,
+  15% NDTI weekly anomaly, 15% oil slick probability.
+
+Comparison sample: rows where all four component z-scores are finite (n = 2,050).
+
+RESULT (thesis panel)
+---------------------
+  Spearman rho = 0.920, p < 0.001, n = 2,050
+
+Subsets:
+  coastal_panel only (all 4 finite):     n = 208,  rho = 0.924
+  Turku + Mariehamn ports (all 4 finite): n = 1,314, rho = 0.944
+
+Note: Full pipeline environmental_stress_index also includes a wind-rank term in its
+equal-weight mean (5 parts). On the same n = 2,050 overlap, pipeline ESI vs equal
+4-component ESI: rho = 0.996 — the sensitivity paragraph compares the two 4-component
+weighting schemes, not the full 5-part pipeline index.
+
+THESIS WORDING (insert actual rho)
+----------------------------------
+To assess sensitivity to the equal-weighting assumption, an alternative ESI was
+computed assigning 35% weight each to NO₂ excess and vessel density and 15% each
+to NDTI anomaly and oil slick probability, reflecting MARPOL Annex VI regulatory
+priorities. The Spearman correlation between the alternative and primary ESI was
+ρ = 0.920 (p < 0.001, n = 2,050), indicating that temporal and spatial patterns
+are robust to the weighting scheme. Equal weighting was retained for transparency
+and reproducibility.
+
+CSV: outputs/thesis_strengthening/esi_weighting_sensitivity.csv

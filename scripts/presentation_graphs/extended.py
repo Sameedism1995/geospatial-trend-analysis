@@ -617,7 +617,7 @@ def anomaly_detection_plots() -> None:
 
 def comparison_cross_port() -> None:
     fx = load_features().copy()
-    ports = ["Turku", "Mariehamn", "Stockholm"]
+    ports = ["Turku", "Mariehamn"]
 
     def tag_port(name: str) -> str | None:
         s = str(name).lower()

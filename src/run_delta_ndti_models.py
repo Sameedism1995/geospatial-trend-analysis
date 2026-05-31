@@ -657,7 +657,7 @@ def run(
     plot_importance(
         imp,
         plots_dir / "feature_importance_hgb.png",
-        "HistGradientBoosting feature importance (delta_ndti)",
+        "HistGradientBoosting feature importance (delta_ndti) · in-sample (training data only)",
     )
 
     # Plots — ndti_next

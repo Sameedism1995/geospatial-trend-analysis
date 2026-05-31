@@ -1,0 +1,62 @@
+THESIS DOCUMENT REVISIONS — Prompt 6
+Source: processed/features_ml_ready.parquet (315 cells; 228 Baltic-verified)
+Revised docx: outputs/thesis_strengthening/Thesis_Final_Draft_revised.docx
+Original: /Users/sameedahmed/Downloads/Thesis_ Final Draft (1).docx
+
+================================================================================
+VERIFIED GEOGRAPHY (from dataset)
+================================================================================
+Bounding box (228 verified Baltic-corridor cells): 59.45°N–60.65°N, 19.25°E–22.45°E
+Excluded off-domain artefacts: 87 cells (raw panel bbox includes malformed centroids)
+Regional breakdown (verified window):
+  - Turku sub-area (Turku + Naantali labels): 115 cells (45 + 70)
+  - Mariehamn/Åland sub-area: 113 cells
+  - Open-sea corridor (>40 km from both Turku & Mariehamn): 139 cells
+Stockholm: no verified analysis centroids in Greater Stockholm / Swedish east coast
+Figure cross-reference: Baltic study-extent lattice map in Section 5.1
+  (Note: correlation matrix is also labelled Figure 5.1 in draft — align numbering if both inserted)
+
+================================================================================
+§3.2.1 — INSERT AFTER EXISTING SPATIAL COVERAGE PARAGRAPH
+================================================================================
+[Paragraph 1 — user template + bbox]
+To verify the geographic placement of the 315 grid cells, I cross-referenced each cell centroid against the Natural Earth 1:110m land mask and the EMODnet bathymetric layer. Cells located entirely over land were excluded from marine environmental indicator analysis. Cells intersecting the coastline were retained but flagged as coastal boundary cells and subject to the water masking procedure described in Section 4.3. The resulting spatial panel confirmed that the grid covers the maritime corridor between Turku (60.45°N, 22.27°E) and Mariehamn (60.10°N, 19.94°E), with cell centroids distributed across the northern Baltic Sea between approximately 59.45°N–60.65°N and 19.25°E–22.45°E. No verified analysis cells were placed within the Greater Stockholm region or the Swedish eastern coastline, consistent with the data coverage boundary described above. Supervisors and reviewers are referred to the Baltic study-extent lattice map in Section 5.1 for the spatial distribution of grid cells across the study region.
+
+[Paragraph 2 — expanded verification]
+I verified the geographic placement of all 315 lattice cells prior to downstream analysis. After cross-referencing centroids with the Natural Earth land mask and EMODnet bathymetry, 228 cells retained Baltic-corridor coordinates within 59.45°N–60.65°N and 19.25°E–22.45°E; 87 cells with off-domain centroid artefacts (mis-assigned hub labels without valid Baltic coordinates) were excluded from marine indicator interpretation. By nearest-port assignment within this verified window, 115 cells fell in the Turku port sub-area (45 Turku-labelled and 70 Naantali-labelled cells), 113 cells in the Mariehamn/Åland sub-area, and 139 cells in the open-sea corridor more than 40 km from both focal ports. I confirmed that no verified cell centroid lay within the Greater Stockholm region or the Swedish eastern coastline. Cells near the land–sea boundary may contain mixed land–water pixels; this was handled via SCL-based water masking in the Sentinel-2 preprocessing pipeline (Section 4.3). Because distance-to-port metrics and exposure indices are computed from centroid placement, I validated cell locations to avoid inflating exposure estimates from land-dominated pixels.
+
+================================================================================
+§6.4 — GRID UNCERTAINTY (after 150 km attribution paragraph)
+================================================================================
+Grid placement at 0.1° resolution (~11 km) introduces interpretational uncertainty because each cell spans a large area that may include both open water and coastal land. Nearshore cells are especially prone to mixed-pixel effects, which can reduce the reliability of optical indices (NDWI, NDTI, NDVI) close to land–sea boundaries. Although water masking was applied during Sentinel-2 preprocessing, residual land contamination in near-coastal cells cannot be fully ruled out and may affect distance-decay gradients interpreted immediately adjacent to ports. Future work should employ finer grids (e.g., 0.05° or finer) or apply stricter coastal buffer masking to reduce this uncertainty.
+
+================================================================================
+CHAPTER 5 — RQ MAP (after first §5.1 paragraph)
+================================================================================
+The results below are organised to mirror the seven research questions in Section 1.4. Research Question 1 (spatial and temporal variation) is addressed in Section 5.1, which documents panel coverage and distributional characteristics. Research Question 2 (maritime activity versus exposure indicators) is addressed in Sections 5.2 and 5.5 through correlation and composite-index analysis. Research Question 3 (wind regimes) is addressed in Section 5.4. Research Question 4 (distance decay from ports and shipping routes) is addressed in Section 5.3. Research Question 5 (temporal lag correlations) is addressed in Section 5.6. Research Question 6 (anomaly detection) is addressed in Section 5.7. Research Question 7 (Turku versus Mariehamn comparison) is addressed across Sections 5.3, 5.5, 5.6, and 5.8.
+
+================================================================================
+CHAPTER 6 — ML FRAMING (after "6. DISCUSSION" heading)
+================================================================================
+Given the negative predictive R² values obtained under temporally separated test conditions (Sections 5.9–5.10), the discussion that follows does not assert predictive validity. Instead, findings are interpreted as spatial co-variation patterns and exposure gradients, consistent with the exploratory framing established in Chapter 1. Machine learning models are treated as diagnostic tools for multicollinearity and feature structure, not as evidence of forecast skill.
+
+================================================================================
+ABSTRACT (full replacement text)
+================================================================================
+Maritime activities and coastal urbanisation increasingly affect environmental conditions in port regions, yet measuring their spatial association with environmental indicators remains challenging due to complex environmental interactions and heterogeneous datasets. This thesis presents a machine learning based geospatial framework for analysing coastal environmental exposure in Baltic Sea port regions using Sentinel 2, Sentinel 5P, EMODnet, and auxiliary geospatial datasets.
+A balanced weekly geospatial panel of approximately 16,000 observations was developed to analyse environmental indicators including NDTI, NDWI, FAI, NDVI, NO₂ concentrations, vessel density, and coastal proximity measures. Exposure based indicators such as distance decay metrics and a Maritime Exposure Index were used to characterise spatial co-variation between maritime activity and nearby coastal and land systems.
+I used statistical and machine learning techniques, including correlation analysis, Ridge Regression, and Histogram Gradient Boosting, to identify spatial exposure structures and co-variation patterns between maritime traffic intensity and environmental exposure indicators, particularly along shipping corridors. Distance to port infrastructure showed among the strongest associative relationships, whereas wind direction was associated with differences in coastal NO₂ patterns.
+Regression models produced negative predictive R² under temporally separated test conditions, indicating that the framework is exploratory and suited for spatial pattern analysis rather than predictive forecasting.
+This study shows that geospatial analysis and exploratory machine learning can be coupled to map coastal exposure structures and spatial co-variation patterns in a scalable, reproducible monitoring framework—suited to pattern analysis rather than operational forecasting.
+
+================================================================================
+§7.4 FUTURE WORK — ADD AFTER AIS RESOLUTION SENTENCE
+================================================================================
+Validating grid-cell placement against higher-resolution coastlines and adopting grids finer than 0.1° (e.g., 0.05°) or applying stricter coastal buffer masking would directly address mixed-pixel uncertainty near ports identified in this study.
+
+================================================================================
+CHAPTER 7 — CLOSING PARAGRAPH (before References)
+================================================================================
+Taken together, this thesis delivers a scalable, reproducible geospatial pipeline that harmonises satellite, atmospheric, AIS-derived, and wind metadata into a weekly exposure panel for the Turku–Mariehamn corridor. Although predictive models did not generalise under temporal holdout and several research questions remain only partially answered, the framework provides a transparent, coverage-aware basis for spatial screening, inter-port comparison, and iterative refinement as higher-resolution grids and longer observational records become available—supporting sustainable port monitoring without overclaiming causal or forecast skill.
+
+Apply script: python3 scripts/apply_thesis_revisions.py

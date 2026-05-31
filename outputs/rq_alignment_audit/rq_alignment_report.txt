@@ -1,0 +1,733 @@
+================================================================================
+RESEARCH QUESTION ALIGNMENT AUDIT
+================================================================================
+
+Thesis:     ML-Based Geospatial Analysis of Coastal Water Quality and Urban
+            Exposure
+
+Source:     Chapter 1, Section 1.4 — Thesis_ Final Draft.docx
+            (/Users/sameedahmed/Downloads/Thesis_ Final Draft.docx)
+
+Audit date: 2026-05-30 (revised against Final Draft)
+
+Scope:      Existing repository artefacts only; no new data collection suggested.
+
+Repository: /Users/sameedahmed/geospatial-trend-analysis/
+
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+VERDICT COUNTS
+--------------
+  Partially Answered .......... 7  (RQ1 through RQ7)
+  Weakly Answered ............. 0  (RQ3 is weakest within "Partially")
+  Fully Answered .............. 0
+  Not Answered ................ 0
+
+
+CAN EACH RESEARCH QUESTION BE DEFENDED USING THE CURRENT EVIDENCE?
+------------------------------------------------------------------
+
+  - YES, WITH EXPLICIT CAVEATS for RQ1, RQ4, RQ6, and RQ7. The Final Draft
+    correctly scopes comparison to Turku vs Mariehamn and excludes Stockholm
+    (Sections 1.5.4, 3.2.1), which aligns with repository coverage.
+
+  - RQ2 and RQ5 are defensible only for composite/atmospheric associations.
+    Maritime-to-optical water-quality links remain weak or undefined at
+    port-specific temporal scale.
+
+  - RQ3 is the thinnest. The draft itself reports Mann-Whitney U = 152,763,
+    p = 0.815 for vessel density vs wind regime (Section 5.4), correctly
+    framing vessel-wind differences as seasonal confound. Directional claims
+    rest mainly on MEI/CES stratification (wind is an MEI input), not
+    independent NO2 transport proof.
+
+  - NO RQ is "fully answered" in a strong inferential sense. All remain
+    associational, single-year, and missingness-constrained.
+
+
+STRONGEST EVIDENCE OVERALL
+--------------------------
+  - Port-centred distance-decay for MEI/vessel density (Section 5.3)
+  - Turku-Mariehamn ranking (Sections 5.3, 5.5)
+  - Pooled vessel-ESI Spearman rho = 0.25 (n = 102)
+  - NO2 persistence (lag-1 rho approximately 0.41)
+  - Anomaly co-occurrence tables (Section 5.7)
+
+
+FIGURE NUMBERING NOTE
+---------------------
+  This audit maps repository artefacts to the Final Draft chapter structure.
+  Repository figure numbers (e.g. repo Fig. 5.6 decay, 5.7 wind) differ from
+  some Final Draft placements (draft Section 5.3 cites "Figure 5.7" for
+  shoreline gradients; Section 5.4 uses 5.7a/5.7b for wind).
+
+
+================================================================================
+1. RESEARCH QUESTIONS (VERBATIM FROM FINAL DRAFT SECTION 1.4)
+================================================================================
+
+RQ1. How do environmental indicators vary spatially and temporally across
+     Baltic coastal port regions?
+
+RQ2. What relationships can be identified between maritime activity intensity
+     and environmental exposure indicators?
+
+RQ3. How do wind regimes and directional transport dynamics influence coastal
+     environmental exposure patterns?
+
+RQ4. How does the intensity of exposure to the environment alter with
+     increasing distance from ports and shipping routes?
+
+RQ5. Are there temporal lag correlations between environmental indicators,
+     marine activity and atmospheric exposure that can be measured
+
+RQ6. Can spatiotemporal anomaly detection approaches detect anomalous
+     environmental circumstances and clustering behaviour in coastal maritime
+     systems?
+
+RQ7. What are the differences in maritime exposure structures and environmental
+     patterns between the port regions of Turku and Mariehamn within the
+     Turku-Mariehamn-Aland corridor?
+
+
+SCOPE NOTE (Final Draft, not RQ text)
+-------------------------------------
+  Stockholm is EXCLUDED from final analysis (Sections 1.3.4, 1.5.4, 3.2.1).
+  The corridor is Turku-Mariehamn-Aland only.
+
+
+================================================================================
+2. EVIDENCE MATRIX
+================================================================================
+
+--------------------------------------------------------------------------------
+RQ1 — Spatial and temporal variation
+--------------------------------------------------------------------------------
+  Supporting analysis:
+    Panel audit; missingness; distributional and weekly temporal summaries;
+    correlation overview
+
+  Final Draft sections / figures:
+    Section 5.1, Section 5.2; Fig. 5.1-5.3; Table 5.1
+
+  Repository artefacts:
+    outputs/thesis/chapter_5_1_*.md and *.csv
+    outputs/reports/spearman_correlation.csv
+    outputs/final_figures/chapter_5_1_baltic_vessel_density_maritime_exposure.png
+
+  Evidence strength: MODERATE
+
+  Main limitation:
+    Optical approximately 18-19% valid; NDVI approximately 2.3%; temporal
+    plots reflect observable weeks only
+
+
+--------------------------------------------------------------------------------
+RQ2 — Maritime activity vs exposure indicators
+--------------------------------------------------------------------------------
+  Supporting analysis:
+    Cross-domain correlations; MEI/ESI/CES; pooled and port-disaggregated
+    Spearman; oil-proxy coastal tests
+
+  Final Draft sections / figures:
+    Sections 5.2, 5.3, 5.5; Fig. 5.1, 5.8
+
+  Repository artefacts:
+    outputs/final_run_turku_mariehamn_thesis/tables/final_temporal_relationships.csv
+    outputs/reports/port_exposure_ranking.csv
+    outputs/thesis_analysis/cross_category_relationships.csv
+
+  Evidence strength: MODERATE (composites) / WEAK (optical)
+
+  Main limitation:
+    Basin vessel-NO2 rho approximately 0.096; port temporal vessel-ESI NaN;
+    ML test R2 negative (Sections 5.9-5.10)
+
+
+--------------------------------------------------------------------------------
+RQ3 — Wind regimes and directional transport
+--------------------------------------------------------------------------------
+  Supporting analysis:
+    Shoreward/non-shoreward classification; Mann-Whitney on composites and
+    vessel density; participation by regime
+
+  Final Draft sections / figures:
+    Section 5.4; Fig. 5.7a, 5.7b
+
+  Repository artefacts:
+    outputs/reports/vessel_density_wind_regime_tests.csv
+    outputs/reports/coastal_exposure_statistics.csv
+    outputs/reports/wind_regime_statistics.csv
+
+  Evidence strength: WEAK-MODERATE
+
+  Main limitation:
+    Vessel-wind p = 0.815 (draft acknowledges); MEI wind effect partly
+    definitional; Mariehamn 0 shoreward rows in coastal-panel vessel test
+
+
+--------------------------------------------------------------------------------
+RQ4 — Distance decay from ports and shipping lanes
+--------------------------------------------------------------------------------
+  Supporting analysis:
+    Port annuli; shoreline-distance bands; high-vessel-cell distance; decay
+    curves Turku/Mariehamn
+
+  Final Draft sections / figures:
+    Section 5.3; Fig. 5.7 (shoreline gradients in draft)
+
+  Repository artefacts:
+    outputs/final_run_turku_mariehamn_thesis/reports/port_distance_decay_statistics_turku_mariehamn.csv
+    outputs/final_run_turku_mariehamn_thesis/figures/final_distance_decay_turku.png
+    outputs/final_run_turku_mariehamn_thesis/figures/final_distance_decay_mariehamn.png
+    outputs/5_2_to_5_10/thesis_figures/figure_5_6_distance_decay.png
+
+  Evidence strength: MODERATE (MEI/NO2/vessel) / WEAK (optical)
+
+  Main limitation:
+    Inner-band optical n tiny; draft claim 30-50 km > 10-30 km for MEI needs
+    careful defence (see Section 4 of this report)
+
+
+--------------------------------------------------------------------------------
+RQ5 — Temporal lag correlations
+--------------------------------------------------------------------------------
+  Supporting analysis:
+    Lag t, t-1, t-2; roll2/3; persistence; weekly medians; autocorrelation
+    heatmap
+
+  Final Draft sections / figures:
+    Section 5.6
+
+  Repository artefacts:
+    outputs/final_run_turku_mariehamn_thesis/tables/final_temporal_relationships.csv
+    outputs/final_run_turku_mariehamn_thesis/reports/final_temporal_validation.md
+    outputs/final_figures/fig_5_9a_temporal_weekly_medians.png
+    outputs/final_figures/fig_5_9b_lag_autocorrelation_heatmap.png
+
+  Evidence strength: MODERATE (NO2, NO2-ESI) / WEAK (maritime-water quality, NDVI)
+
+  Main limitation:
+    NO2-NDVI n = 2-4 leads to NaN; vessel-NDTI rho approximately 0.08;
+    flat vessel_density within port windows
+
+
+--------------------------------------------------------------------------------
+RQ6 — Anomaly detection and clustering
+--------------------------------------------------------------------------------
+  Supporting analysis:
+    Rolling-baseline flags; co-occurrence matrix; timeline; hotspot maps
+
+  Final Draft sections / figures:
+    Section 5.7
+
+  Repository artefacts:
+    outputs/final_run_turku_mariehamn_thesis/tables/final_anomaly_overlap_table.csv
+    outputs/final_figures/fig_5_10a_anomaly_cooccurrence_heatmap.png
+    outputs/final_figures/fig_5_10b_anomaly_simultaneous_timeline.png
+
+  Evidence strength: MODERATE (detection) / WEAK (clustering inference)
+
+  Main limitation:
+    "Clustering" is visual/descriptive; MEI/vessel flagged all 51 weeks
+    (trivial persistence)
+
+
+--------------------------------------------------------------------------------
+RQ7 — Turku vs Mariehamn differences (corridor)
+--------------------------------------------------------------------------------
+  Supporting analysis:
+    Port ranking; cross-port decay; ESI subregion means; shared-valid annulus;
+    synthesis dashboard
+
+  Final Draft sections / figures:
+    Sections 5.3, 5.5, 5.6, 5.8; Fig. 5.8b hotspots
+
+  Repository artefacts:
+    outputs/reports/port_exposure_ranking.csv
+    outputs/reports/port_pairwise_mannwhitney.csv
+    outputs/final_run_turku_mariehamn_thesis/figures/Fig1-Fig7
+
+  Evidence strength: MODERATE
+
+  Main limitation:
+    Approximately 150 km port separation confounds attribution (draft Section 6
+    acknowledges); MEI-ESI sign reversal Turku (-0.08) vs Mariehamn (+0.26)
+
+
+================================================================================
+3. PER-QUESTION ASSESSMENT
+================================================================================
+
+--------------------------------------------------------------------------------
+RQ1 — SPATIAL AND TEMPORAL VARIATION
+--------------------------------------------------------------------------------
+  Answer status: PARTIALLY ANSWERED
+
+  Final Draft                          Repository
+  -----------                          ----------
+  Section 5.1: 16,065 obs,             chapter_5_1_dataset_core_statistics.csv
+    315 cells, 51 weeks                ALIGNED
+
+  Table 5.1 coverage                   chapter_5_1_missingness_all_columns.csv
+    (NO2 89.9%, optical 18-19%,         ALIGNED
+     NDVI 2.3%)
+
+  Fig. 5.2 distributions,                figure_5_5_statistical_boxplots.png
+    Fig. 5.3 weekly variability        fig_5_9a_temporal_weekly_medians.png
+
+  Section 5.1: vessel density          chapter_5_1_baltic_vessel_density_
+    localized to corridors             maritime_exposure.png  ALIGNED
+
+  Strongest evidence:
+    Documented panel skeleton and high-coverage maritime/atmospheric spatial
+    heterogeneity.
+
+  Gap:
+    Full-panel temporal characterisation of NDTI/NDWI/NDVI is not possible.
+    Section 5.1 correctly states structural missingness but Sections 5.3/6
+    sometimes discuss optical lags with thin n.
+
+  Additional analysis (existing dataset only):
+    - Port-stratified weekly median plots with per-week n badges
+    - Effective sample size table by indicator x month
+
+
+--------------------------------------------------------------------------------
+RQ2 — MARITIME ACTIVITY vs EXPOSURE INDICATORS
+--------------------------------------------------------------------------------
+  Answer status: PARTIALLY ANSWERED
+
+  Final Draft claim                      Repository support
+  ---------------                        ------------------
+  Pooled vessel-ESI rho = 0.25            final_temporal_relationships.csv
+    (n = 102) Section 5.5                row 17: rho = 0.2507, n = 102  ALIGNED
+
+  Turku MEI-ESI rho = -0.08;             Spatial/port-disaggregated;
+    Mariehamn rho = 0.26 Section 5.5     NOT in temporal CSV port columns
+
+  Vessel-density lag persistence         spearman_correlation.csv
+    rho > 0.99 Section 5.1               ALIGNED (if lag columns present)
+
+  ML identifies relationships            CONTRADICTED for predictive use:
+    Section 1.1.4                        rolling CV test R2 approximately -0.09
+                                         (delta NDTI); vessel importance
+                                         approximately 0.0025
+
+  Strongest evidence:
+    Composite exposure ranking (Turku MEI 0.57 vs Mariehamn 0.32); oil slick
+    proxy in high-exposure zones (p approximately 3.5e-13, coastal impact
+    analysis).
+
+  Gap:
+    Direct maritime-to-optical water quality near null. Draft Sections 5.9-5.10
+    correctly states negative R2 — do NOT use ML as evidence for RQ2
+    substantive claims.
+
+  Additional analysis (existing dataset only):
+    - Export spatial Spearman with p for vessel-MEI/ESI by port annulus
+    - Partial correlation controlling for week_of_year
+
+
+--------------------------------------------------------------------------------
+RQ3 — WIND REGIMES AND DIRECTIONAL TRANSPORT
+--------------------------------------------------------------------------------
+  Answer status: PARTIALLY ANSWERED (WEAKEST RQ)
+
+  Final Draft                            Repository
+  -----------                            ----------
+  Section 5.4: vessel higher in          Turku coastal raw: non-shoreward
+    non-shoreward; seasonal confound     mean 0.571 vs shoreward 0.540 —
+                                         directionally consistent but NOT
+                                         significant after season adjustment
+
+  Mann-Whitney U = 152,763,              vessel_density_wind_regime_tests.csv
+    p = 0.815 Section 5.4                row 1  EXACT MATCH
+
+  Section 5.4: shoreward MEI/CES         coastal_exposure_statistics.csv:
+    higher inland                        MEI shoreward > non in bands
+                                         (p tiny) — partly CIRCULAR (wind in MEI)
+
+  Fig. 5.7a/5.7b directional             fig_5_7a_wind_regime_distributions.png
+    structuring                          fig_5_7b_wind_regime_mean_comparison.png
+
+  Strongest defensible claim:
+    Wind regime partitions composite exposure ordinally by band; vessel activity
+    does NOT differ by wind class once season structure is acknowledged.
+
+  Overclaim risk in draft:
+    "Wind direction contributed to spatial diversity" (Section 5.4 closing) —
+    soften to associative stratification of wind-informed indices, not validated
+    pollutant transport.
+
+  Additional analysis (existing dataset only):
+    - ESI/NO2 (not MEI) shoreward contrasts with month fixed effects
+    - Report Mariehamn wind coverage gap explicitly in Section 5.4
+
+
+--------------------------------------------------------------------------------
+RQ4 — DISTANCE DECAY FROM PORTS AND SHIPPING LANES
+--------------------------------------------------------------------------------
+  Answer status: PARTIALLY ANSWERED
+
+  Final Draft                            Repository
+  -----------                            ----------
+  Section 5.3: Turku MEI approximately   Directionally supported in decay
+    0.50 (3-10 km) to approximately      tables; exact bands differ (repo uses
+    0.03 (10-50 km)                      0-3, 3-7, 7-15, 15-30 km annuli)
+
+  Section 5.3: vessel density >13        Consistent with
+    near-port, <1 distant                port_distance_decay_statistics_
+                                         turku_mariehamn.csv order-of-magnitude
+
+  Section 5.3 Fig. 5.7: 30-50 km         TENSION: classic port-centred decay
+    MEI/CES/ESI > 10-30 km               shows highest MEI near port, decreasing
+                                         outward in coastal_exposure_statistics.csv.
+                                         Shoreline-distance lattice uses a
+                                         DIFFERENT axis (shoreline km, not port
+                                         annulus).
+
+  Shipping-lane distance Section 1.3.4   indicator_participation distance-to-
+                                         high-vessel-cell bands
+
+  Strongest evidence:
+    Turku port annulus decay for MEI, vessel density, NO2 (Section 5.3 narrative
+    matches repo decay figures).
+
+  Gap:
+    Optical indicators sparse in inner bands; dual distance frameworks (port vs
+    shoreline vs high-vessel cell) easy to conflate in prose.
+
+  Additional analysis (existing dataset only):
+    - Single figure/table reconciling port annulus vs shoreline-distance metrics
+      side-by-side with n per bin
+
+
+--------------------------------------------------------------------------------
+RQ5 — TEMPORAL LAG CORRELATIONS
+--------------------------------------------------------------------------------
+  Answer status: PARTIALLY ANSWERED
+
+  Final Draft                            Repository
+  -----------                            ----------
+  Section 5.6: NO2 lag-1                 final_temporal_relationships.csv
+    autocorrelation rho = 0.41           persistence block: NO2 lag1-NO2 t
+                                         rho = 0.4128  ALIGNED
+
+  Section 5.6: NDWI lag rho = -0.23;     Verify against lagged_correlations.csv
+    NDTI lag-2 rho approximately 0.16  — plausible on optical subset
+
+  Section 5.6: NDWI-NDTI                 spearman_correlation.csv:
+    contemporaneous rho = -0.62          ndwi-ndti rho = -0.715
+
+  Maritime activity lags                 final_temporal_relationships.csv:
+                                         vessel-NDTI rho approximately 0.08
+                                         (n = 31); vessel-ESI pooled only
+
+  Strongest evidence:
+    NO2 persistence and NO2-ESI (rho approximately 0.57 contemporaneous,
+    roll2 rho approximately 0.43).
+
+  Gap:
+    NDVI lag leg undefined (NO2-NDVI n = 2-4). Draft Section 3.x NDVI seasonal
+    confound (N = 369 valid) is appropriately cautious — keep NDVI out of main
+    RQ5 answer.
+
+  Additional analysis (existing dataset only):
+    - Export p-values from final_thesis_spatiotemporal.py
+    - Cell-level lag CCF for NO2 and ESI
+
+
+--------------------------------------------------------------------------------
+RQ6 — ANOMALY DETECTION AND CLUSTERING
+--------------------------------------------------------------------------------
+  Answer status: PARTIALLY ANSWERED
+
+  Final Draft                            Repository
+  -----------                            ----------
+  Section 5.7: vessel/MEI anomalies      Expected if baselines flag persistent
+    all 51 weeks                         corridor activity — NOT episodic
+                                         "anomaly" in strict sense
+
+  Section 5.7: NO2 anomalies rare        Consistent with low co-occurrence in
+    (4 spikes)                           overlap table
+
+  Section 5.7: NDTI/FAI episodic         final_anomaly_overlap_table.csv
+
+  "Clustering behaviour"                 Co-occurrence heatmap + timeline only —
+                                         NO formal cluster test
+
+  Strongest evidence:
+    Descriptive co-occurrence structure and episodic multi-indicator weeks
+    (e.g. Turku 2023-02-26: ndti;no2;stress;vessel).
+
+  Gap:
+    Calling persistent vessel/MEI flags "anomalies" overstates rarity;
+    clustering claim needs qualification.
+
+  Additional analysis (existing dataset only):
+    - Permutation test on co-occurrence rates
+    - Run-length / recurrence statistics per port
+
+
+--------------------------------------------------------------------------------
+RQ7 — TURKU vs MARIEHAMN DIFFERENCES (CORRIDOR)
+--------------------------------------------------------------------------------
+  Answer status: PARTIALLY ANSWERED
+  (Upgraded vs prior audit — scope now matches evidence)
+
+  Final Draft                            Repository
+  -----------                            ----------
+  Sections 5.3/5.5: Turku highest        port_exposure_ranking.csv:
+    MEI, ESI, vessel intensity           Turku rank 1 all composites  ALIGNED
+
+  Section 5.5: Turku ESI mean            Verify scale — repo ESI is percentile-
+    approximately 0.28 vs Mariehamn      like approximately 0.53 mean on coastal
+    approximately -0.10                    subset; check subregion filtering
+
+  Sections 5.5/6: divergent MEI-ESI       Qualitatively supported; critical for
+    signs by port                        honest interpretation
+
+  Section 6.8: approximately 150 km       Methodologically appropriate caveat
+    separation, no source apportionment  ALIGNED
+
+  Stockholm excluded                     Matches empty Stockholm rows in repo —
+                                         NO LONGER an RQ7 gap
+
+  Strongest evidence:
+    Mann-Whitney port pairs in outer bands (p approximately 10^-230 for MEI);
+    integrated synthesis dashboard Section 5.8.
+
+  Gap:
+    Corridor-level pooling masks port-level sign reversal; spatial proximity
+    prevents port-specific attribution.
+
+  Additional analysis (existing dataset only):
+    - Shared-valid-annulus table already in repo — ensure all cross-port figures
+      cite same annulus selection
+
+
+================================================================================
+4. FINAL DRAFT CLAIMS vs REPOSITORY EVIDENCE
+================================================================================
+
+Topic                          Final Draft statement              Audit verdict
+-----                          ---------------------              -------------
+Stockholm                      Excluded Sections 1.5.4,           ALIGNED with repo;
+                               3.2.1, 6.8                         prior three-port RQ7
+                                                                  mismatch RESOLVED
+
+Vessel vs wind                 p = 0.815, seasonal confound       ALIGNED —
+                               Section 5.4                        vessel_density_wind_
+                                                                  regime_tests.csv
+
+Vessel vs ESI                  rho = 0.25, n = 102 Section 5.5    ALIGNED —
+                                                                  final_temporal_
+                                                                  relationships.csv
+
+MEI-ESI by port                Turku -0.08, Mariehamn +0.26       PLAUSIBLE (spatial
+                                                                  disaggregation); not
+                                                                  in temporal CSV
+
+ML performance                 Negative R2, exploratory only      ALIGNED —
+                               Sections 5.9-5.10                  rolling_window_
+                                                                  average_metrics.csv
+
+NDVI                           N = 369, seasonal bias,             ALIGNED with
+                               preliminary Section 3.x            approximately 2.3%
+                                                                  panel missingness;
+                                                                  do not use for main
+                                                                  claims
+
+Wind drives exposure diversity Section 5.4 closing sentence        OVERSTATED relative
+                                                                  to p = 0.815 on vessel
+                                                                  and circular MEI input
+
+Shoreline 30-50 km > 10-30 km  Section 5.3 Fig. 5.7 narrative     NEEDS methodology
+                                                                  footnote — different
+                                                                  distance construct
+                                                                  than port decay
+
+MEI anomalies all 51 weeks     Section 5.7                        TECHNICALLY TRUE but
+                                                                  WEAK anomaly evidence —
+                                                                  persistent corridor,
+                                                                  not rare events
+
+
+================================================================================
+5. CHAPTER 5 CROSSWALK (FINAL DRAFT vs REPOSITORY)
+================================================================================
+
+Final Draft    Primary RQs              Key repository outputs
+-----------    -----------              ----------------------
+5.1            RQ1                      outputs/thesis/chapter_5_1_*
+
+5.2            RQ1, RQ2                 outputs/reports/spearman_correlation.csv
+                                        outputs/thesis_analysis/cross_category_
+                                        relationships.csv
+
+5.3            RQ2, RQ4, RQ7            outputs/final_run_turku_mariehamn_thesis/
+                                        reports/port_distance_decay_statistics_
+                                        turku_mariehamn.csv
+                                        final_distance_decay_*.png
+
+5.4            RQ3                      outputs/reports/vessel_density_wind_regime_
+                                        tests.csv
+                                        outputs/final_figures/fig_5_7a_*.png
+                                        outputs/final_figures/fig_5_7b_*.png
+
+5.5            RQ2, RQ7                 outputs/final_figures/fig_5_8a_*.png
+                                        outputs/final_figures/fig_5_8b_*.png
+                                        final_temporal_relationships.csv
+
+5.6            RQ5                      final_temporal_relationships.csv
+                                        fig_5_9a_*.png, fig_5_9b_*.png
+
+5.7            RQ6                      final_anomaly_overlap_table.csv
+                                        fig_5_10a_*.png, fig_5_10b_*.png
+
+5.8            RQ1, RQ7                 composite_land_exposure_dashboard
+                                        thesis bundle maps
+
+5.9-5.10       Method objective 1.3.1   outputs/ml_cv_results/
+               (not an RQ)
+
+
+================================================================================
+6. CROSS-CUTTING TOPICS
+================================================================================
+
+DISTANCE-TO-PORT / SHORELINE GRADIENTS
+--------------------------------------
+  - Port annuli (0-30 km): Strong composite gradients Turku; supported.
+  - Shoreline-distance lattice (draft Fig. 5.7 in Section 5.3): Separate
+    construct — report both with distinct labels.
+  - NO2 at large distance: outputs/reports/no2_distance_diagnostic.md warns
+    regional land-emission confounding.
+
+
+MEI / ESI
+---------
+  - MEI: 1,173 coastal rows, mean approximately 0.73
+    (outputs/reports/exposure_indices_summary.csv)
+  - ESI: experimental composite; NO2 link strongest temporally (rho approximately 0.57)
+  - Wind alignment embedded in MEI — limits independent wind hypothesis tests
+
+
+CORRELATION ANALYSIS
+--------------------
+  - Dominated by optical inter-correlations (NDWI-NDCI rho approximately -0.876) —
+    answers RQ1 indicator structure, not shipping impact
+  - Cross-domain maritime links weak except composites and oil proxy
+
+
+MACHINE LEARNING
+----------------
+  - Rolling CV: delta NDTI test R2 approximately -0.09 (HistGBR); ndti_next R2
+    approximately -2.0
+  - Draft correctly relegates ML to pattern analysis (Section 5.9) — do NOT cite
+    ML as RQ2/RQ5 evidence
+
+
+TEMPORAL VALIDATION
+-------------------
+  - final_temporal_validation.md: 51 weeks/port; flat-input warning for
+    vessel_density
+  - Port stability scores often low for maritime pairs with sign disagreement
+
+
+NDVI MISSINGNESS
+----------------
+  - 97.7% panel missing; draft designates preliminary (Section 3.x)
+  - Temporal NO2-NDVI: n = 2-4 leads to NaN in final_temporal_relationships.csv
+  - Nearest-land linkage: 375 maritime-to-land pairs — exploratory only
+    (outputs/reports/run_nearest_land_ndvi_linkage/)
+
+
+================================================================================
+7. STRONGEST EVIDENCE BY RESEARCH QUESTION
+================================================================================
+
+RQ   Strongest defensible claim                    Primary artefact
+--   --------------------------                    ----------------
+RQ1  Indicators vary spatially (corridor-localized Section 5.1 Table 5.1,
+     shipping; heterogeneous NO2/oil) and          Fig. 5.3
+     temporally for high-coverage layers;
+     optical/NDVI observation-limited
+
+RQ2  Associative links between maritime intensity  Section 5.5 rho=0.25;
+     and ESI/MEI/oil proxy; weak links to          port_exposure_ranking.csv
+     optical water quality
+
+RQ3  Wind regimes structure composite exposure;    Section 5.4 +
+     do NOT claim vessel activity differs by       vessel_density_wind_
+     wind (p=0.815)                                regime_tests.csv
+
+RQ4  MEI/vessel/NO2 decrease with port distance    Section 5.3, decay CSV
+     (Turku strongest); shipping-lane proximity
+     features show band gradients
+
+RQ5  Measurable lags for NO2 persistence and      Section 5.6,
+     NO2-ESI; maritime-NDTI/NDVI lags NOT robust   final_temporal_relationships.csv
+
+RQ6  Anomaly flags and co-occurrence produced;      Section 5.7, overlap table
+     clustering descriptive only
+
+RQ7  Turku > Mariehamn on exposure composites;     Sections 5.3, 5.5, 6.8
+     divergent local MEI-ESI structure; corridor
+     confounding acknowledged
+
+
+================================================================================
+8. DEFENCE READINESS (FINAL DRAFT ALIGNED)
+================================================================================
+
+RQ   Defensible?              Recommended posture in viva/examination
+--   -----------              ---------------------------------------
+RQ1  Yes, with missingness    Lead with Table 5.1; separate panel
+     caveats                  regularity from sensor observability
+
+RQ2  Partially                Emphasize composites + oil proxy; disclaim
+                              optical and ML predictive claims
+
+RQ3  Partially                Lead with p=0.815 for vessel; frame wind
+                              results as index stratification
+
+RQ4  Partially                Port annulus decay strong; clarify shoreline
+                              vs port distance axes
+
+RQ5  Partially                NO2/ESI lags yes; maritime-to-water-quality/
+                              NDVI no
+
+RQ6  Partially                Detection yes; inferential clustering no;
+                              note MEI/vessel persistent flags
+
+RQ7  Yes, corridor-scoped     Turku-Mariehamn contrast robust; cite
+                              Section 6.8 proximity limitation
+
+
+================================================================================
+9. SOURCE DOCUMENT NOTE
+================================================================================
+
+Research questions extracted from:
+  /Users/sameedahmed/Downloads/Thesis_ Final Draft.docx
+  Section 1.4 (bullet list under "The study is guided by the following
+  research questions").
+
+Change from earlier audit:
+  The revised PDF (Thesis_Chapters_1_3_Revised.pdf) listed a three-port RQ7
+  including Stockholm. The Final Draft narrows RQ7 to Turku vs Mariehamn and
+  excludes Stockholm throughout — this IMPROVES alignment with repository
+  evidence.
+
+Evidence paths refer to artefacts under outputs/ and processed/ in:
+  /Users/sameedahmed/geospatial-trend-analysis/
+
+
+================================================================================
+END OF AUDIT
+================================================================================

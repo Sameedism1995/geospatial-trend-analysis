@@ -28,7 +28,7 @@ SPEARMAN = REPORTS / "spearman_correlation.csv"
 LAGGED = REPORTS / "lagged_correlations.csv"
 PARQUET = PROCESSED / "features_ml_ready.parquet"
 
-PORTS_FOCUS = ["Stockholm", "Turku", "Mariehamn"]
+PORTS_FOCUS = ["Turku", "Mariehamn"]
 DIST_ORDER = ["0-3 km", "3-7 km", "7-15 km", "15-30 km"]
 KEY_METRICS = [
     "maritime_exposure_index",

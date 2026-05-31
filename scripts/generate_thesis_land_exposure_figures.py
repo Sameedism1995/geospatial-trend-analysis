@@ -29,6 +29,8 @@ if str(ROOT / "src") not in sys.path:
 import human_impact_distance_analysis as hid  # noqa: E402
 
 
+from visualization.thesis_plot_ports import EXCLUDED_PORTS, PORT_COORDS, exclude_ports  # noqa: E402
+
 PARQUET = ROOT / "processed" / "features_ml_ready.parquet"
 WIND_CSV = ROOT / "outputs/reports/run_coastal_wind_transport/coastal_wind_alignment_features.csv"
 OUT = ROOT / "outputs/thesis_land_exposure"
@@ -41,17 +43,15 @@ NE_LAND_URL = "https://naciscdn.org/naturalearth/110m/physical/ne_110m_land.zip"
 
 CRS_WGS84 = "EPSG:4326"
 
-PORTS_ORDER = ["Turku", "Mariehamn", "Stockholm"]
+PORTS_ORDER = ["Turku", "Mariehamn"]
 PORT_COORDS: dict[str, tuple[float, float]] = {
     "Turku": (60.435, 22.225),
     "Mariehamn": (60.0973, 19.9348),
-    "Stockholm": (59.3293, 18.0686),
 }
 
 COAST_DISTANCE_MAX_KM = 50.0
 SHIPPING_DISTANCE_MAX_KM_ARCHIVAL = 30.0
-# Inland capitols can sit many tens of kilometres from archival “nearest high-density” seeds; keep archival <30km rule everywhere except explicit ports needing a bounded secondary tolerance.
-SHIPPING_EXTENDED_INLAND_PORTS = frozenset({"Stockholm"})
+SHIPPING_EXTENDED_INLAND_PORTS = frozenset()
 SHIPPING_EXTENDED_CAP_KM = 7200.0
 
 
@@ -205,6 +205,7 @@ def build_base_panel() -> pd.DataFrame:
     df = pd.read_parquet(PARQUET)
     df["week_start_utc"] = pd.to_datetime(df["week_start_utc"], utc=True)
     df["nearest_port"] = df["nearest_port"].astype(str)
+    df = exclude_ports(df)
 
     if Path(WIND_CSV).is_file():
         w = pd.read_csv(WIND_CSV)
@@ -653,7 +654,6 @@ def figure_c(analysis: pd.DataFrame) -> None:
     zooms = dict(
         Turku=dict(lon_min=21.07, lon_max=23.28, lat_min=59.74, lat_max=61.92),
         Mariehamn=dict(lon_min=18.74, lon_max=20.32, lat_min=59.84, lat_max=60.44),
-        Stockholm=dict(lon_min=17.75, lon_max=19.40, lat_min=59.10, lat_max=59.66),
     )
 
     land_union = load_land_union()

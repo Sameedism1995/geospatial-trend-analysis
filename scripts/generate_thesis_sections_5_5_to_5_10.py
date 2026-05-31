@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import math
 import re
+import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -25,6 +26,11 @@ import matplotlib.dates as mdates
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(ROOT / "src"))
+
+from visualization.thesis_plot_ports import EXCLUDED_PORTS, PORT_COORDS, exclude_ports  # noqa: E402
+
 PARQUET = ROOT / "processed" / "features_ml_ready.parquet"
 WIND_CSV = ROOT / "outputs" / "reports" / "run_coastal_wind_transport" / "coastal_wind_alignment_features.csv"
 
@@ -35,7 +41,7 @@ FIGM = ROOT / "outputs" / "thesis_figures"
 REPM = ROOT / "outputs" / "reports"
 OUT_FINAL = ROOT / "outputs" / "final_figures"
 
-PORTS_LL = dict(Stockholm=(59.3293, 18.0686), Turku=(60.435, 22.225), Mariehamn=(60.0973, 19.9348))
+PORTS_LL = {k: v for k, v in PORT_COORDS.items() if k in ("Turku", "Mariehamn")}
 PORTS_ORDER = list(PORTS_LL.keys())
 
 WIND_DISTANCE_BANDS_ORDER = ["0–3 km", "3–7 km", "7–15 km", "15–30 km"]
@@ -214,7 +220,7 @@ def load_panel() -> pd.DataFrame:
     df["wind_regime"] = np.where(sh >= 1, "shoreward", np.where(sh.notna(), "nonshoreward", pd.NA))
     df["wind_regime"] = df["wind_regime"].astype("object")
     df["nearest_port"] = df["nearest_port"].astype(str)
-    return df
+    return exclude_ports(df)
 
 
 def bands_km(series: pd.Series) -> pd.Series:
@@ -957,7 +963,7 @@ def fig57(df: pd.DataFrame) -> None:
         "## Figure 5.7b — Directional regime comparison\n\n"
         "Three outcome panels summarise **means ± SE** for vessel density (`vessel_density_t`), Maritime Exposure Index "
         "(`maritime_pressure_index`), and weekly NO₂. Within each subplot, clustered bars contrast shoreward versus "
-        "non-shoreward classifications at each archival `nearest_port` assignment (Stockholm, Turku, Mariehamn); numerals atop "
+        "non-shoreward classifications at each archival `nearest_port` assignment (Turku, Mariehamn); numerals atop "
         "bars give means, while **n=** captions record analytic sample sizes.",
     )
 
@@ -1257,7 +1263,7 @@ def fig58(df: pd.DataFrame) -> None:
         "## Figure 5.8b — Environmental Stress Index (spatial hotspots)\n\n"
         "**Spectral_r** colours encode **cell-mean ESI** on the study bounding box. **Red open circles** emphasise "
         "the pooled **upper 8%** of cells (≥ 92nd percentile among distinct `grid_cell_id`). Stars mark reference ports "
-        "(Stockholm, Turku, Mariehamn). Rasterised points keep vector PDF exports lightweight.",
+        "(Turku, Mariehamn). Rasterised points keep vector PDF exports lightweight.",
     )
 
 

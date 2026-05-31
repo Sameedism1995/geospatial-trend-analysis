@@ -33,7 +33,7 @@ MID = OUT / "intermediate"
 COASTAL_MAP_SCRIPT = ROOT / "scripts" / "generate_geospatial_coastal_exposure_maps.py"
 DASHBOARD_SCRIPT = ROOT / "scripts" / "generate_composite_land_exposure_dashboard.py"
 
-PORTS_SHOW = ["Turku", "Mariehamn", "Stockholm"]
+PORTS_SHOW = ["Turku", "Mariehamn"]
 DZM_LABELS = ("0–3 km", "3–7 km", "7–15 km", "15–30 km")
 DPI = 400
 TOP_N = 15
@@ -103,6 +103,7 @@ def load_df(pq: Path) -> pd.DataFrame:
         d["wind_speed_m_s"] = np.nan
 
     d["nearest_port"] = d["nearest_port"].astype(str)
+    d = d[~d["nearest_port"].isin(["Stockholm"])].copy()
     return d
 
 
@@ -241,14 +242,14 @@ def plot_ml(d: pd.DataFrame) -> None:
     ax.barh(ys, vals, color=cols)
     ax.set_yticks(ys, labels=names)
     ax.set_xlabel("|β| (standardized scale)")
-    ax.set_title(f"Ridge · top {TOP_N} | target={target}")
+    ax.set_title(f"Ridge · top {TOP_N} · in-sample (train) | target={target}")
     ax.axvline(0, color="#666", lw=0.8)
     plt.tight_layout()
     savefig(fig, "ridge_feature_importance")
 
     hg = HistGradientBoostingRegressor(max_depth=5, learning_rate=0.06, max_iter=200, random_state=0)
     hg.fit(X_tr, y_tr)
-    perm = permutation_importance(hg, X_te, y_te, n_repeats=12, random_state=0, n_jobs=-1)
+    perm = permutation_importance(hg, X_tr, y_tr, n_repeats=12, random_state=0, n_jobs=-1)
     imp = pd.Series(perm.importances_mean, index=feats).sort_values(ascending=False).head(TOP_N)
     imp_n = imp / (imp.max() + 1e-12)
 
@@ -261,7 +262,7 @@ def plot_ml(d: pd.DataFrame) -> None:
     ax2.barh(ys2, vals2, color=cols2)
     ax2.set_yticks(ys2, labels=names2)
     ax2.set_xlabel("Permutation Δ loss (normalized)")
-    ax2.set_title(f"HistGradientBoosting · top {TOP_N} permutation | target={target}")
+    ax2.set_title(f"HistGradientBoosting · top {TOP_N} · in-sample (train) | target={target}")
     plt.tight_layout()
     savefig(fig2, "hgbr_permutation_importance")
 
@@ -637,8 +638,9 @@ Artifacts live in `outputs/final_thesis_figures/` (PNG + PDF at {:.0f} DPI) and 
 
 | Figure | Thesis themes |
 | --- | --- |
-| `ridge_feature_importance.png` | ML explainability — linear baseline |
-| `hgbr_permutation_importance.png` | ML explainability — non-linear permutation signal |
+| `ridge_feature_importance.png` | ML explainability — linear baseline (in-sample train) |
+| `hgbr_permutation_importance.png` | ML explainability — HGB permutation on train only |
+| `fig_ml_insample_feature_importance.png` | **In-sample** spatial/maritime feature weights (ΔNDTI, training weeks) |
 | `environmental_correlation_network.png` | Exposure coupling, coastal monitoring hypotheses |
 | `comparative_distance_decay.png` | Exposure gradients, maritime proximity footprint |
 | `temporal_persistence_heatmap.png` | Persistence of pressure / response signals in time |
@@ -695,6 +697,11 @@ def main() -> None:
         logging.warning("Skipping data-driven plots (no panel parquet found).")
 
     plot_framework_diagram()
+    insample_script = ROOT / "scripts" / "generate_insample_feature_importance_figure.py"
+    if insample_script.is_file():
+        ins = subprocess.run([sys.executable, str(insample_script)], cwd=str(ROOT))
+        if ins.returncode != 0:
+            logging.warning("in-sample feature importance script exited %s", ins.returncode)
     write_figure_summary()
 
 

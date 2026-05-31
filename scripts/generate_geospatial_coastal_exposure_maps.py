@@ -49,7 +49,6 @@ DPI = 320
 
 # (lat_deg, lon_deg)
 PORT_COORDS_WGS84: dict[str, tuple[float, float]] = {
-    "Stockholm": (59.3293, 18.0686),
     "Turku": (60.435, 22.225),
     "Mariehamn": (60.0973, 19.9348),
 }
@@ -57,7 +56,6 @@ PORT_COORDS_WGS84: dict[str, tuple[float, float]] = {
 _ZOOM_BOX_DEG = {
     "turku": (21.05, 23.35, 59.82, 60.92),
     "mariehamn": (18.65, 20.42, 59.74, 60.46),
-    "stockholm": (17.72, 19.62, 58.94, 59.68),
 }
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -144,6 +142,9 @@ def load_weekly_panel() -> tuple[pd.DataFrame, str | None]:
             wind_col = cand
             logging.info("optional wind aligned feature: %s", cand)
             break
+
+    if "nearest_port" in d.columns:
+        d = d[~d["nearest_port"].astype(str).isin(["Stockholm"])].copy()
 
     return d, wind_col
 
@@ -680,7 +681,7 @@ def main() -> None:
     plt.close(fig)
     logging.info("saved %s", hot_png.with_suffix(".png"))
 
-    for slug in ("turku", "mariehamn", "stockholm"):
+    for slug in ("turku", "mariehamn"):
         bb = _ZOOM_BOX_DEG[slug]
         xm0, ym0, xm1, ym1 = wgs_bbox_to_xy(bb[0], bb[1], bb[2], bb[3])
         land_zoom = land_plot.clip(gpd.GeoSeries([box(*bb)], crs=CRS_WGS84).to_crs(CRS_PLOT))

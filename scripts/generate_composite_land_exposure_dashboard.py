@@ -734,13 +734,9 @@ def main() -> None:
     zcfg = (
         ("Turku exposure hotspots", ("Turku",), "turku", 55.0),
         ("Mariehamn exposure hotspots", ("Mariehamn",), "mariehamn", 40.0),
-        ("Stockholm exposure hotspots", ("Stockholm",), "stockholm", 52.0),
     )
 
-    zoom_blocks = []
-    for col, cfg in enumerate(zcfg):
-        ax_z = fig.add_subplot(gs[1, col])
-        zoom_blocks.append(ax_z)
+    zoom_blocks = [fig.add_subplot(gs[1, 0]), fig.add_subplot(gs[1, 1])]
 
     for ax_z, cfg in zip(zoom_blocks, zcfg):
         title, plist, slug, km_scl = cfg
@@ -855,7 +851,6 @@ def main() -> None:
     for slug, plist, km in (
         ("b_turku", ("Turku",), 55.0),
         ("c_mariehamn", ("Mariehamn",), 40.0),
-        ("d_stockholm", ("Stockholm",), 52.0),
     ):
         bb = coast_mod._ZOOM_BOX_DEG[slug.replace("b_", "").replace("c_", "").replace("d_", "")]
         _slug = slug.split("_", 1)[-1]

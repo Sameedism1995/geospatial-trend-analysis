@@ -621,7 +621,6 @@ def fig_hotspots_refined(analysis: pd.DataFrame) -> None:
     zooms = dict(
         Turku=dict(lon_min=21.07, lon_max=23.28, lat_min=59.74, lat_max=61.92),
         Mariehamn=dict(lon_min=18.74, lon_max=20.32, lat_min=59.84, lat_max=60.44),
-        Stockholm=dict(lon_min=17.75, lon_max=19.40, lat_min=59.10, lat_max=59.66),
     )
     lw_coast = {k: zooms[k]["lon_max"] - zooms[k]["lon_min"] for k in zooms}
     lw_lat = {k: zooms[k]["lat_max"] - zooms[k]["lat_min"] for k in zooms}

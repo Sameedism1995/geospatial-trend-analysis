@@ -35,7 +35,7 @@ OUT_CAP = ROOT / "outputs" / "final_figures" / "coastal_port_adjacent_lattice_ca
 SCRIPT_COAST = ROOT / "scripts" / "generate_geospatial_coastal_exposure_maps.py"
 
 DPI = 300
-STUDY_PORTS = ("Turku", "Mariehamn", "Stockholm")
+STUDY_PORTS = ("Turku", "Mariehamn")
 
 
 def _load_coastal():
@@ -63,6 +63,7 @@ def main() -> None:
 
     gdf["nearest_port_first"] = gdf["nearest_port_first"].fillna("—").astype(str)
     gdf.loc[gdf["nearest_port_first"].str.strip().eq(""), "nearest_port_first"] = "—"
+    gdf = gdf[~gdf["nearest_port_first"].isin(["Stockholm"])].copy()
 
     minx, miny, maxx, maxy = gdf.total_bounds
     pad = max((maxx - minx), (maxy - miny)) * 0.08 + 0.15
@@ -113,7 +114,7 @@ def main() -> None:
         pal[p] = base_cols[i % 20]
     for sp in STUDY_PORTS:
         if sp in pal:
-            pal[sp] = dict(Turku="#1d4ed8", Mariehamn="#b45309", Stockholm="#15803d").get(sp, pal[sp])
+            pal[sp] = dict(Turku="#1d4ed8", Mariehamn="#b45309").get(sp, pal[sp])
 
     gdf["__col"] = gdf["nearest_port_first"].map(lambda x: pal.get(x, "#94a3b8"))
     gdf.plot(ax=ax_map, color=gdf["__col"], edgecolor="#1e293b", linewidth=0.15, alpha=0.88)

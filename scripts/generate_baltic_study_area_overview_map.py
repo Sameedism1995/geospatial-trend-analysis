@@ -36,7 +36,6 @@ BALTIC_LAT_RANGE = (53.8, 67.6)
 BALTIC_LON_RANGE = (8.4, 31.2)
 
 PORT_COORDS: dict[str, tuple[float, float]] = {
-    "Stockholm": (59.3293, 18.0686),
     "Turku": (60.435, 22.225),
     "Mariehamn": (60.0973, 19.9348),
     "Naantali": (60.4669, 22.0258),
